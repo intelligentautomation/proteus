@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="Sensor Management" uid="com.iai.proteus.product" id="com.iai.proteus.product" application="com.iai.proteus.application" version="1.1.0" useFeatures="true" includeLaunchers="true">
+
+   <aboutInfo>
+      <image path="/com.iai.proteus/icons/about.png"/>
+      <text>
+         Sensor Discovery and Management
+
+Version 1.0.0
+      </text>
+   </aboutInfo>
+
+   <configIni use="default">
+      <macosx>/com.iai.proteus/config.ini</macosx>
+      <win32>/com.iai.proteus/config.ini</win32>
+   </configIni>
+
+   <launcherArgs>
+      <vmArgs>-Dosgi.requiredJavaVersion=1.5 -Xms40m -Xmx512m</vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <windowImages i32="/com.iai.proteus/icons/sinea32.png" i48="/com.iai.proteus/icons/sinea48.png"/>
+
+   <splash
+      location="com.iai.proteus" />
+   <launcher name="Proteus">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="gov.nasa.worldwind.feature"/>
+      <feature id="com.iai.proteus.feature"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="com.iai.proteus.rootfiles.feature"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
+   </configurations>
+
+</product>

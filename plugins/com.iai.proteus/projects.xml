@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smt xmlns:gml="http://www.opengis.net/gml/3.2">
+  <sources>
+    <source service="SOS">
+      <name>NOAA</name>
+      <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+      <cache status="yes">
+        <timestamp>1323876967241</timestamp>
+      </cache>
+    </source>
+  </sources>
+  <projects>
+    <project>
+      <name>Mexican coast</name>
+      <layers>
+        <!-- 
+             This defines a layer.  When sharing layers with peers,
+             this is what would be shared. 
+        -->
+        <layer>
+          <name>Buoys in North Pacific</name>
+          <queries>
+            <!-- A sensor offering from a source (SOS) -->
+            <query type="SensorOffering" gml:id="station-43412">
+              <source service="SOS">
+                <name>NOAA</name>
+                <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+              </source>
+              <gml:boundedBy>
+                <gml:Envelope>
+                  <gml:lowerCorner>16.03 -107</gml:lowerCorner>
+                  <gml:upperCorner>16.03 -107</gml:upperCorner>
+                </gml:Envelope>
+              </gml:boundedBy>
+            </query>
+            <!-- A sensor offering from a source (SOS) -->
+            <query type="SensorOffering" gml:id="station-43413">
+              <source service="SOS">
+                <name>NOAA</name>
+                <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+              </source>
+              <gml:boundedBy>
+                <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+                  <gml:lowerCorner>10.84 -100.08</gml:lowerCorner>
+                  <gml:upperCorner>10.84 -100.08</gml:upperCorner>
+                </gml:Envelope>
+              </gml:boundedBy>
+            </query>
+          </queries>
+        </layer>
+      </layers>
+    </project>
+  </projects>
+</smt>

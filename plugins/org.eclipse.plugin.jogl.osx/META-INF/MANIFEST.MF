@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mac OS X Fragment
+Bundle-SymbolicName: org.eclipse.plugin.jogl.osx
+Bundle-Version: 1.0.1
+Bundle-Vendor: JOGL
+Fragment-Host: org.eclipse.plugin.jogl;bundle-version="1.0.0"
+Eclipse-PlatformFilter: (& (osgi.os=macosx) (| (osgi.arch=x86) (osgi.arch=x86_64) ))
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

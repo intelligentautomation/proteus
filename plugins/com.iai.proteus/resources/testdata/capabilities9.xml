@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities xmlns:sos="http://www.opengis.net/sos/1.0"
+                  xmlns:oost="http://www.oostethys.org/schemas/0.1.0/oostethys"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:ows="http://www.opengis.net/ows/1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:gml="http://www.opengis.net/gml"
+                  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+                  xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd"
+                  version="1.0.0">
+   <ows:ServiceIdentification>
+      <ows:Title>Sensor Observation Service (SOS) for Marine Metadata Interoperability Initiative
+			(MMI)</ows:Title>
+      <ows:Abstract>Sensor Observation Service (SOS) for Marine Metadata Interoperability Initiative
+			(MMI)</ows:Abstract>
+      <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+      <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+   </ows:ServiceIdentification>
+   <ows:ServiceProvider>
+      <ows:ProviderName>Marine Metadata Interoperability Initiative
+			(MMI)</ows:ProviderName>
+      <ows:ProviderSite xlink:href="http://www.marinemetadata.org"/>
+      <ows:ServiceContact>
+         <ows:IndividualName/>
+         <ows:ContactInfo>
+            <ows:Address>
+               <ows:ElectronicMailAddress/>
+            </ows:Address>
+         </ows:ContactInfo>
+      </ows:ServiceContact>
+   </ows:ServiceProvider>
+   <ows:OperationsMetadata>
+      <ows:Operation name="GetCapabilities">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://mmisw.org/oostethys/sos"/>
+               <ows:Post xlink:href="http://mmisw.org/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="GetObservation">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://mmisw.org/oostethys/sos"/>
+               <ows:Post xlink:href="http://mmisw.org/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="offering">
+            <ows:AllowedValues>
+               <ows:Value>observationOffering3</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="observedProperty">
+            <ows:AllowedValues>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/sea_water_temperature</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/conductivity</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/sea_water_salinity</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="DescribeSensor">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://mmisw.org/oostethys/sos"/>
+               <ows:Post xlink:href="http://mmisw.org/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml;subtype="sensorML/1.0.1"</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="procedure">
+            <ows:AllowedValues>
+               <ows:Value>urn:mbari:org</ows:Value>
+               <ows:Value>uri:mbari:org:mooring:m2</ows:Value>
+               <ows:Value>urn:mbari:org:device:1455</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+   </ows:OperationsMetadata>
+   <sos:Contents>
+      <sos:ObservationOfferingList>
+         <sos:ObservationOffering gml:id="observationOffering_1455">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>36.69623 -122.39965</gml:lowerCorner>
+                  <gml:upperCorner>36.69623 -122.39965</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod3">
+                  <gml:beginPosition>2009-06-10T18:28:41Z</gml:beginPosition>
+                  <gml:endPosition>2009-06-11T10:58:40Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:mbari:org:device:1455"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+      </sos:ObservationOfferingList>
+   </sos:Contents>
+</sos:Capabilities>

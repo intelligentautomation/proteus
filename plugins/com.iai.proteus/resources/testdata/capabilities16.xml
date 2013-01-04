@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sos:Capabilities version="1.0.0" xsi:schemaLocation="" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ns11="http://www.opengis.net/gml/" xmlns:icism="urn:us:gov:ic:ism:v2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sampling="http://www.opengis.net/sampling/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:om="http://www.opengis.net/om/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:sml1="http://www.opengis.net/sensorML/1.0" xmlns:swe1="http://www.opengis.net/swe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <ows:ServiceIdentification>
+        <ows:Title xml:lang="fr">BRGM SOS</ows:Title>
+        <ows:Abstract xml:lang="fr">BRGM SOS Server</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword>SOS</ows:Keyword>
+            <ows:Keyword>geomatys</ows:Keyword>
+            <ows:Keyword>BRGM</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType codeSpace="http://www.opengeospatial.net">OGC:SOS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <ows:ServiceProvider>
+        <ows:ProviderName>BRGM</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://www.brgm.fr/"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>????</ows:IndividualName>
+            <ows:PositionName>????</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>??-??-??-??-??</ows:Voice>
+                    <ows:Facsimile>??-??-??-??-??</ows:Facsimile>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>BRGM</ows:DeliveryPoint>
+                    <ows:City>Orleans</ows:City>
+                    <ows:PostalCode>????</ows:PostalCode>
+                    <ows:Country>FRANCE</ows:Country>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                    <ows:Post xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="Acceptversions">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="Sections">
+                <ows:AllowedValues>
+                    <ows:Value>ServiceIdentification</ows:Value>
+                    <ows:Value>ServiceProvider</ows:Value>
+                    <ows:Value>OperationsMetadata</ows:Value>
+                    <ows:Value>Contents</ows:Value>
+                    <ows:Value>Filter_Capabilities</ows:Value>
+                    <ows:Value>All</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="AcceptFormats">
+                <ows:AllowedValues>
+                    <ows:Value>text/xml</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetResult">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetObservation">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="srsName">
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="offering">
+                <ows:AllowedValues>
+                    <ows:Value>offering-allSensor</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="eventTime">
+                <ows:AllowedValues>
+                    <ows:Range>
+                        <ows:MinimumValue>2010-10-22 12:18:21.765</ows:MinimumValue>
+                        <ows:MaximumValue>now</ows:MaximumValue>
+                    </ows:Range>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="procedure">
+                <ows:AllowedValues>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:1</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:2</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:3</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:4</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:5</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:6</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:7</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:8</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:9</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:10</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="observedProperty">
+                <ows:AllowedValues>
+                    <ows:Value>depth</ows:Value>
+                    <ows:Value>rainFall</ows:Value>
+                    <ows:Value>precipitation</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="featureOfInterest">
+                <ows:AllowedValues>
+                    <ows:Value>station</ows:Value>
+                    <ows:Value>station-001</ows:Value>
+                    <ows:Value>station-002</ows:Value>
+                    <ows:Value>station-005</ows:Value>
+                    <ows:Value>station-006</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="result">
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="responseFormat">
+                <ows:AllowedValues>
+                    <ows:Value>text/xml; subtype="om/1.0.0"</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="resultModel">
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="responseMode">
+                <ows:AllowedValues>
+                    <ows:Value>inline</ows:Value>
+                    <ows:Value>resultTemplate</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetFeatureOfInterest">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="FeatureOfInterestId">
+                <ows:AllowedValues>
+                    <ows:Value>station</ows:Value>
+                    <ows:Value>station-001</ows:Value>
+                    <ows:Value>station-002</ows:Value>
+                    <ows:Value>station-005</ows:Value>
+                    <ows:Value>station-006</ows:Value>
+                </ows:AllowedValues>
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="location">
+                <ows:AllowedValues/>
+            </ows:Parameter>
+            <ows:Parameter name="eventTime">
+                <ows:AllowedValues>
+                    <ows:Range>
+                        <ows:MinimumValue>2010-10-22 12:18:21.765</ows:MinimumValue>
+                        <ows:MaximumValue>now</ows:MaximumValue>
+                    </ows:Range>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeSensor">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Post xlink:href="http://swe.brgm.fr/constellation-envision/WS/sos-discovery?"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="outputFormat">
+                <ows:AllowedValues>
+                    <ows:Value>text/xml;subtype="sensorML/1.0.0"</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="procedure">
+                <ows:AllowedValues>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:1</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:2</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:3</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:4</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:5</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:6</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:7</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:8</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:9</ows:Value>
+                    <ows:Value>urn:ogc:object:sensor:BRGM:10</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Constraint name="PostEncoding">
+            <ows:AllowedValues>
+                <ows:Value>XML</ows:Value>
+            </ows:AllowedValues>
+        </ows:Constraint>
+    </ows:OperationsMetadata>
+    <sos:Filter_Capabilities>
+        <ogc:Spatial_Capabilities>
+            <ogc:GeometryOperands>
+                <ogc:GeometryOperand>gml:Envelope</ogc:GeometryOperand>
+            </ogc:GeometryOperands>
+            <ogc:SpatialOperators>
+                <ogc:SpatialOperator name="BBOX"/>
+            </ogc:SpatialOperators>
+        </ogc:Spatial_Capabilities>
+        <ogc:Temporal_Capabilities>
+            <ogc:TemporalOperands>
+                <ogc:TemporalOperand>gml:TimeInstant</ogc:TemporalOperand>
+                <ogc:TemporalOperand>gml:TimePeriod</ogc:TemporalOperand>
+            </ogc:TemporalOperands>
+            <ogc:TemporalOperators>
+                <ogc:TemporalOperator name="TM_During"/>
+                <ogc:TemporalOperator name="TM_Equals"/>
+                <ogc:TemporalOperator name="TM_After"/>
+                <ogc:TemporalOperator name="TM_Before"/>
+            </ogc:TemporalOperators>
+        </ogc:Temporal_Capabilities>
+        <ogc:Scalar_Capabilities>
+            <ogc:ComparisonOperators>
+                <ogc:ComparisonOperator>Between</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>EqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>NotEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>LessThan</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>LessThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>GreaterThan</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>GreaterThanEqualTo</ogc:ComparisonOperator>
+                <ogc:ComparisonOperator>Like</ogc:ComparisonOperator>
+            </ogc:ComparisonOperators>
+        </ogc:Scalar_Capabilities>
+        <ogc:Id_Capabilities>
+            <ogc:EID/>
+            <ogc:FID/>
+        </ogc:Id_Capabilities>
+    </sos:Filter_Capabilities>
+    <sos:Contents>
+        <sos:ObservationOfferingList>
+            <sos:ObservationOffering gml:id="offering-allSensor">
+                <gml:description>Base offering containing all the sensors.</gml:description>
+                <gml:name>offering-allSensor</gml:name>
+                <gml:srsName>EPSG:4326</gml:srsName>
+                <gml:boundedBy>
+                    <gml:Null>not_bounded</gml:Null>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod gml:id="time-offering-allSensor">
+                        <gml:beginPosition>2010-10-22T12:18:21.765</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"></gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:1"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:2"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:3"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:4"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:5"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:6"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:7"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:8"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:9"/>
+                <sos:procedure xlink:href="urn:ogc:object:sensor:BRGM:10"/>
+                <sos:observedProperty>
+                    <swe:Phenomenon gml:id="depth">
+                        <gml:description>profondeur</gml:description>
+                        <gml:name>urn:ogc:def:phenomenon:OGC:1.0:depth</gml:name>
+                    </swe:Phenomenon>
+                </sos:observedProperty>
+                <sos:observedProperty>
+                    <swe:Phenomenon gml:id="rainFall">
+                        <gml:description>rainFall</gml:description>
+                        <gml:name>rainFall</gml:name>
+                    </swe:Phenomenon>
+                </sos:observedProperty>
+                <sos:observedProperty>
+                    <swe:Phenomenon gml:id="precipitation">
+                        <gml:description>precipitation</gml:description>
+                        <gml:name>urn:ogc:def:phenomenon:OGC:1.0:precipitation</gml:name>
+                    </swe:Phenomenon>
+                </sos:observedProperty>
+                <sos:featureOfInterest xlink:href="station"/>
+                <sos:featureOfInterest xlink:href="station-001"/>
+                <sos:featureOfInterest xlink:href="station-002"/>
+                <sos:featureOfInterest xlink:href="station-005"/>
+                <sos:featureOfInterest xlink:href="station-006"/>
+                <sos:responseFormat>text/xml</sos:responseFormat>
+                <sos:resultModel>om:Observation</sos:resultModel>
+                <sos:resultModel>om:Measurement</sos:resultModel>
+                <sos:responseMode>resultTemplate</sos:responseMode>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+        </sos:ObservationOfferingList>
+    </sos:Contents>
+</sos:Capabilities>

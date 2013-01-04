@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Capabilities xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:om="http://www.opengis.net/om/1.0" xmlns="http://www.opengis.net/sos/1.0" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:ogc="http://www.opengis.net/ogc" xmlns:tml="http://www.opengis.net/tml" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:myorg="http://www.myorg.org/features" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sos/1.0  http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd " version="1.0.0"><ows:ServiceIdentification>
+  <ows:Title>CMOP NANOOS Sensor Observation Port</ows:Title>
+  <ows:Abstract>Sensor Observation Service developed in the Center for Coastal Margin Observation and Prediction with sponsorship of the Northwest Association of Networked Ocean Observing Systems</ows:Abstract>
+  <ows:Keywords><ows:Keyword>salinity</ows:Keyword><ows:Keyword>temperature</ows:Keyword><ows:Keyword>chemical</ows:Keyword><ows:Keyword>physical</ows:Keyword><ows:Keyword>columbia river</ows:Keyword><ows:Keyword>pacific northwest</ows:Keyword><ows:Keyword>NANOOS</ows:Keyword></ows:Keywords>
+  <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+  <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+  <ows:Fees>NONE</ows:Fees> 
+  <ows:AccessConstraints>NONE</ows:AccessConstraints>
+</ows:ServiceIdentification><ows:ServiceProvider>
+  <ows:ProviderName>Center for Coastal Margin Observation and Prediction</ows:ProviderName>
+  <ows:ProviderSite xlink:href="http://www.stccmop.org"/>
+  <ows:ServiceContact>
+    <ows:IndividualName>Alex Jaramillo</ows:IndividualName>
+    <ows:ContactInfo>
+      <ows:Phone>
+        <ows:Voice>503-748-1071</ows:Voice>
+      </ows:Phone>
+      <ows:Address>
+        <ows:DeliveryPoint>20000 NW Walker Road</ows:DeliveryPoint>
+        <ows:City>Beaverton</ows:City>
+        <ows:AdministrativeArea>OR</ows:AdministrativeArea>
+        <ows:PostalCode>97006</ows:PostalCode>
+        <ows:Country>US</ows:Country>
+        <ows:ElectronicMailAddress>jaramilloa@stccmop.org</ows:ElectronicMailAddress>
+      </ows:Address>
+    </ows:ContactInfo>
+  </ows:ServiceContact>
+</ows:ServiceProvider><ows:OperationsMetadata>
+<ows:Operation name="GetCapabilities">
+  <ows:DCP>
+    <ows:HTTP>
+      <ows:Get xlink:href="http://data.stccmop.org/ws/util/sos.py"/>
+    </ows:HTTP>
+  </ows:DCP>
+  <ows:Parameter name="Sections">
+    <ows:AllowedValues>
+      <ows:Value>ServiceIdentification</ows:Value>
+      <ows:Value>ServiceProvider</ows:Value>
+      <ows:Value>OperationsMetadata</ows:Value>
+      <ows:Value>Contents</ows:Value>
+
+    </ows:AllowedValues>
+  </ows:Parameter>
+</ows:Operation>
+<ows:Operation name="GetObservation">
+  <ows:DCP>
+    <ows:HTTP>
+      <ows:Get xlink:href="http://data.stccmop.org/ws/util/sos.py"/>
+    </ows:HTTP>
+  </ows:DCP>
+  <ows:Parameter name='observedProperty'><ows:AllowedValues><ows:Value>salinity</ows:Value><ows:Value>waterlevel</ows:Value><ows:Value>watertemperature</ows:Value></ows:AllowedValues></ows:Parameter>  
+</ows:Operation>
+<!--
+<ows:Operation name="DescribeSensor">
+  <ows:DCP>
+    <ows:HTTP>
+      <ows:Get xlink:href="http://data.stccmop.org/ws/util/sos.py"/>
+    </ows:HTTP>
+  </ows:DCP>
+  <ows:Parameter name="outputFormat">
+    <ows:AllowedValues>
+      <ows:Value>text/xml;subtype="sensorML/1.0.0"</ows:Value>
+    </ows:AllowedValues>
+  </ows:Parameter>
+  <ows:Parameter name="sensorId">
+  </ows:Parameter>
+</ows:Operation>
+-->
+<ows:Parameter name="service">
+  <ows:AllowedValues>
+    <ows:Value>SOS</ows:Value>
+  </ows:AllowedValues>
+ </ows:Parameter>
+ <ows:Parameter name="version">
+   <ows:AllowedValues>
+     <ows:Value>1.0.0</ows:Value>
+    </ows:AllowedValues>
+ </ows:Parameter>
+</ows:OperationsMetadata><Contents><ObservationOfferingList><ObservationOffering gml:id="saturn03">
+  <gml:description>SATURN-03</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn03</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.2 -123.94</gml:lowerCorner>
+      <gml:upperCorner>46.2 -123.94</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2008-07-14T13:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.1300.R.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.1300.R.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.1300.R.Thermistor"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.240.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.240.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.240.A.Thermistor"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.820.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.820.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.820.A.Thermistor"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.88888.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.88888.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.99999.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn03.99999.A.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="coaof">
+  <gml:description>Waste water outfall (City of Astoria)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::coaof</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.205 -123.774</gml:lowerCorner>
+      <gml:upperCorner>46.205 -123.774</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2005-04-06T13:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::coaof.210.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::coaof.210.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::coaof.210.A.CTD"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="hmndb">
+  <gml:description>Hammond Tide Gage</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::hmndb</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.203 -123.952</gml:lowerCorner>
+      <gml:upperCorner>46.203 -123.952</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2006-02-22T00:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::hmndb.-407.A.Tide Gauge"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="tnslh">
+  <gml:description>Tenasillahe Island (USFW dock)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::tnslh</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.238 -123.468</gml:lowerCorner>
+      <gml:upperCorner>46.238 -123.468</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2009-09-15T13:21:56Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::tnslh.10.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::tnslh.10.A.CTD"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="woody">
+  <gml:description>Woody Island (USCG Pillar Rock back range board)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::woody</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.252 -123.534</gml:lowerCorner>
+      <gml:upperCorner>46.252 -123.534</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-04-21T16:28:04Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::woody.240.A.Thermistor"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="saturn05">
+  <gml:description>SATURN-05</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn05</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.185 -123.187</gml:lowerCorner>
+      <gml:upperCorner>46.185 -123.187</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2012-01-26T00:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn05.250.A.LOBO"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn05.250.A.LOBO"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="cbnc3">
+  <gml:description>Cathlamet Bay North Channel (USCG day mark green 3)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::cbnc3</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.21 -123.714</gml:lowerCorner>
+      <gml:upperCorner>46.21 -123.714</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2009-07-02T11:08:35Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::cbnc3.650.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::cbnc3.650.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::cbnc3.900.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::cbnc3.900.F.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="saturn06">
+  <gml:description>SATURN-06</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn06</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>45.519 -122.667</gml:lowerCorner>
+      <gml:upperCorner>45.519 -122.667</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2009-01-21T08:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn06.50.A.YSI6600V2"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn06.50.A.YSI6600V2"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="saturn01">
+  <gml:description>SATURN-01</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn01</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.235 -123.872</gml:lowerCorner>
+      <gml:upperCorner>46.235 -123.872</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-08-04T13:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn01.0.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn01.0.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn01.0.F.Pressure"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn01.1950.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn01.1950.A.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="sandi">
+  <gml:description>Lower Sand Island light (USCG day mark green 5)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::sandi</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.256 -123.982</gml:lowerCorner>
+      <gml:upperCorner>46.256 -123.982</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2009-10-05T17:57:15Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::sandi.790.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::sandi.790.A.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="saturn02">
+  <gml:description>SATURN-02</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn02</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.173 -124.127</gml:lowerCorner>
+      <gml:upperCorner>46.173 -124.127</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-09-28T13:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn02.100.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn02.100.F.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="tansy">
+  <gml:description>Tansy Point (USCG front range board)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::tansy</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.189 -123.919</gml:lowerCorner>
+      <gml:upperCorner>46.189 -123.919</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-04-21T11:12:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::tansy.840.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::tansy.840.A.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="jetta">
+  <gml:description>Jetty A</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::jetta</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.27 -124.038</gml:lowerCorner>
+      <gml:upperCorner>46.27 -124.038</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-08-03T17:16:47Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::jetta.640.R.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::jetta.640.R.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="dsdma">
+  <gml:description>Desdemona Sands Light</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::dsdma</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.226 -123.955</gml:lowerCorner>
+      <gml:upperCorner>46.226 -123.955</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2010-09-21T16:08:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::dsdma.730.A.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::dsdma.730.A.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="saturn04">
+  <gml:description>SATURN-04</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::saturn04</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.204 -123.759</gml:lowerCorner>
+      <gml:upperCorner>46.204 -123.759</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2011-01-26T14:36:14Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.30.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.30.F.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.30.F.Thermistor"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.60.F.SAMI"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.860.A.Thermistor"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.860.R.CT"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::saturn04.860.R.CT"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="grays">
+  <gml:description>Grays Point (USCG day mark green 13)</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::grays</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.273 -123.767</gml:lowerCorner>
+      <gml:upperCorner>46.273 -123.767</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2010-03-15T01:00:00Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::grays.160.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::grays.160.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::grays.160.A.CTD"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering>
+<ObservationOffering gml:id="eliot">
+  <gml:description>Elliott Point</gml:description>
+  <gml:name>urn:x-noaa:def:station:nanoos.stccmop.org::eliot</gml:name>
+  <gml:srsName>urn:x-noaa:def:crs:epsg::4326</gml:srsName>
+  <gml:boundedBy>
+    <gml:Envelope srsName="urn:x-noaa:def:crs:epsg::4326">
+      <gml:lowerCorner>46.26 -123.614</gml:lowerCorner>
+      <gml:upperCorner>46.26 -123.614</gml:upperCorner>
+    </gml:Envelope>
+  </gml:boundedBy>
+  <time>
+    <gml:TimePeriod> 
+        <gml:beginPosition>2007-04-22T11:04:45Z</gml:beginPosition>
+        <gml:endPosition indeterminatePosition="now"/>
+    </gml:TimePeriod>
+  </time><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::eliot.1390.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::eliot.1390.A.CTD"/><procedure xlink:href="urn:x-noaa:def:sensor:nanoos.stccmop.org::eliot.1390.A.CTD"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterLevel"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/><observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+  <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+  <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+  <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+  <resultModel>om:Observation</resultModel>
+  <responseMode>inline</responseMode>
+</ObservationOffering></ObservationOfferingList></Contents></Capabilities>

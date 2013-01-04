@@ -1,0 +1,2893 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities version="1.0.0" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:uah="http://vast.uah.edu" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd">
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Service Identification -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceIdentification>
+        <ows:Title>UAH - NADIR TRACK SOS</ows:Title>
+        <ows:Abstract/>
+        <ows:Keywords>
+            <ows:Keyword>Nadir Track, Satellites</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType codeSpace="http://opengeospatial.net">
+			OGC:SOS
+		</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Provider Description -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceProvider>
+        <ows:ProviderName>
+			University of Alabama in Huntsville, VAST
+		</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://vast.uah.edu:8080"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Alexandre Robin</ows:IndividualName>
+            <ows:PositionName>Research Engineer</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>+1-256-961-7978</ows:Voice>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>
+						NSSTC, 320 Sparkman Dr.
+					</ows:DeliveryPoint>
+                    <ows:City>Huntsvile</ows:City>
+                    <ows:AdministrativeArea>AL</ows:AdministrativeArea>
+                    <ows:PostalCode>35899</ows:PostalCode>
+                    <ows:Country>USA</ows:Country>
+                    <ows:ElectronicMailAddress>
+						robin@nsstc.uah.edu
+					</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- operations Metadata Section -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://vast.uah.edu/vast/nadir"/>
+                    <ows:Post xlink:href="http://vast.uah.edu/vast/nadir"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetObservation">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://vast.uah.edu/vast/nadir"/>
+                    <ows:Post xlink:href="http://vast.uah.edu/vast/nadir"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="observedProperty">
+                <ows:AnyValue/>
+            </ows:Parameter>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Observation Offerings -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <sos:Contents>
+        <sos:ObservationOfferingList>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ADEOS">
+                <gml:description>
+					ADEOS Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>ADEOS Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1996-08-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.930Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AQUA">
+                <gml:description>
+			      AQUA Satellite Track as projected on the Earth's Ellipsoid
+			   </gml:description>
+                <gml:name>AQUA Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2002-05-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.931Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AURA">
+                <gml:description>
+					AURA Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>AURA Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2004-07-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.931Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="CALIPSO">
+                <gml:description>
+					CALIPSO Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>CALIPSO Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2006-04-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.931Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="CLOUDSAT">
+                <gml:description>
+					CLOUDSAT Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>CLOUDSAT Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2006-04-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.931Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F8">
+                <gml:description>
+					DMSP F8 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F8 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1987-06-20T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F9">
+                <gml:description>
+					DMSP F9 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F9 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-02-03T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F10">
+                <gml:description>
+					DMSP F10 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F10 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-12-01T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F11">
+                <gml:description>
+					DMSP F11 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F11 Nadir Track</gml:name>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-11-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F12">
+                <gml:description>
+					DMSP F12 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F12 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-08-29T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F13">
+                <gml:description>
+					DMSP F13 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F13 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-03-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.932Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F14">
+                <gml:description>
+					DMSP F14 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F14 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-04-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP_F15">
+                <gml:description>
+					DMSP F15 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>DMSP F15 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1999-12-12T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ELEKTRO">
+                <gml:description>
+					ELEKTRO Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>ELEKTRO Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-10-31T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ENVISAT">
+                <gml:description>
+					ENVISAT Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>ENVISAT Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2002-03-01T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="EO_1">
+                <gml:description>
+					EO 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>EO 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2000-11-21T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ERS_1">
+                <gml:description>
+					ERS 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>ERS 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-07-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ERS_2">
+                <gml:description>
+					ERS 2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>ERS 2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-04-21T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.933Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="FASAT_B">
+                <gml:description>
+					FASAT B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>FASAT B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-07-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="FY_1B">
+                <gml:description>
+					FY 1B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>FY 1B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-09-03T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="FY_2A">
+                <gml:description>
+					FY 2A Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>FY 2A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-06-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GMS_4">
+                <gml:description>
+					GMS 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GMS 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1989-09-05T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GMS_5">
+                <gml:description>
+					GMS 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GMS 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-03-18T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_2">
+                <gml:description>
+					GOES 2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1977-06-16T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_3">
+                <gml:description>
+					GOES 3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1978-06-16T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_4">
+                <gml:description>
+					GOES 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1980-09-09T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.934Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_5">
+                <gml:description>
+					GOES 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1981-05-22T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_6">
+                <gml:description>
+					GOES 6 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 6 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1983-04-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_7">
+                <gml:description>
+					GOES 7 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 7 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1987-02-26T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_8">
+                <gml:description>
+					GOES 8 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 8 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-04-13T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_9">
+                <gml:description>
+					GOES 9 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 9 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-05-23T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_10">
+                <gml:description>
+					GOES 10 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 10 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-04-25T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_11">
+                <gml:description>
+					GOES 11 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 11 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2000-05-03T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.935Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GOES_12">
+                <gml:description>
+					GOES 12 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GOES 12 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2001-07-23T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="GRO">
+                <gml:description>
+					GRO Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>GRO Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-04-05T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="INSAT_2A">
+                <gml:description>
+					INSAT 2A Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>INSAT 2A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1992-07-09T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="INSAT_2B">
+                <gml:description>
+					INSAT 2B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>INSAT 2B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1993-07-22T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="INSAT_2C">
+                <gml:description>
+					INSAT 2C Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>INSAT 2C Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-12-06T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_1A">
+                <gml:description>
+					IRS 1A Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS 1A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-03-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_1B">
+                <gml:description>
+					IRS 1B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS 1B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-08-29T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.936Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_1C">
+                <gml:description>
+					IRS 1C Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS 1C Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-12-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_1D">
+                <gml:description>
+					IRS 1D Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS 1D Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-09-29T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_P2">
+                <gml:description>
+					IRS P2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS P2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-10-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="IRS_P3">
+                <gml:description>
+					IRS P3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>IRS P3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1996-03-21T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="JERS_1">
+                <gml:description>
+					JERS 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>JERS 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1992-02-11T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="LANDSAT_4">
+                <gml:description>
+					LANDSAT 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>LANDSAT 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1982-07-16T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="LANDSAT_5">
+                <gml:description>
+					LANDSAT 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>LANDSAT 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1984-03-01T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.937Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="LANDSAT_7">
+                <gml:description>
+					LANDSAT 7 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>LANDSAT 7 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1999-04-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_16">
+                <gml:description>
+					MET2 16 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 16 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1987-08-18T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_17">
+                <gml:description>
+					MET2 17 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 17 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-01-30T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_18">
+                <gml:description>
+					MET2 18 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 18 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1989-02-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_19">
+                <gml:description>
+					MET2 19 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 19 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-06-27T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_20">
+                <gml:description>
+					MET2 20 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 20 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-09-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET2_21">
+                <gml:description>
+					MET2 21 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET2 21 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1993-08-31T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.938Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_1">
+                <gml:description>
+					MET3 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1985-10-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_2">
+                <gml:description>
+					MET3 2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-07-26T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_3">
+                <gml:description>
+					MET3 3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1989-10-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_4">
+                <gml:description>
+					MET3 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-04-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_5">
+                <gml:description>
+					MET3 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-08-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MET3_6">
+                <gml:description>
+					MET3 6 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MET3 6 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-01-25T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METEOSAT_3">
+                <gml:description>
+					METEOSAT 3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>METEOSAT 3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-06-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.939Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METEOSAT_4">
+                <gml:description>
+					METEOSAT 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>METEOSAT 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1989-03-06T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METEOSAT_5">
+                <gml:description>
+					METEOSAT 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>METEOSAT 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-03-02T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METEOSAT_6">
+                <gml:description>
+					METEOSAT 6 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>METEOSAT 6 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1993-11-20T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METEOSAT_7">
+                <gml:description>
+					METEOSAT 7 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>METEOSAT 7 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-09-02T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METOP-A">
+                <gml:description>
+		         METOP-A Satellite Track as projected on the Earth's Ellipsoid
+		      </gml:description>
+                <gml:name>METOP-A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+		               2006-10-19T00:00:00Z
+		            </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MICROLAB_1">
+                <gml:description>
+					MICROLAB 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MICROLAB 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-04-03T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MOS_1A">
+                <gml:description>
+					MOS 1A Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MOS 1A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1987-03-19T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.940Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="MOS_1B">
+                <gml:description>
+					MOS 1B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>MOS 1B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-02-07T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NIMBUS_6">
+                <gml:description>
+					NIMBUS 6 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NIMBUS 6 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1975-06-12T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NIMBUS_7">
+                <gml:description>
+					NIMBUS 7 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NIMBUS 7 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1978-10-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_6">
+                <gml:description>
+					NOAA 6 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 6 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1979-06-27T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_7">
+                <gml:description>
+					NOAA 7 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 7 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1981-06-23T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_8">
+                <gml:description>
+					NOAA 8 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 8 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1983-03-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_9">
+                <gml:description>
+					NOAA 9 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 9 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1984-12-12T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.941Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_10">
+                <gml:description>
+					NOAA 10 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 10 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1986-09-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_11">
+                <gml:description>
+					NOAA 11 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 11 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-09-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_12">
+                <gml:description>
+					NOAA 12 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 12 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-05-15T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_13">
+                <gml:description>
+					NOAA 13 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 13 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1993-08-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_14">
+                <gml:description>
+					NOAA 14 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 14 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-12-31T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_15">
+                <gml:description>
+					NOAA 15 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 15 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-05-13T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.942Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA_16">
+                <gml:description>
+					NOAA 16 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>NOAA 16 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2000-09-21T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="OKEAN_1">
+                <gml:description>
+					OKEAN 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>OKEAN 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1988-07-05T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="OKEAN_2">
+                <gml:description>
+					OKEAN 2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>OKEAN 2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-02-28T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="OKEAN_3">
+                <gml:description>
+					OKEAN 3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>OKEAN 3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-06-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="OKEAN_4">
+                <gml:description>
+					OKEAN 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>OKEAN 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-10-11T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="OKEAN_O">
+                <gml:description>
+					OKEAN O Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>OKEAN O Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1999-07-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="RADARSAT">
+                <gml:description>
+					RADARSAT Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>RADARSAT Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-11-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.943Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="RESURS_O1">
+                <gml:description>
+					RESURS O1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>RESURS O1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1994-11-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="RESURS_O1-N4">
+                <gml:description>
+					RESURS O1-N4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>RESURS O1-N4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-07-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SEASAT_1">
+                <gml:description>
+					SEASAT 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SEASAT 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1978-06-27T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SEASTAR">
+                <gml:description>
+					SEASTAR Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SEASTAR Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-08-01T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SICH_1">
+                <gml:description>
+					SICH 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SICH 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1995-08-31T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT_1">
+                <gml:description>
+					SPOT 1 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SPOT 1 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1986-02-22T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT_2">
+                <gml:description>
+					SPOT 2 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SPOT 2 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1990-01-22T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.944Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT_3">
+                <gml:description>
+					SPOT 3 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SPOT 3 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1993-09-26T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT_4">
+                <gml:description>
+					SPOT 4 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SPOT 4 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-03-24T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT_5">
+                <gml:description>
+					SPOT 5 Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>SPOT 5 Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							2002-05-04T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TECHSAT_1B">
+                <gml:description>
+					TECHSAT 1B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TECHSAT 1B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-07-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA">
+                <gml:description>
+					TERRA Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TERRA Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1999-12-18T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TIROS_N">
+                <gml:description>
+					TIROS N Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TIROS N Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1978-10-13T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TMSAT">
+                <gml:description>
+					TMSAT Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TMSAT Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-07-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.945Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TOMS">
+                <gml:description>
+					TOMS Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TOMS Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1996-07-02T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TOPEX">
+                <gml:description>
+					TOPEX Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TOPEX Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1992-08-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TRMM">
+                <gml:description>
+					TRMM Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TRMM Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1997-11-27T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TUBSAT_A">
+                <gml:description>
+					TUBESAT A Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TUBSAT A Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-07-17T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TUBSAT_B">
+                <gml:description>
+					TUBSAT B Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>TUBSAT B Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1998-07-10T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="UARS">
+                <gml:description>
+					UARS Satellite Track as projected on the Earth's Ellipsoid
+				</gml:description>
+                <gml:name>UARS Nadir Track</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope>
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>
+							1991-09-12T00:00:00Z
+						</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:46.946Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:nadirTrack"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+        </sos:ObservationOfferingList>
+    </sos:Contents>
+</sos:Capabilities>

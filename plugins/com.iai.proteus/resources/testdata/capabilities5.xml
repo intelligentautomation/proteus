@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities xmlns:oost="http://www.oostethys.org/schemas/0.1.0/oostethys" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:swe="http://www.opengis.net/swe/1.0" xmlns:sos="http://www.opengis.net/sos/1.0" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd" version="1.0.0">
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Service Identification -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceIdentification>
+        <ows:Title>Dauphin Island Sea Lab SOS</ows:Title>
+        <ows:Abstract/>
+        <ows:Keywords><ows:Keyword>Ocean Observations</ows:Keyword></ows:Keywords>
+        <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Provider Description -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceProvider>
+        <ows:ProviderName>disl</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://www.disl.org"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Lei Hu</ows:IndividualName>
+            <ows:PositionName/>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice/>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint/>
+                    <ows:City/>
+                    <ows:AdministrativeArea/>
+                    <ows:PostalCode/>
+                    <ows:Country/>
+                    <ows:ElectronicMailAddress>lhu@disl.org</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- operations Metadata Section -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetObservation">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="offering"><ows:AllowedValues><ows:Value>bsca</ows:Value><ows:Value>cata</ows:Value><ows:Value>disl</ows:Value><ows:Value>kata</ows:Value><ows:Value>mbla</ows:Value><ows:Value>mhpa</ows:Value><ows:Value>ppta</ows:Value></ows:AllowedValues></ows:Parameter>
+            <ows:Parameter name="eventTime">
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="observedProperty"><ows:AllowedValues><ows:Value>air_pressure</ows:Value><ows:Value>air_temperature</ows:Value><ows:Value>dissolved_oxygen</ows:Value><ows:Value>downward_shortwave_radiation</ows:Value><ows:Value>photosynthetically_available_radiation</ows:Value><ows:Value>relative_humidity</ows:Value><ows:Value>sea_surface_elevation</ows:Value><ows:Value>sea_water_salinity</ows:Value><ows:Value>sea_water_temperature</ows:Value><ows:Value>wind_from_direction</ows:Value><ows:Value>wind_speed</ows:Value></ows:AllowedValues></ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeSensor">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://gcoos.disl.org/cgi-bin/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="procedure"><ows:AllowedValues><ows:Value>urn:disl.org:source.mooring#bsca</ows:Value><ows:Value>urn:disl.org:source.mooring#cata</ows:Value><ows:Value>urn:disl.org:source.mooring#disl</ows:Value><ows:Value>urn:disl.org:source.mooring#kata</ows:Value><ows:Value>urn:disl.org:source.mooring#mbla</ows:Value><ows:Value>urn:disl.org:source.mooring#mhpa</ows:Value><ows:Value>urn:disl.org:source.mooring#ppta</ows:Value></ows:AllowedValues></ows:Parameter>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Observation Offerings -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <sos:Contents>
+        <sos:ObservationOfferingList>
+            
+        <sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="bsca">
+                <gml:description>Latest data from Station Bon Secour from the Gulf of Mexico Ocean Observing System (GCOOS),
+located in Bon Secour, Alabama</gml:description>
+                <gml:name>bsca</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.33 -87.83 0</gml:lowerCorner>
+                        <gml:upperCorner>30.33 -87.83 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="bsca_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2011-10-04T11:30:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#bsca"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#relative_humidity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="cata">
+                <gml:description>Latest data from Station Cedar Point from the Gulf of Mexico Ocean Observing System (GCOOS),
+located in Cedar Point, Alabama</gml:description>
+                <gml:name>cata</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.31 -88.14 0</gml:lowerCorner>
+                        <gml:upperCorner>30.31 -88.14 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="cata_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2011-04-15T15:00:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#cata"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#relative_humidity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="disl">
+                <gml:description>Latest data from Station Dauphin Island from the Gulf of Mexico Ocean Observing System (GCOOS),
+located off Dauphin Island, Alabama</gml:description>
+                <gml:name>disl</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.25 -88.08 0</gml:lowerCorner>
+                        <gml:upperCorner>30.25 -88.08 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="disl_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2003-02-24T15:00:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#disl"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="kata">
+                <gml:description>Latest data from Station Katrina Cut from the Gulf of Mexico Ocean Observing System (GCOOS),
+located off Dauphin Island, Alabama</gml:description>
+                <gml:name>kata</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.26 -88.21 0</gml:lowerCorner>
+                        <gml:upperCorner>30.26 -88.21 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="kata_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2011-04-15T12:11:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#kata"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#relative_humidity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="mbla">
+                <gml:description>Latest data from Station Middle Bay Light from the Gulf of Mexico Ocean Observing System (GCOOS),
+located on the Middle Bay Lighthouse in Mobile Bay, Alabama</gml:description>
+                <gml:name>mbla</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.44 -88.01 0</gml:lowerCorner>
+                        <gml:upperCorner>30.44 -88.01 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="mbla_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2005-05-23T09:30:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#mbla"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#relative_humidity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="mhpa">
+                <gml:description>Latest data from Station Meaher Park from the Gulf of Mexico Ocean Observing System (GCOOS),
+located in Meaher Park, Alabama</gml:description>
+                <gml:name>mhpa</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.67 -87.94 0</gml:lowerCorner>
+                        <gml:upperCorner>30.67 -87.94 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="mhpa_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2003-08-21T10:08:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#mhpa"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering><sos:ObservationOffering xmlns:xlink="http://www.w3.org/1999/xlink" gml:id="ppta">
+                <gml:description>Latest data from Station Perdido Key from the Gulf of Mexico Ocean Observing System (GCOOS),
+located off Dauphin Island, Alabama</gml:description>
+                <gml:name>ppta</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                        <gml:lowerCorner>30.28 -87.56 0</gml:lowerCorner>
+                        <gml:upperCorner>30.28 -87.56 0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:eventTime>
+                    <gml:TimePeriod gml:id="ppta_valid_times">
+                        <gml:beginPosition indeterminatePosition="unknown">2011-11-07T14:53:00Z</gml:beginPosition>
+                        <gml:endPosition indeterminatePosition="now"/>
+                        <gml:timeInterval unit="hour">.5</gml:timeInterval>
+                    </gml:TimePeriod>
+                </sos:eventTime>
+                <sos:procedure xlink:href="urn:disl.org:source.mooring#ppta"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_speed"/><sos:observedProperty xlink:href="http://mmisw.org/cf#wind_from_direction"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_water_salinity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#sea_surface_elevation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#relative_humidity"/><sos:observedProperty xlink:href="http://mmisw.org/cf#photosynthetically_available_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#downward_shortwave_radiation"/><sos:observedProperty xlink:href="http://mmisw.org/cf#dissolved_oxygen"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_temperature"/><sos:observedProperty xlink:href="http://mmisw.org/cf#air_pressure"/>
+                
+                
+                <sos:featureOfInterest xlink:href="urn:something:bodyOfWater"/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering></sos:ObservationOfferingList>
+    </sos:Contents>
+</sos:Capabilities>

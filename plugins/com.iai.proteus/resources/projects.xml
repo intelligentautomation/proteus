@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<smt xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sos="http://www.opengis.net/sos/1.0">
+  <services>
+    <service type="SOS">
+      <name>NOAA</name>
+      <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+      <color>#80ffff</color>
+    </service>
+  </services>
+  <projects>
+    <project>
+      <name>Buoys</name>
+      <layers>
+        <layer>
+          <name>Pacific Ocean</name>
+          <queries>
+            <query gml:id="station-51307" type="SensorOffering">
+              <service type="SOS">
+                <name>NOAA</name>
+                <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+              </service>
+              <gml:boundedBy>
+                <gml:Envelope>
+                  <gml:lowerCorner>8.0 -125.0</gml:lowerCorner>
+                  <gml:upperCorner>8.0 -125.0</gml:upperCorner>
+                </gml:Envelope>
+              </gml:boundedBy>
+            </query>
+            <query gml:id="station-51308" type="SensorOffering">
+              <service type="SOS">
+                <name>NOAA</name>
+                <url>http://sdf.ndbc.noaa.gov/sos/server.php</url>
+              </service>
+              <gml:boundedBy>
+                <gml:Envelope>
+                  <gml:lowerCorner>-8.0 -125.0</gml:lowerCorner>
+                  <gml:upperCorner>-8.0 -125.0</gml:upperCorner>
+                </gml:Envelope>
+              </gml:boundedBy>
+            </query>
+          </queries>
+          <color>#ffff00</color>
+        </layer>
+      </layers>
+    </project>
+  </projects>
+</smt>

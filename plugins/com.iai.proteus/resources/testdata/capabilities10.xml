@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities xmlns:oost="http://www.oostethys.org/schemas/0.1.0/oostethys"
+                  xmlns:ows="http://www.opengis.net/ows/1.1"
+                  xmlns:sos="http://www.opengis.net/sos/1.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:gml="http://www.opengis.net/gml"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+                  xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd"
+                  version="1.0.0">
+   <ows:ServiceIdentification>
+      <ows:Title>Sensor Observation Service (SOS) for Hawaii Integrated Ocean Observing System (HIOOS)</ows:Title>
+      <ows:Abstract>Sensor Observation Service (SOS) for Hawaii Integrated Ocean Observing System (HIOOS)</ows:Abstract>
+      <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+      <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+   </ows:ServiceIdentification>
+   <ows:ServiceProvider>
+      <ows:ProviderName>Hawaii Integrated Ocean Observing System (HIOOS)</ows:ProviderName>
+      <ows:ProviderSite xlink:href="http://www.hioos.org"/>
+      <ows:ServiceContact>
+         <ows:IndividualName>Jim Potemra</ows:IndividualName>
+         <ows:ContactInfo>
+            <ows:Address>
+               <ows:ElectronicMailAddress>jimp@hawaii.edu</ows:ElectronicMailAddress>
+            </ows:Address>
+         </ows:ContactInfo>
+      </ows:ServiceContact>
+   </ows:ServiceProvider>
+   <ows:OperationsMetadata>
+      <ows:Operation name="GetCapabilities">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+               <ows:Post xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="GetObservation">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+               <ows:Post xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="offering">
+            <ows:AllowedValues>
+               <ows:Value>observationOffering3</ows:Value>
+               <ows:Value>observationOffering4</ows:Value>
+               <ows:Value>observationOffering5</ows:Value>
+               <ows:Value>observationOffering6</ows:Value>
+               <ows:Value>observationOffering8</ows:Value>
+               <ows:Value>observationOffering9</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="observedProperty">
+            <ows:AllowedValues>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/sea_water_temperature</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/conductivity</ows:Value>
+               <ows:Value>uri:x:turb</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/sea_water_salinity</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/sea_water_pressure</ows:Value>
+               <ows:Value>http://mmisw.org/ont/cf/parameter/mass_concentration_of_oxygen_in_sea_water</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="DescribeSensor">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+               <ows:Post xlink:href="http://oos.soest.hawaii.edu/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml;subtype="sensorML/1.0.1"</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="procedure">
+            <ows:AllowedValues>
+               <ows:Value>urn:hioos:org:uh</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:nss01</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:nss02</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:nss03</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:nss04</ows:Value>
+               <ows:Value>urn:hioos:org:uh:wqb</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:wqbaw</ows:Value>
+               <ows:Value>urn:hioos:org:uh:nss:wqbkn</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+   </ows:OperationsMetadata>
+   <sos:Contents>
+      <sos:ObservationOfferingList>
+         <sos:ObservationOffering gml:id="observationOffering_NS-01">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.28786 -157.84068</gml:lowerCorner>
+                  <gml:upperCorner>21.28786 -157.84068</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod3">
+                  <gml:beginPosition>2012-03-06T17:20:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:56:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:nss01"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_pressure"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+         <sos:ObservationOffering gml:id="observationOffering_NS-02">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.286407 -157.84276</gml:lowerCorner>
+                  <gml:upperCorner>21.286407 -157.84276</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod4">
+                  <gml:beginPosition>2012-03-06T17:20:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:56:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:nss02"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_pressure"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+         <sos:ObservationOffering gml:id="observationOffering_NS-03">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.280415 -157.83807</gml:lowerCorner>
+                  <gml:upperCorner>21.280415 -157.83807</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod5">
+                  <gml:beginPosition>2012-03-06T17:20:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:56:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:nss03"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_pressure"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+         <sos:ObservationOffering gml:id="observationOffering_NS-04">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.265875 -157.82275</gml:lowerCorner>
+                  <gml:upperCorner>21.265875 -157.82275</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod6">
+                  <gml:beginPosition>2012-03-06T17:20:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:56:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:nss04"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_pressure"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+         <sos:ObservationOffering gml:id="observationOffering_WQBAW">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.279861 -157.84833</gml:lowerCorner>
+                  <gml:upperCorner>21.279861 -157.84833</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod8">
+                  <gml:beginPosition>2012-03-05T14:40:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:40:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:wqbaw"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/mass_concentration_of_oxygen_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+         <sos:ObservationOffering gml:id="observationOffering_WQBKN">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>21.288721 -157.865</gml:lowerCorner>
+                  <gml:upperCorner>21.288721 -157.865</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod9">
+                  <gml:beginPosition>2012-03-05T14:40:00Z</gml:beginPosition>
+                  <gml:endPosition>2012-03-06T23:40:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="urn:hioos:org:uh:nss:wqbkn"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_temperature"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/conductivity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/sea_water_salinity"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/mass_concentration_of_oxygen_in_sea_water"/>
+            <sos:observedProperty xlink:href="http://mmisw.org/ont/cf/parameter/chlorophyll_concentration_in_sea_water"/>
+            <sos:observedProperty xlink:href="uri:x:turb"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+      </sos:ObservationOfferingList>
+   </sos:Contents>
+</sos:Capabilities>

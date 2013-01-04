@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Log4j Fragment
+Bundle-SymbolicName: com.iai.proteus.log4j.fragment
+Bundle-Version: 1.0.0
+Bundle-Vendor: Intelligent Automation Inc.
+Fragment-Host: com.iai.proteus
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

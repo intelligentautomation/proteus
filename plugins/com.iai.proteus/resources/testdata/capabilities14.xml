@@ -1,0 +1,334 @@
+<?xml version="1.0"?>
+<Capabilities xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:om="http://www.opengis.net/om/1.0" xmlns="http://www.opengis.net/sos/1.0" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:ogc="http://www.opengis.net/ogc" xmlns:tml="http://www.opengis.net/tml" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:myorg="http://www.myorg.org/features" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosAll.xsd" version="1.0.0">
+<!-- This is a PROTOTYPE service. -->
+  <ows:ServiceIdentification>
+    <ows:Title>National Data Buoy Center SOS</ows:Title>
+    <ows:Abstract>National Data Buoy Center SOS</ows:Abstract>
+    <ows:Keywords>
+      <ows:Keyword>Weather</ows:Keyword>
+      <ows:Keyword>Ocean Currents</ows:Keyword>
+      <ows:Keyword>Water Temperature</ows:Keyword>
+      <ows:Keyword>Salinity</ows:Keyword>
+      <ows:Keyword>Water Level</ows:Keyword>
+      <ows:Keyword>Waves</ows:Keyword>
+      <ows:Keyword>Winds</ows:Keyword>
+    </ows:Keywords>
+    <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+    <ows:Fees>NONE</ows:Fees>
+    <ows:AccessConstraints>NONE</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  <ows:ServiceProvider>
+    <ows:ProviderName>National Data Buoy Center</ows:ProviderName>
+    <ows:ProviderSite xlink:href="http://sdf.ndbc.noaa.gov/"/>
+    <ows:ServiceContact>
+      <ows:IndividualName>Webmaster</ows:IndividualName>
+      <ows:ContactInfo>
+        <ows:Phone>
+          <ows:Voice>228-688-2805</ows:Voice>
+        </ows:Phone>
+        <ows:Address>
+          <ows:DeliveryPoint>1007 Balch Blvd.</ows:DeliveryPoint>
+          <ows:City>Stennis Space Center</ows:City>
+          <ows:AdministrativeArea>MS</ows:AdministrativeArea>
+          <ows:PostalCode>39529</ows:PostalCode>
+          <ows:Country>USA</ows:Country>
+          <ows:ElectronicMailAddress>webmaster.ndbc@noaa.gov</ows:ElectronicMailAddress>
+        </ows:Address>
+      </ows:ContactInfo>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  <ows:OperationsMetadata>
+    <ows:Operation name="GetCapabilities">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+          <ows:Post xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="Sections">
+        <ows:AllowedValues>
+          <ows:Value>ServiceIdentification</ows:Value>
+          <ows:Value>ServiceProvider</ows:Value>
+          <ows:Value>OperationsMetadata</ows:Value>
+          <ows:Value>Contents</ows:Value>
+          <ows:Value>All</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetObservation">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+          <ows:Post xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="observedProperty">
+        <ows:AllowedValues>
+          <ows:Value>currents</ows:Value>
+          <ows:Value>salinity</ows:Value>
+          <ows:Value>waterlevel</ows:Value>
+          <ows:Value>watertemperature</ows:Value>
+          <ows:Value>waves</ows:Value>
+          <ows:Value>winds</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="DescribeSensor">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+          <ows:Post xlink:href="http://sccoos-obs0.ucsd.edu/sos/server.php?service=SOS&amp;request=GetCapabilities&amp;version=1.0.0"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="outputFormat">
+        <ows:AllowedValues>
+          <ows:Value>text/xml;subtype="sensorML/1.0.0"</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Parameter name="service">
+      <ows:AllowedValues>
+        <ows:Value>SOS</ows:Value>
+      </ows:AllowedValues>
+    </ows:Parameter>
+    <ows:Parameter name="version">
+      <ows:AllowedValues>
+        <ows:Value>1.0.0</ows:Value>
+      </ows:AllowedValues>
+    </ows:Parameter>
+  </ows:OperationsMetadata>
+  <Contents>
+    <ObservationOfferingList>
+      <ObservationOffering gml:id="network-all">
+        <gml:description>All stations on the SCCOOS SOS server</gml:description>
+        <gml:name>urn:x-ioos:def:network:sccoos::all</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>33.599 -123.4698</gml:lowerCorner>
+            <gml:upperCorner>37.9456 -117.257</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>1999-01-06T19:25Z</gml:beginPosition>
+            <gml:endPosition>2006-04-20T19:38Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::006"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::029"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::071"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::072"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::newportbeach"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::santamonicapier"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::scrippspier"/>
+        <procedure xlink:href="urn:x-ioos:def:station:sccoos::stearnswharf"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Waves"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-006">
+        <gml:description>500 ft. SW of West Jetty, Santa Cruz Harbor</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::006</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>36.9533 -122.0033</gml:lowerCorner>
+            <gml:upperCorner>36.9533 -122.0033</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>1999-01-06T19:32Z</gml:beginPosition>
+            <gml:endPosition>1999-02-18T01:30Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::006:summarywav1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Waves"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-029">
+        <gml:description>Approximately 21.5nm W of Point Reyes</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::029</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>37.9456 -123.4698</gml:lowerCorner>
+            <gml:upperCorner>37.9456 -123.4698</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>1999-01-06T19:31Z</gml:beginPosition>
+            <gml:endPosition>1999-02-18T04:01Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::029:watertemp1"/>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::029:summarywav1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Waves"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-071">
+        <gml:description>Approximately 15.5nm W of Point Conception</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::071</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>34.454 -120.7805</gml:lowerCorner>
+            <gml:upperCorner>34.454 -120.7805</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>1999-01-06T19:29Z</gml:beginPosition>
+            <gml:endPosition>1999-02-18T04:28Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::071:watertemp1"/>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::071:summarywav1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#WaterTemperature"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Waves"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-072">
+        <gml:description>Approximately 1 mile west of lifeguard headquarters at Huntington Beach, CA</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::072</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>33.6317 -117.9783</gml:lowerCorner>
+            <gml:upperCorner>33.6317 -117.9783</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>1999-01-06T19:25Z</gml:beginPosition>
+            <gml:endPosition>1999-02-18T04:25Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::072:summarywav1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Waves"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-newportbeach">
+        <gml:description>Newport Beach</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::newportbeach</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>33.599 -117.9</gml:lowerCorner>
+            <gml:upperCorner>33.599 -117.9</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2006-04-19T15:08Z</gml:beginPosition>
+            <gml:endPosition>2006-04-20T19:38Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::newportbeach:ct1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-santamonicapier">
+        <gml:description>Santa Monica Pier</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::santamonicapier</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>34.008 -118.499</gml:lowerCorner>
+            <gml:upperCorner>34.008 -118.499</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2006-04-20T07:31Z</gml:beginPosition>
+            <gml:endPosition>2006-04-20T19:36Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::santamonicapier:ct1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-scrippspier">
+        <gml:description>Scripps Pier</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::scrippspier</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>33.867 -117.257</gml:lowerCorner>
+            <gml:upperCorner>33.867 -117.257</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2006-04-19T15:07Z</gml:beginPosition>
+            <gml:endPosition>2006-04-20T19:35Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::scrippspier:ct1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="station-stearnswharf">
+        <gml:description>Stearns Wharf</gml:description>
+        <gml:name>urn:x-ioos:def:station:sccoos::stearnswharf</gml:name>
+        <gml:srsName>urn:ogc:def:crs:epsg::4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="urn:ogc:def:crs:epsg::4326">
+            <gml:lowerCorner>34.408 -119.685</gml:lowerCorner>
+            <gml:upperCorner>34.408 -119.685</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2006-04-19T15:10Z</gml:beginPosition>
+            <gml:endPosition>2006-04-20T19:34Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-ioos:def:sensor:sccoos::stearnswharf:ct1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#Salinity"/>
+        <featureOfInterest xlink:href="urn:cgi:Feature:CGI:EarthOcean"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+    </ObservationOfferingList>
+  </Contents>
+</Capabilities>

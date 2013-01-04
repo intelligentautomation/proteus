@@ -1,0 +1,172 @@
+<!--
+    Pure Ant plug-in build script.  This code can successfully assemble an
+    eclipse plug-in jar file, but it cannot compile it. This is due to the
+    complex nature of the eclipse classpath.
+
+    Maybe in the future we can attempt to tackle that problem, but for now
+    simply use eclipse to compile the project.  Then use this ant script
+    to build the plug-in jar file.
+
+    This script assumes a simple project configuration which is used by
+    most eclipse plugins. The output directory is classes.
+    Icons go in the icons folder, splash screen and icons go in the nl folder.
+-->
+
+<project name="plugin-builder" default="build" basedir=".">
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+	<description></description>
+
+	<!-- When this property exists the version will be appended to the
+       JAR filename. -->
+	<property name="version.include"  value="yes" />
+
+	<!-- When this property exists the src folder will be exported with
+	     the JAR file. -->
+	<!--
+      <property name="src.include" value="yes" />
+  -->
+
+	<!-- loads the properties from the MANIFEST.MF file -->
+    <loadproperties>
+      <file file="META-INF/MANIFEST.MF" />
+    </loadproperties>
+
+	<!-- loads the build properties from the build.properties file -->
+	<loadproperties>
+	   <file file="build.properties" />
+	</loadproperties>
+
+	<!-- get the plugin version from the MANIFEST.MF file -->
+	<property name="version" value="${Bundle-Version}"
+		 description="The version number" />
+
+	<!-- Global Properties -->
+	<property name="src" location="bin"
+		description="The location of the source files." />
+	<property name="classes" location="classes"
+		description="The location of the compiled classes." />
+	<property name="dist" location="distribution"
+		description="The distribution directory." />
+
+	<!-- Target Specific Properties -->
+
+	<!-- the destination of the jar -->
+	<property name="jar.dest" value="${dist}"
+		description="The destination directory of the jar target!" />
+
+	<!-- sets the jar file name: The core Bundle-SymbolicName value -->
+    <propertyregex property="jar.name"
+                  input="${Bundle-SymbolicName}"
+                  regexp="([^;]*)([;](.*))?"
+                  select="\1"
+                  casesensitive="false" />
+
+	<property name="dist.name" value="${dist}/${jar.name}-${version}" />
+	<property name="dist.basedir" value="${dist}"/>
+
+	<target name="build" depends="clean, compile, jar">
+	</target>
+
+	<target name="rebuild" depends="compile">
+		<antcall target="jar">
+			<param name="dest" value="${dist}"/>
+		</antcall>
+	</target>
+
+	<target name="compile">
+	</target>
+
+	<target name="jar" >
+
+		<mkdir dir="${dist}" />
+
+		<!-- Copy the source code to the output directory IF the src.include
+		     property is declared above -->
+		<antcall target="src.copy">
+		</antcall>
+
+		<!-- Build the JAR file with the version number in the filename IF
+		     the version.include property is declared above -->
+		<antcall target="jar.withversion">
+		</antcall>
+
+		<!-- Build the JAR file without the version number in the filename IF
+		     the version.include property is not declared above -->
+		<antcall target="jar.withoutversion">
+		</antcall>
+	</target>
+
+	<target name="jar.withversion" description="" if="version.include">
+		<property name="jar.file"
+			value="${jar.dest}/${jar.name}_${version}.jar" />
+
+		<antcall target="jar.doit">
+			<param name="dest" value="${dist}"/>
+		</antcall>
+	</target>
+
+	<target name="jar.withoutversion" description="" unless="version.include">
+		<property name="jar.file" value="${jar.dest}/${jar.name}.jar" />
+		<antcall target="jar.doit">
+			<param name="dest" value="${dist}"/>
+		</antcall>
+	</target>
+
+	<target name="src.copy">
+		<copy todir="${classes}" failonerror="false">
+			<fileset dir="${src}">
+				<include name="**/*.class" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="jar.doit"
+		description="Create a jar file from the compiled classes and resources!">
+
+        <for list="${bin.includes}" delimiter="," param = "file">
+            <sequential>
+
+            	<!-- copy files -->
+                <copy todir="${classes}" failonerror="true">
+                  <fileset dir=".">
+                	<include name="@{file}" />
+                  </fileset>
+                </copy>
+
+            	<!-- copy directories -->
+                <copy todir="${classes}" failonerror="true">
+                  <fileset dir=".">
+                	<include name="@{file}/**/*" />
+                  </fileset>
+                </copy>
+
+            </sequential>
+        </for>
+
+		<!-- Jar the contents of the output folder (Required) -->
+		<jar jarfile="${jar.file}" basedir="${classes}"
+			 manifest="META-INF\MANIFEST.MF">
+		</jar>
+
+		<!-- 6.)  Sign the Jar file (Optional, Not Implemented) -->
+		<!--
+    	<signjar jar="${jar.file}" alias="I-A-I" storepass="iai">
+	   </signjar>
+        -->
+	</target>
+
+	<target name="dist" depends="build">
+	</target>
+
+	<target name="clean" description="Delete all of the output directories.">
+	    <delete dir="${dist}"/>
+		<delete dir="${classes}" includeEmptyDirs="true" />
+	    <!--
+		<mkdir dir="${classes}" />
+		<mkdir dir="${dist}" />
+		-->
+	</target>
+
+</project>

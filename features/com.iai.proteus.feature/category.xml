@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.iai.proteus.feature_1.1.0.jar" id="com.iai.proteus.feature" version="1.1.0" os="macosx,win32" ws="cocoa,win32" nl="en_US" arch="x86,x86_64">
+      <category name="Intelligent Automation Inc."/>
+   </feature>
+   <category-def name="Intelligent Automation Inc." label="Proteus - Sensor Management"/>
+</site>

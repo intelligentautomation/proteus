@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities xmlns:sos="http://www.opengis.net/sos/1.0"
+                  xmlns:oost="http://www.oostethys.org/schemas/0.1.0/oostethys"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:ows="http://www.opengis.net/ows/1.1"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:gml="http://www.opengis.net/gml"
+                  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+                  xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd"
+                  version="1.0.0">
+   <ows:ServiceIdentification>
+      <ows:Title>Sensor Observation Service (SOS) for Instituto de Engenharia de Sistemas e Computadores</ows:Title>
+      <ows:Abstract>Sensor Observation Service (SOS) for Instituto de Engenharia de Sistemas e Computadores</ows:Abstract>
+      <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+      <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+   </ows:ServiceIdentification>
+   <ows:ServiceProvider>
+      <ows:ProviderName>Instituto de Engenharia de Sistemas e Computadores</ows:ProviderName>
+      <ows:ProviderSite xlink:href="http://www.inescporto.pt"/>
+      <ows:ServiceContact>
+         <ows:IndividualName/>
+         <ows:ContactInfo>
+            <ows:Address>
+               <ows:ElectronicMailAddress/>
+            </ows:Address>
+         </ows:ContactInfo>
+      </ows:ServiceContact>
+   </ows:ServiceProvider>
+   <ows:OperationsMetadata>
+      <ows:Operation name="GetCapabilities">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+               <ows:Post xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="GetObservation">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+               <ows:Post xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="offering">
+            <ows:AllowedValues>
+               <ows:Value>observationOffering2</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="observedProperty">
+            <ows:AllowedValues>
+               <ows:Value>Cl_a</ows:Value>
+               <ows:Value>QCLO</ows:Value>
+               <ows:Value>QCurrDir104</ows:Value>
+               <ows:Value>QCurrDir119</ows:Value>
+               <ows:Value>QCurrDir14</ows:Value>
+               <ows:Value>QCurrDir29</ows:Value>
+               <ows:Value>QCurrDir44</ows:Value>
+               <ows:Value>QCurrDir59</ows:Value>
+               <ows:Value>QCurrDir74</ows:Value>
+               <ows:Value>QCurrDir89</ows:Value>
+               <ows:Value>QCurrErr104</ows:Value>
+               <ows:Value>QCurrErr119</ows:Value>
+               <ows:Value>QCurrErr14</ows:Value>
+               <ows:Value>QCurrErr29</ows:Value>
+               <ows:Value>QCurrErr44</ows:Value>
+               <ows:Value>QCurrErr59</ows:Value>
+               <ows:Value>QCurrErr74</ows:Value>
+               <ows:Value>QCurrErr89</ows:Value>
+               <ows:Value>QCurrSp104</ows:Value>
+               <ows:Value>QCurrSp119</ows:Value>
+               <ows:Value>QCurrSp14</ows:Value>
+               <ows:Value>QCurrSp29</ows:Value>
+               <ows:Value>QCurrSp44</ows:Value>
+               <ows:Value>QCurrSp59</ows:Value>
+               <ows:Value>QCurrSp74</ows:Value>
+               <ows:Value>QCurrSp89</ows:Value>
+               <ows:Value>QTar</ows:Value>
+               <ows:Value>QTemp1m</ows:Value>
+               <ows:Value>QWDir</ows:Value>
+               <ows:Value>QWmax</ows:Value>
+               <ows:Value>QWvel</ows:Value>
+               <ows:Value>Qhm0</ows:Value>
+               <ows:Value>Qhmax</ows:Value>
+               <ows:Value>Qhs</ows:Value>
+               <ows:Value>Qhum</ows:Value>
+               <ows:Value>Qmdir</ows:Value>
+               <ows:Value>Qoxy</ows:Value>
+               <ows:Value>Qpres</ows:Value>
+               <ows:Value>Qsprtp</ows:Value>
+               <ows:Value>Qthtp</ows:Value>
+               <ows:Value>Qtm02</ows:Value>
+               <ows:Value>Qtmm10</ows:Value>
+               <ows:Value>Qtp</ows:Value>
+               <ows:Value>Temp</ows:Value>
+               <ows:Value>atms</ows:Value>
+               <ows:Value>cdir104</ows:Value>
+               <ows:Value>cdir119</ows:Value>
+               <ows:Value>cdir14</ows:Value>
+               <ows:Value>cdir29</ows:Value>
+               <ows:Value>cdir44</ows:Value>
+               <ows:Value>cdir59</ows:Value>
+               <ows:Value>cdir74</ows:Value>
+               <ows:Value>cdir89</ows:Value>
+               <ows:Value>cerr104</ows:Value>
+               <ows:Value>cerr119</ows:Value>
+               <ows:Value>cerr14</ows:Value>
+               <ows:Value>cerr29</ows:Value>
+               <ows:Value>cerr44</ows:Value>
+               <ows:Value>cerr59</ows:Value>
+               <ows:Value>cerr74</ows:Value>
+               <ows:Value>cerr89</ows:Value>
+               <ows:Value>cspd104</ows:Value>
+               <ows:Value>cspd119</ows:Value>
+               <ows:Value>cspd14</ows:Value>
+               <ows:Value>cspd29</ows:Value>
+               <ows:Value>cspd44</ows:Value>
+               <ows:Value>cspd59</ows:Value>
+               <ows:Value>cspd74</ows:Value>
+               <ows:Value>cspd89</ows:Value>
+               <ows:Value>doxy</ows:Value>
+               <ows:Value>hm0</ows:Value>
+               <ows:Value>hmax</ows:Value>
+               <ows:Value>hs</ows:Value>
+               <ows:Value>hum</ows:Value>
+               <ows:Value>mdir</ows:Value>
+               <ows:Value>sprtp</ows:Value>
+               <ows:Value>temp1</ows:Value>
+               <ows:Value>thmax</ows:Value>
+               <ows:Value>thtp</ows:Value>
+               <ows:Value>tm02</ows:Value>
+               <ows:Value>tmm10</ows:Value>
+               <ows:Value>tp</ows:Value>
+               <ows:Value>wdir</ows:Value>
+               <ows:Value>wgust</ows:Value>
+               <ows:Value>wspd</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+      <ows:Operation name="DescribeSensor">
+         <ows:DCP>
+            <ows:HTTP>
+               <ows:Get xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+               <ows:Post xlink:href="http://gis.inescporto.pt/oostethys/sos"/>
+            </ows:HTTP>
+         </ows:DCP>
+         <ows:Parameter name="version">
+            <ows:AllowedValues>
+               <ows:Value>1.0.0</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="service">
+            <ows:AllowedValues>
+               <ows:Value>SOS</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="outputFormat">
+            <ows:AllowedValues>
+               <ows:Value>text/xml;subtype="sensorML/1.0.1"</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+         <ows:Parameter name="procedure">
+            <ows:AllowedValues>
+               <ows:Value>http://observatorioraia.org</ows:Value>
+               <ows:Value>raia_01_qc</ows:Value>
+            </ows:AllowedValues>
+         </ows:Parameter>
+      </ows:Operation>
+   </ows:OperationsMetadata>
+   <sos:Contents>
+      <sos:ObservationOfferingList>
+         <sos:ObservationOffering gml:id="observationOffering_RAIA_01">
+            <gml:description/>
+            <gml:boundedBy>
+               <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4326">
+                  <gml:lowerCorner>41.162 -9.562</gml:lowerCorner>
+                  <gml:upperCorner>41.162 -9.562</gml:upperCorner>
+               </gml:Envelope>
+            </gml:boundedBy>
+            <sos:time>
+               <gml:TimePeriod gml:id="timePeriod2">
+                  <gml:beginPosition>2010-05-23T18:05:00Z</gml:beginPosition>
+                  <gml:endPosition>2010-05-26T07:05:00Z</gml:endPosition>
+               </gml:TimePeriod>
+            </sos:time>
+            <sos:procedure xlink:href="raia_01_qc"/>
+            <sos:observedProperty xlink:href="Cl_a"/>
+            <sos:observedProperty xlink:href="QCLO"/>
+            <sos:observedProperty xlink:href="QCurrDir104"/>
+            <sos:observedProperty xlink:href="QCurrDir119"/>
+            <sos:observedProperty xlink:href="QCurrDir14"/>
+            <sos:observedProperty xlink:href="QCurrDir29"/>
+            <sos:observedProperty xlink:href="QCurrDir44"/>
+            <sos:observedProperty xlink:href="QCurrDir59"/>
+            <sos:observedProperty xlink:href="QCurrDir74"/>
+            <sos:observedProperty xlink:href="QCurrDir89"/>
+            <sos:observedProperty xlink:href="QCurrErr104"/>
+            <sos:observedProperty xlink:href="QCurrErr119"/>
+            <sos:observedProperty xlink:href="QCurrErr14"/>
+            <sos:observedProperty xlink:href="QCurrErr29"/>
+            <sos:observedProperty xlink:href="QCurrErr44"/>
+            <sos:observedProperty xlink:href="QCurrErr59"/>
+            <sos:observedProperty xlink:href="QCurrErr74"/>
+            <sos:observedProperty xlink:href="QCurrErr89"/>
+            <sos:observedProperty xlink:href="QCurrSp104"/>
+            <sos:observedProperty xlink:href="QCurrSp119"/>
+            <sos:observedProperty xlink:href="QCurrSp14"/>
+            <sos:observedProperty xlink:href="QCurrSp29"/>
+            <sos:observedProperty xlink:href="QCurrSp44"/>
+            <sos:observedProperty xlink:href="QCurrSp59"/>
+            <sos:observedProperty xlink:href="QCurrSp74"/>
+            <sos:observedProperty xlink:href="QCurrSp89"/>
+            <sos:observedProperty xlink:href="QTar"/>
+            <sos:observedProperty xlink:href="QTemp1m"/>
+            <sos:observedProperty xlink:href="QWDir"/>
+            <sos:observedProperty xlink:href="QWmax"/>
+            <sos:observedProperty xlink:href="QWvel"/>
+            <sos:observedProperty xlink:href="Qhm0"/>
+            <sos:observedProperty xlink:href="Qhmax"/>
+            <sos:observedProperty xlink:href="Qhs"/>
+            <sos:observedProperty xlink:href="Qhum"/>
+            <sos:observedProperty xlink:href="Qmdir"/>
+            <sos:observedProperty xlink:href="Qoxy"/>
+            <sos:observedProperty xlink:href="Qpres"/>
+            <sos:observedProperty xlink:href="Qsprtp"/>
+            <sos:observedProperty xlink:href="Qthtp"/>
+            <sos:observedProperty xlink:href="Qtm02"/>
+            <sos:observedProperty xlink:href="Qtmm10"/>
+            <sos:observedProperty xlink:href="Qtp"/>
+            <sos:observedProperty xlink:href="Temp"/>
+            <sos:observedProperty xlink:href="atms"/>
+            <sos:observedProperty xlink:href="cdir104"/>
+            <sos:observedProperty xlink:href="cdir119"/>
+            <sos:observedProperty xlink:href="cdir14"/>
+            <sos:observedProperty xlink:href="cdir29"/>
+            <sos:observedProperty xlink:href="cdir44"/>
+            <sos:observedProperty xlink:href="cdir59"/>
+            <sos:observedProperty xlink:href="cdir74"/>
+            <sos:observedProperty xlink:href="cdir89"/>
+            <sos:observedProperty xlink:href="cerr104"/>
+            <sos:observedProperty xlink:href="cerr119"/>
+            <sos:observedProperty xlink:href="cerr14"/>
+            <sos:observedProperty xlink:href="cerr29"/>
+            <sos:observedProperty xlink:href="cerr44"/>
+            <sos:observedProperty xlink:href="cerr59"/>
+            <sos:observedProperty xlink:href="cerr74"/>
+            <sos:observedProperty xlink:href="cerr89"/>
+            <sos:observedProperty xlink:href="cspd104"/>
+            <sos:observedProperty xlink:href="cspd119"/>
+            <sos:observedProperty xlink:href="cspd14"/>
+            <sos:observedProperty xlink:href="cspd29"/>
+            <sos:observedProperty xlink:href="cspd44"/>
+            <sos:observedProperty xlink:href="cspd59"/>
+            <sos:observedProperty xlink:href="cspd74"/>
+            <sos:observedProperty xlink:href="cspd89"/>
+            <sos:observedProperty xlink:href="doxy"/>
+            <sos:observedProperty xlink:href="hm0"/>
+            <sos:observedProperty xlink:href="hmax"/>
+            <sos:observedProperty xlink:href="hs"/>
+            <sos:observedProperty xlink:href="hum"/>
+            <sos:observedProperty xlink:href="mdir"/>
+            <sos:observedProperty xlink:href="sprtp"/>
+            <sos:observedProperty xlink:href="temp1"/>
+            <sos:observedProperty xlink:href="thmax"/>
+            <sos:observedProperty xlink:href="thtp"/>
+            <sos:observedProperty xlink:href="tm02"/>
+            <sos:observedProperty xlink:href="tmm10"/>
+            <sos:observedProperty xlink:href="tp"/>
+            <sos:observedProperty xlink:href="wdir"/>
+            <sos:observedProperty xlink:href="wgust"/>
+            <sos:observedProperty xlink:href="wspd"/>
+            <sos:featureOfInterest xlink:href="http://mmisw.org/mmi/20080516/system#EarthRealm"/>
+            <sos:responseFormat>text/xml; subtype="om/1.0.0"</sos:responseFormat>
+            <sos:responseMode>inline</sos:responseMode>
+         </sos:ObservationOffering>
+      </sos:ObservationOfferingList>
+   </sos:Contents>
+</sos:Capabilities>

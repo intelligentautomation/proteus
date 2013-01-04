@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/minerva.viz.map3d.worldwind_1.1.0.jar" id="minerva.viz.map3d.worldwind" version="1.0.0" os="macosx,win32" ws="cocoa,win32" nl="en_US" arch="x86,x86_64">
+      <category name="Intelligent Automation Inc."/>
+   </feature>
+   <category-def name="Intelligent Automation Inc." label="3D Map - World Wind"/>
+</site>

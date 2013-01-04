@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities xmlns:oost="http://www.oostethys.org/schemas/0.1.0/oostethys" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:swe="http://www.opengis.net/swe/1.0" xmlns:sos="http://www.opengis.net/sos/1.0" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd" version="1.0.0">
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Service Identification -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceIdentification>
+        <ows:Title>Mote Marine Laboratory SOS</ows:Title>
+        <ows:Abstract/>
+        <ows:Keywords><ows:Keyword>OCEANOGRAPHY</ows:Keyword><ows:Keyword>Ocean Observations</ows:Keyword><ows:Keyword>GCOOS</ows:Keyword><ows:Keyword>Gulf of Mexico</ows:Keyword></ows:Keywords>
+        <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Provider Description -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceProvider>
+        <ows:ProviderName>MML</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://www.mote.org/"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Bob Currier</ows:IndividualName>
+            <ows:PositionName/>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice/>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint/>
+                    <ows:City/>
+                    <ows:AdministrativeArea/>
+                    <ows:PostalCode/>
+                    <ows:Country/>
+                    <ows:ElectronicMailAddress>rdc@mote.org</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- operations Metadata Section -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetObservation">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="offering"><ows:AllowedValues/></ows:Parameter>
+            <ows:Parameter name="eventTime">
+                <ows:AnyValue/>
+            </ows:Parameter>
+            <ows:Parameter name="observedProperty"><ows:AllowedValues/></ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="DescribeSensor">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                    <ows:Post xlink:href="http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="procedure"><ows:AllowedValues/></ows:Parameter>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Observation Offerings -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <sos:Contents>
+        <sos:ObservationOfferingList>
+            
+        </sos:ObservationOfferingList>
+    </sos:Contents>
+</sos:Capabilities>

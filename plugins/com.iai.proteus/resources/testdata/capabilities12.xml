@@ -1,0 +1,1012 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sos:Capabilities version="1.0.0" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:uah="http://vast.uah.edu" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd">
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Service Identification -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceIdentification>
+        <ows:Title>UAH - FOOTPRINT SOS</ows:Title>
+        <ows:Abstract>Footprints and visibility corridors of various earth observation satellites</ows:Abstract>
+        <ows:Keywords>
+            <ows:Keyword>Footprint, Satellite, Track</ows:Keyword>
+        </ows:Keywords>
+        <ows:ServiceType codeSpace="http://opengeospatial.net"> OGC:SOS </ows:ServiceType>
+        <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+        <ows:Fees>NONE</ows:Fees>
+        <ows:AccessConstraints>NONE</ows:AccessConstraints>
+    </ows:ServiceIdentification>
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Provider Description -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:ServiceProvider>
+        <ows:ProviderName>University of Alabama in Huntsville, VAST</ows:ProviderName>
+        <ows:ProviderSite xlink:href="http://vast.uah.edu"/>
+        <ows:ServiceContact>
+            <ows:IndividualName>Alexandre Robin</ows:IndividualName>
+            <ows:PositionName>Research Engineer</ows:PositionName>
+            <ows:ContactInfo>
+                <ows:Phone>
+                    <ows:Voice>+1-256-961-7978</ows:Voice>
+                </ows:Phone>
+                <ows:Address>
+                    <ows:DeliveryPoint>NSSTC, 320 Sparkman Dr.</ows:DeliveryPoint>
+                    <ows:City>Huntsvile</ows:City>
+                    <ows:AdministrativeArea>AL</ows:AdministrativeArea>
+                    <ows:PostalCode>35899</ows:PostalCode>
+                    <ows:Country>USA</ows:Country>
+                    <ows:ElectronicMailAddress>robin@nsstc.uah.edu</ows:ElectronicMailAddress>
+                </ows:Address>
+            </ows:ContactInfo>
+        </ows:ServiceContact>
+    </ows:ServiceProvider>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- operations Metadata Section -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <ows:OperationsMetadata>
+        <ows:Operation name="GetCapabilities">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://vast.uah.edu/vast/footprint"/>
+                    <ows:Post xlink:href="http://vast.uah.edu/vast/footprint"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="service">
+                <ows:AllowedValues>
+                    <ows:Value>SOS</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+            <ows:Parameter name="version">
+                <ows:AllowedValues>
+                    <ows:Value>1.0.0</ows:Value>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+        <ows:Operation name="GetObservation">
+            <ows:DCP>
+                <ows:HTTP>
+                    <ows:Get xlink:href="http://vast.uah.edu/vast/footprint"/>
+                    <ows:Post xlink:href="http://vast.uah.edu/vast/footprint"/>
+                </ows:HTTP>
+            </ows:DCP>
+            <ows:Parameter name="observedProperty">
+                <ows:AllowedValues>
+                    <ows:Value/>
+                </ows:AllowedValues>
+            </ows:Parameter>
+        </ows:Operation>
+    </ows:OperationsMetadata>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!-- Observation Offerings -->
+    <!--~~~~~~~~~~~~~~~~~~~~~~~-->
+    <sos:Contents>
+        <sos:ObservationOfferingList>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA15-AMSU-A">
+                <gml:description>NOAA 15 Advanced Microwave Sounding Unit-A Footprint Data</gml:description>
+                <gml:name>NOAA 15 - AMSU-A Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1998-05-13T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.852Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AMSU_A:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA15-AMSU-B">
+                <gml:description>NOAA 15 Advanced Microwave Sounding Unit-B Footprint Data</gml:description>
+                <gml:name>NOAA 15 - AMSU-B Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1998-05-13T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.905Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AMSU_B:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA15-AVHRR">
+                <gml:description>NOAA 15 Advanced Very High Resolution (AVHRR) Footprint Data</gml:description>
+                <gml:name>NOAA 15 - AVHRR Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1998-05-13T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.906Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AVHRR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA12-AMSU-A">
+                <gml:description>NOAA 12 Advanced Microwave Sounding Unit-A Footprint Data</gml:description>
+                <gml:name>NOAA 12 - AMSU-A Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1991-05-14T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.906Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AMSU_A:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA12-AMSU-B">
+                <gml:description>NOAA 12 Advanced Microwave Sounding Unit-B Footprint Data</gml:description>
+                <gml:name>NOAA 12 - AMSU-B Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1991-05-14T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.907Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AMSU-B:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="NOAA12-AVHRR">
+                <gml:description>NOAA 12 Advanced Very High Resolution (AVHRR) Footprint Data</gml:description>
+                <gml:name>NOAA 12 - AVHRR Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1991-05-14T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.907Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AVHRR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MODIS">
+                <gml:description>Footprints of the Moderate Resolution Imaging Spectroradiometer (MODIS)
+               on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MODIS Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.908Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MODIS:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Da">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 70.5
+               deg aft on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Da Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.909Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Ca">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 60
+               deg aft on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Ca Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.909Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Ba">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 45.6
+               deg aft on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MIRS Ba Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.909Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Aa">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 26.1
+               deg aft on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Aa Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.910Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-NADIR">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at Nadir
+               on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR An Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.910Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Af">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 26.1
+               deg fore on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Af Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.910Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Bf">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 45.6
+               deg fore on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Bf Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.910Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Cf">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 60
+               deg fore on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Cf Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.911Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TERRA-MISR-Df">
+                <gml:description>Footprints of the Multi-angle Imaging SpectroRadiometer (MISR) at 70.5
+               deg fore on the TERRA satellite</gml:description>
+                <gml:name>TERRA - MISR Df Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1999-12-18T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.911Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MISR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AQUA-AIRS">
+                <gml:description>Footprints of the Atmospheric InfraRed Sounder on the Aqua satellite</gml:description>
+                <gml:name>AQUA - AIRS Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2002-05-04T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.911Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AIRS:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AQUA-MODIS">
+                <gml:description>Footprints of the Moderate Resolution Imaging Spectroradiometer (MODIS)
+               on the Aqua satellite</gml:description>
+                <gml:name>AQUA - MODIS Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2002-05-04T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.912Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MODIS:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AQUA-AMSRE">
+                <gml:description>Footprints for the advanced microwave scanning radiometer for eos
+               (AMSR-E) sensor on the Aqua satellite</gml:description>
+                <gml:name>AQUA - AMSRE Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2002-05-04T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.912Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:AMSRE:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AURA-OMI">
+                <gml:description>Footprints of the Ozone Monitoring Instrument (OMI) on the Aura
+               satellite</gml:description>
+                <gml:name>AURA - OMI Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2004-07-15T00:10:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.912Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:OMI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="AURA-TES-NADIR">
+                <gml:description>Nadir scanning footprints of the Tropospheric Emission Spectrometer
+               (TES) on the Aura satellite</gml:description>
+                <gml:name>AURA - TES Nadir Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2004-07-15T00:10:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:TES:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT4-HRVIR">
+                <gml:description>Footprints for the High Resolution Visible and InfraRed (HRVIR)
+               instrument on SPOT4 satellite</gml:description>
+                <gml:name>SPOT 4 - HRVIR Footprints</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1998-04-01T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:SPOT4:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT4-HRVIR-Potential">
+                <gml:description>Visibility Corridor for the High Resolution Visible and InfraRed
+               (HRVIR) instrument on SPOT4 satellite</gml:description>
+                <gml:name>SPOT 4 - HRVIR Corridor</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1998-04-01T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:SPOT4:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT5-HRG">
+                <gml:description>Footprints for the High Resolution Geometric (HRG) instrument on SPOT5
+               satellite</gml:description>
+                <gml:name>SPOT 5 - HRG Footprints</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2002-04-01T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:SPOT5:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="SPOT5-HRG-Potential">
+                <gml:description>Visibility Corridor for the High Resolution Geometric (HRG) instrument
+               on SPOT5 satellite</gml:description>
+                <gml:name>SPOT 5 - HRG Corridor</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2002-04-01T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:SPOT5:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ENVISAT-MERIS">
+                <gml:description>Footprints for the Medium Resolution Imaging Spectrometer (MERIS)
+               sensor on the ENVISAT satellite</gml:description>
+                <gml:name>ENVISAT - MERIS Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2002-03-01T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.913Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:MERIS:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="ENVISAT-SCIAMACHY-NADIR">
+                <gml:description>Footprints for the SCanning Imaging Absorption SpectroMeter for
+               Atmospheric CHartographY (SCIAMACHY) sensor at Nadir on the ENVISAT satellite</gml:description>
+                <gml:name>ENVISAT - SCIAMACHY Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2002-03-01T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:SCIAMACHY:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TRMM-LIS">
+                <gml:description>Footprints for the Lightning Imaging Sensor (LIS) on the TRMM satellite</gml:description>
+                <gml:name>TRMM - LIS Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:LIS:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TRMM-TMI">
+                <gml:description>Footprints for the Microwave Imager (TMI) sensor on the TRMM satellite</gml:description>
+                <gml:name>TRMM - TIM Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:TMI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="TRMM-PR">
+                <gml:description>Footprints for the Precipitation Radar (PR) sensor on the TRMM
+               satellite</gml:description>
+                <gml:name>TRMM - PR Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:PR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP-F13-SSMI">
+                <gml:description>Footprints for the Special Sensor Microwave Imager (SSMI) sensor on the DMSP-F13 satellite</gml:description>
+                <gml:name>DMSP-F13 - SSMI Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:DMSP-F13-SSMI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP-F14-SSMI">
+                <gml:description>Footprints for the Special Sensor Microwave Imager (SSMI) sensor on the DMSP-F14 satellite</gml:description>
+                <gml:name>DMSP-F14 - SSMI Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:DMSP-F14-SSMI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="DMSP-F15-SSMI">
+                <gml:description>Footprints for the Special Sensor Microwave Imager (SSMI) sensor on the DMSP-F15 satellite</gml:description>
+                <gml:name>DMSP-F15 - SSMI Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>1997-11-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.914Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:DMSP-F15-SSMI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="EO1-ALI-NADIR">
+                <gml:description>Nadir-staring footprints for the Advanced Land Imager (ALI) on the EO-1
+               satellite</gml:description>
+                <gml:name>EO1 - ALI Nadir-Staring Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2000-11-21T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:ALI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="EO1-ALI-Potential">
+                <gml:description>Potential area of pointing for the Advanced Land Imager (ALI) on the
+               EO-1 satellite</gml:description>
+                <gml:name>EO1 - ALI Potential Pointing Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2000-11-21T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:Hyperion:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="EO1-Hyperion-NADIR">
+                <gml:description>Footprints at Nadir look angle for the Advanced Land Imager (ALI) on
+               the EO-1 satellite</gml:description>
+                <gml:name>EO1 - Hyperion Footprint at Nadir pointing</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2000-11-21T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:Hyperion:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="EO1-Hyperion-Potential">
+                <gml:description>Potential area of pointing for the Hyperion hyperspectral sensor on the
+               EO-1 satellite</gml:description>
+                <gml:name> EO1 - Hyperion Potential Pointing Footprint </gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 2000-11-21T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:Hyperion:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="LANDSAT7-TM">
+                <gml:description>Footprints of the Thematic Mapper sensor onboard Landsat 7 satellite</gml:description>
+                <gml:name>TM Footprint on Landsat 7</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition> 1999-04-15T00:00:00Z </gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:TM:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="METOP-A-IASI">
+                <gml:description>Footprints for the IASI sensor on the METOP-A satellite</gml:description>
+                <gml:name>METOP-A - IASI Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2006-10-19T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:IASI:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="CALIPSO-LIDAR">
+                <gml:description>Footprints for the LIDAR sensor on the CALIPSO satellite</gml:description>
+                <gml:name>CALIPSO - LIDAR Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2006-04-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.915Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:LIDAR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+            <sos:ObservationOffering gml:id="CLOUDSAT-RADAR">
+                <gml:description>Footprints for the RADAR sensor on the CLOUDSAT satellite</gml:description>
+                <gml:name>CLOUDSAT - RADAR Footprint</gml:name>
+                <gml:boundedBy>
+                    <gml:Envelope srsName="urn:ogc:def:crs:EPSG:6.5:4329">
+                        <gml:lowerCorner>-90.0 -180.0</gml:lowerCorner>
+                        <gml:upperCorner>90.0 180.0</gml:upperCorner>
+                    </gml:Envelope>
+                </gml:boundedBy>
+                <sos:time>
+                    <gml:TimePeriod>
+                        <gml:beginPosition>2006-04-28T00:00:00Z</gml:beginPosition>
+                        <gml:endPosition>2012-04-07T01:24:44.916Z</gml:endPosition>
+                    </gml:TimePeriod>
+                </sos:time>
+                <sos:procedure xlink:href="urn:vast:platform:RADAR:footprint"/>
+                <sos:observedProperty xlink:href="urn:ogc:sensor:satellite:footprint"/>
+                <sos:featureOfInterest/>
+                <sos:responseFormat>text/xml; subtype="om/1.0"</sos:responseFormat>
+                <sos:responseMode>inline</sos:responseMode>
+            </sos:ObservationOffering>
+            <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+        </sos:ObservationOfferingList>
+    </sos:Contents>
+</sos:Capabilities>

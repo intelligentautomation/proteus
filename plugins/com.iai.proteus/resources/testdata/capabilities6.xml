@@ -1,0 +1,3113 @@
+<?xml version="1.0"?>
+<Capabilities xmlns="http://www.opengis.net/sos/1.0" xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:ogc="http://www.opengis.net/ogc" xmlns:tml="http://www.opengis.net/tml" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:myorg="http://www.myorg.org/features" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosAll.xsd" version="1.0.0">
+  <!-- This is a Sensor Observation Service implementation.  The information in this response may not be complete. -->
+  <ows:ServiceIdentification>
+    <ows:Title>Gulf of Mexico Coastal Ocean Observing System SOS</ows:Title>
+    <ows:Abstract>Gulf of Mexico Coastal Ocean Observing System SOS</ows:Abstract>
+    <ows:Keywords>
+      <ows:Keyword>Ocean Currents</ows:Keyword>
+      <ows:Keyword>Water Temperature</ows:Keyword>
+      <ows:Keyword>Salinity</ows:Keyword>
+      <ows:Keyword>Water Level</ows:Keyword>
+      <ows:Keyword>Waves</ows:Keyword>
+      <ows:Keyword>Winds</ows:Keyword>
+    </ows:Keywords>
+    <ows:ServiceType codeSpace="http://opengeospatial.net">OGC:SOS</ows:ServiceType>
+    <ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+    <ows:Fees>NONE</ows:Fees>
+    <ows:AccessConstraints>NONE</ows:AccessConstraints>
+  </ows:ServiceIdentification>
+  <ows:ServiceProvider>
+    <ows:ProviderName>Gulf of Mexico Coastal Ocean Observing System</ows:ProviderName>
+    <ows:ProviderSite xlink:href="http://gcoos.rsmas.miami.edu/"/>
+    <ows:ServiceContact>
+      <ows:IndividualName>Matt Howard</ows:IndividualName>
+      <ows:ContactInfo>
+        <ows:Phone>
+          <ows:Voice>979-862-4169</ows:Voice>
+          <ows:Facsimile>979-847-8879</ows:Facsimile>
+        </ows:Phone>
+        <ows:Address>
+          <ows:DeliveryPoint>Eller Oceanography and Meteorology Building, Texas A and M University</ows:DeliveryPoint>
+          <ows:City>College Station</ows:City>
+          <ows:AdministrativeArea>TX</ows:AdministrativeArea>
+          <ows:PostalCode>77843</ows:PostalCode>
+          <ows:Country>USA</ows:Country>
+          <ows:ElectronicMailAddress>mkhoward@tamu.edu</ows:ElectronicMailAddress>
+        </ows:Address>
+      </ows:ContactInfo>
+    </ows:ServiceContact>
+  </ows:ServiceProvider>
+  <ows:OperationsMetadata>
+    <ows:Operation name="GetCapabilities">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+          <ows:Post xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="Sections">
+        <ows:AllowedValues>
+          <ows:Value>ServiceIdentification</ows:Value>
+          <ows:Value>ServiceProvider</ows:Value>
+          <ows:Value>OperationsMetadata</ows:Value>
+          <ows:Value>Contents</ows:Value>
+          <ows:Value>All</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="GetObservation">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+          <ows:Post xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="observedProperty">
+        <ows:AllowedValues>
+          <ows:Value>currents</ows:Value>
+          <ows:Value>salinity</ows:Value>
+          <ows:Value>waterlevel</ows:Value>
+          <ows:Value>watertemperature</ows:Value>
+          <ows:Value>waves</ows:Value>
+          <ows:Value>winds</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Operation name="DescribeSensor">
+      <ows:DCP>
+        <ows:HTTP>
+          <ows:Get xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+          <ows:Post xlink:href="http://gcoos.rsmas.miami.edu/dp/sos_server.php"/>
+        </ows:HTTP>
+      </ows:DCP>
+      <ows:Parameter name="outputFormat">
+        <ows:AllowedValues>
+          <ows:Value>text/xml;subtype="sensorML/1.0.0"</ows:Value>
+        </ows:AllowedValues>
+      </ows:Parameter>
+    </ows:Operation>
+    <ows:Parameter name="service">
+      <ows:AllowedValues>
+        <ows:Value>SOS</ows:Value>
+      </ows:AllowedValues>
+    </ows:Parameter>
+    <ows:Parameter name="version">
+      <ows:AllowedValues>
+        <ows:Value>1.0.0</ows:Value>
+      </ows:AllowedValues>
+    </ows:Parameter>
+  </ows:OperationsMetadata>
+  <Contents>
+    <ObservationOfferingList>
+      <ObservationOffering gml:id="offering-041">
+        <gml:name>urn:x-noaa:def:station:ndbc::041</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.88969 -97.59163</gml:lowerCorner>
+            <gml:upperCorner>27.88969 -97.59163</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition>2011-11-01T14:30:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::041:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::041:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::041"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-042">
+        <gml:name>urn:x-noaa:def:station:ndbc::042</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.8888 -97.5696</gml:lowerCorner>
+            <gml:upperCorner>27.8888 -97.5696</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::042:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::042:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::042"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-043">
+        <gml:name>urn:x-noaa:def:station:ndbc::043</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.883783 -97.5332</gml:lowerCorner>
+            <gml:upperCorner>27.883783 -97.5332</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::043:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::043:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::043"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-072">
+        <gml:name>urn:x-noaa:def:station:ndbc::072</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.839194 -97.443972</gml:lowerCorner>
+            <gml:upperCorner>27.839194 -97.443972</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::072:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::072:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::072"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-074">
+        <gml:name>urn:x-noaa:def:station:ndbc::074</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.85155 -97.48203</gml:lowerCorner>
+            <gml:upperCorner>27.85155 -97.48203</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::074:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::074:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::074"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-076">
+        <gml:name>urn:x-noaa:def:station:ndbc::076</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.89183 -97.61045</gml:lowerCorner>
+            <gml:upperCorner>27.89183 -97.61045</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::076:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::076:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::076"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-079">
+        <gml:name>urn:x-noaa:def:station:ndbc::079</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.87078 -97.5177</gml:lowerCorner>
+            <gml:upperCorner>27.87078 -97.5177</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::079:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::079:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::079"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-127">
+        <gml:name>urn:x-noaa:def:station:ndbc::127</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.25976 -96.77369</gml:lowerCorner>
+            <gml:upperCorner>28.25976 -96.77369</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::127:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::127:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::127"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-146">
+        <gml:name>urn:x-noaa:def:station:ndbc::146</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.13235 -97.03445</gml:lowerCorner>
+            <gml:upperCorner>28.13235 -97.03445</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::146:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::146:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::146:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::146"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-147">
+        <gml:name>urn:x-noaa:def:station:ndbc::147</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.08405 -97.20094</gml:lowerCorner>
+            <gml:upperCorner>28.08405 -97.20094</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::147:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::147:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::147"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-148">
+        <gml:name>urn:x-noaa:def:station:ndbc::148</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.97985 -97.02879</gml:lowerCorner>
+            <gml:upperCorner>27.97985 -97.02879</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition>2012-02-18T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::148:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::148:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::148"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-149">
+        <gml:name>urn:x-noaa:def:station:ndbc::149</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.83826 -97.05029</gml:lowerCorner>
+            <gml:upperCorner>27.83826 -97.05029</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::149:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::149:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::149"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-170">
+        <gml:name>urn:x-noaa:def:station:ndbc::170</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.29702 -97.40491</gml:lowerCorner>
+            <gml:upperCorner>27.29702 -97.40491</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::170:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::170:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::170"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-171">
+        <gml:name>urn:x-noaa:def:station:ndbc::171</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.4847 -97.3181</gml:lowerCorner>
+            <gml:upperCorner>27.4847 -97.3181</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-05-18T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::171:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::171:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::171"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42001">
+        <gml:name>urn:x-noaa:def:station:ndbc::42001</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>25.9 -89.667</gml:lowerCorner>
+            <gml:upperCorner>25.9 -89.667</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-05-31T19:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42001:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42001:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42001"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42002">
+        <gml:name>urn:x-noaa:def:station:ndbc::42002</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>25.79 -93.666</gml:lowerCorner>
+            <gml:upperCorner>25.79 -93.666</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42002:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42002:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42002"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42003">
+        <gml:name>urn:x-noaa:def:station:ndbc::42003</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>25.966 -85.594</gml:lowerCorner>
+            <gml:upperCorner>25.966 -85.594</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-06-01T21:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42003:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42003:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42003"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42007">
+        <gml:name>urn:x-noaa:def:station:ndbc::42007</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.09 -88.769</gml:lowerCorner>
+            <gml:upperCorner>30.09 -88.769</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2008-01-01T08:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42007:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42007:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42007"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42012">
+        <gml:name>urn:x-noaa:def:station:ndbc::42012</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.065 -87.555</gml:lowerCorner>
+            <gml:upperCorner>30.065 -87.555</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42012:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42012:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42012"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42013">
+        <gml:name>urn:x-noaa:def:station:ndbc::42013</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.169 -82.926</gml:lowerCorner>
+            <gml:upperCorner>27.169 -82.926</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2012-03-05T07:20:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42013:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42013:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42013:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42013"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42019">
+        <gml:name>urn:x-noaa:def:station:ndbc::42019</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.913 -95.36</gml:lowerCorner>
+            <gml:upperCorner>27.913 -95.36</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42019:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42019:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42019"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42020">
+        <gml:name>urn:x-noaa:def:station:ndbc::42020</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.966 -96.695</gml:lowerCorner>
+            <gml:upperCorner>26.966 -96.695</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42020:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42020:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42020"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42021">
+        <gml:name>urn:x-noaa:def:station:ndbc::42021</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.311 -83.306</gml:lowerCorner>
+            <gml:upperCorner>28.311 -83.306</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2011-11-27T12:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42021:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42021:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42021:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42021"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42022">
+        <gml:name>urn:x-noaa:def:station:ndbc::42022</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.498 -83.722</gml:lowerCorner>
+            <gml:upperCorner>27.498 -83.722</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2011-06-30T17:30:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42022:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42022:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42022:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42022"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42024">
+        <gml:name>urn:x-noaa:def:station:ndbc::42024</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.464 -84.219</gml:lowerCorner>
+            <gml:upperCorner>27.464 -84.219</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2009-07-21T02:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42024:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42024:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42024"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42035">
+        <gml:name>urn:x-noaa:def:station:ndbc::42035</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.232 -94.413</gml:lowerCorner>
+            <gml:upperCorner>29.232 -94.413</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42035:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42035:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42035"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42036">
+        <gml:name>urn:x-noaa:def:station:ndbc::42036</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.5 -84.517</gml:lowerCorner>
+            <gml:upperCorner>28.5 -84.517</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42036:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42036:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42036"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42039">
+        <gml:name>urn:x-noaa:def:station:ndbc::42039</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.791 -86.008</gml:lowerCorner>
+            <gml:upperCorner>28.791 -86.008</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42039:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42039:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42039"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42043">
+        <gml:name>urn:x-noaa:def:station:ndbc::42043</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.9818 -94.9186</gml:lowerCorner>
+            <gml:upperCorner>28.9818 -94.9186</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42043:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42043:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42043"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42044">
+        <gml:name>urn:x-noaa:def:station:ndbc::42044</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.1914 -97.0507</gml:lowerCorner>
+            <gml:upperCorner>26.1914 -97.0507</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>-00-00T00:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42044:waterTemperature.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42044"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42045">
+        <gml:name>urn:x-noaa:def:station:ndbc::42045</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.2168 -96.4998</gml:lowerCorner>
+            <gml:upperCorner>26.2168 -96.4998</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42045:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42045:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42045"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42046">
+        <gml:name>urn:x-noaa:def:station:ndbc::42046</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.8903 -94.0367</gml:lowerCorner>
+            <gml:upperCorner>27.8903 -94.0367</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42046:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42046:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42046"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42047">
+        <gml:name>urn:x-noaa:def:station:ndbc::42047</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.8966 -93.5973</gml:lowerCorner>
+            <gml:upperCorner>27.8966 -93.5973</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42047:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42047:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42047"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42048">
+        <gml:name>urn:x-noaa:def:station:ndbc::42048</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.9396 -96.8429</gml:lowerCorner>
+            <gml:upperCorner>27.9396 -96.8429</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-06-30T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2012-03-07T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42048:waterTemperature.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42048"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42049">
+        <gml:name>urn:x-noaa:def:station:ndbc::42049</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.3507 -96.0058</gml:lowerCorner>
+            <gml:upperCorner>28.3507 -96.0058</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-10-21T21:30:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42049:waterTemperature.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42049"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42050">
+        <gml:name>urn:x-noaa:def:station:ndbc::42050</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.8425 -94.2433</gml:lowerCorner>
+            <gml:upperCorner>28.8425 -94.2433</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-07-01T03:00:00Z</gml:beginPosition>
+            <gml:endPosition>2012-03-07T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42050:waterTemperature.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42050"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42051">
+        <gml:name>urn:x-noaa:def:station:ndbc::42051</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.635 -93.6417</gml:lowerCorner>
+            <gml:upperCorner>29.635 -93.6417</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-07-01T00:00:00Z</gml:beginPosition>
+            <gml:endPosition>2012-03-07T19:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42051:waterTemperature.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42051"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42055">
+        <gml:name>urn:x-noaa:def:station:ndbc::42055</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>22.017 -94.046</gml:lowerCorner>
+            <gml:upperCorner>22.017 -94.046</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42055:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42055:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42055"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42056">
+        <gml:name>urn:x-noaa:def:station:ndbc::42056</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>19.874 -85.059</gml:lowerCorner>
+            <gml:upperCorner>19.874 -85.059</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42056:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42056:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42056"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42057">
+        <gml:name>urn:x-noaa:def:station:ndbc::42057</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>16.834 -81.501</gml:lowerCorner>
+            <gml:upperCorner>16.834 -81.501</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-04-26T14:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42057:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42057:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42057"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42067">
+        <gml:name>urn:x-noaa:def:station:ndbc::42067</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.043 -88.649</gml:lowerCorner>
+            <gml:upperCorner>30.043 -88.649</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2011-12-20T01:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42067:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42067"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42099">
+        <gml:name>urn:x-noaa:def:station:ndbc::42099</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.34 -84.245</gml:lowerCorner>
+            <gml:upperCorner>27.34 -84.245</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42099:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42099:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42099"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42361">
+        <gml:name>urn:x-noaa:def:station:ndbc::42361</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.55 -92.49</gml:lowerCorner>
+            <gml:upperCorner>27.55 -92.49</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42361:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42361:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42361"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42363">
+        <gml:name>urn:x-noaa:def:station:ndbc::42363</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.16 -89.22</gml:lowerCorner>
+            <gml:upperCorner>28.16 -89.22</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42363:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42363:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42363"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-42364">
+        <gml:name>urn:x-noaa:def:station:ndbc::42364</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.06 -88.09</gml:lowerCorner>
+            <gml:upperCorner>29.06 -88.09</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42364:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::42364:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::42364"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-ancf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::ancf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.193 -82.789</gml:lowerCorner>
+            <gml:upperCorner>28.193 -82.789</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ancf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ancf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ancf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ancf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::ancf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-anmf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::anmf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.54 -82.74</gml:lowerCorner>
+            <gml:upperCorner>27.54 -82.74</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::anmf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::anmf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::anmf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-apqf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::apqf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.786 -84.875</gml:lowerCorner>
+            <gml:upperCorner>29.786 -84.875</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2011-05-12T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::apqf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::apqf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::apqf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-apxf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::apxf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.791 -84.883</gml:lowerCorner>
+            <gml:upperCorner>29.791 -84.883</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::apxf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::apxf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::apxf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-arpf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::arpf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.433 -82.667</gml:lowerCorner>
+            <gml:upperCorner>28.433 -82.667</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::arpf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::arpf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::arpf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::arpf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::arpf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-babt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::babt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.301 -97.416</gml:lowerCorner>
+            <gml:upperCorner>27.301 -97.416</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::babt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::babt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::babt2:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::babt2:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::babt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-bgcf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::bgcf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.404 -81.881</gml:lowerCorner>
+            <gml:upperCorner>26.404 -81.881</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bgcf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bgcf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bgcf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bgcf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::bgcf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-bsca1">
+        <gml:name>urn:x-noaa:def:station:ndbc::bsca1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.33 -88.83</gml:lowerCorner>
+            <gml:upperCorner>30.33 -88.83</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-01-01T10:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bsca1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bsca1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::bsca1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::bsca1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-burl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::burl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.905 -89.428</gml:lowerCorner>
+            <gml:upperCorner>28.905 -89.428</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::burl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::burl1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::burl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-camf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::camf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.765 -82.649</gml:lowerCorner>
+            <gml:upperCorner>27.765 -82.649</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2012-03-07T19:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::camf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::camf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::camf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::camf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-cdrf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::cdrf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.136 -83.029</gml:lowerCorner>
+            <gml:upperCorner>29.136 -83.029</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::cdrf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::cdrf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::cdrf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-cllt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::cllt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.563 -95.067</gml:lowerCorner>
+            <gml:upperCorner>29.563 -95.067</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2008-01-01T08:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::cllt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::cllt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::cllt2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::cllt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-dpha1">
+        <gml:name>urn:x-noaa:def:station:ndbc::dpha1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.251 -88.078</gml:lowerCorner>
+            <gml:upperCorner>30.251 -88.078</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::dpha1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::dpha1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::dpha1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::dpha1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::dpha1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-egkf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::egkf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.601 -82.751</gml:lowerCorner>
+            <gml:upperCorner>27.601 -82.751</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::egkf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::egkf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::egkf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::egkf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::egkf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-fhpf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::fhpf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.153 -82.801</gml:lowerCorner>
+            <gml:upperCorner>28.153 -82.801</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2012-03-07T19:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fhpf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fhpf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fhpf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fhpf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::fhpf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-fwyf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::fwyf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>25.59 -80.097</gml:lowerCorner>
+            <gml:upperCorner>25.59 -80.097</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fwyf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::fwyf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::fwyf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-gdxm6">
+        <gml:name>urn:x-noaa:def:station:ndbc::gdxm6</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.359 -88.42</gml:lowerCorner>
+            <gml:upperCorner>30.359 -88.42</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gdxm6:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gdxm6:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::gdxm6"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-gtxf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::gtxf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.658 -81.22</gml:lowerCorner>
+            <gml:upperCorner>29.658 -81.22</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gtxf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gtxf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::gtxf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-hssf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::hssf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.772 -82.707</gml:lowerCorner>
+            <gml:upperCorner>28.772 -82.707</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2010-01-01T23:54:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::hssf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::hssf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::hssf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::hssf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::hssf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-ildl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::ildl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.053 -90.533</gml:lowerCorner>
+            <gml:upperCorner>29.053 -90.533</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ildl1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::ildl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-irdt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::irdt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.485 -97.318</gml:lowerCorner>
+            <gml:upperCorner>27.485 -97.318</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2008-01-01T08:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::irdt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::irdt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::irdt2:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::irdt2:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::irdt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-ktnf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::ktnf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.817 -83.592</gml:lowerCorner>
+            <gml:upperCorner>29.817 -83.592</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ktnf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ktnf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::ktnf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-lkpl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::lkpl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.18894 -90.16831</gml:lowerCorner>
+            <gml:upperCorner>30.18894 -90.16831</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::lkpl1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::lkpl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::lkpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::lkpl1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::lkpl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-luml1">
+        <gml:name>urn:x-noaa:def:station:ndbc::luml1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.25333 -90.66333</gml:lowerCorner>
+            <gml:upperCorner>29.25333 -90.66333</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::luml1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::luml1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::luml1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::luml1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::luml1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-maxt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::maxt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.132 -97.034</gml:lowerCorner>
+            <gml:upperCorner>28.132 -97.034</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::maxt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::maxt2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::maxt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-mbla1">
+        <gml:name>urn:x-noaa:def:station:ndbc::mbla1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.437 -88.012</gml:lowerCorner>
+            <gml:upperCorner>30.437 -88.012</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterLevel.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:waterTemperature.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.4"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.5"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mbla1:salinity.6"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::mbla1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-mhpa1">
+        <gml:name>urn:x-noaa:def:station:ndbc::mhpa1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.667 -87.936</gml:lowerCorner>
+            <gml:upperCorner>30.667 -87.936</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mhpa1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mhpa1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mhpa1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mhpa1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::mhpa1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-mral1">
+        <gml:name>urn:x-noaa:def:station:ndbc::mral1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.5526 -90.807</gml:lowerCorner>
+            <gml:upperCorner>29.5526 -90.807</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2011-10-22T19:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mral1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mral1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mral1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mral1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::mral1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-mrsl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::mrsl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.44 -92.061</gml:lowerCorner>
+            <gml:upperCorner>29.44 -92.061</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.2"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.3"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mrsl1:winds.3"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::mrsl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-mtbf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::mtbf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.661 -82.594</gml:lowerCorner>
+            <gml:upperCorner>27.661 -82.594</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2008-08-23T23:54:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mtbf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mtbf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mtbf1:waves.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mtbf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::mtbf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waves"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::mtbf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-nfbf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::nfbf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>25.084 -81.096</gml:lowerCorner>
+            <gml:upperCorner>25.084 -81.096</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nfbf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nfbf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nfbf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nfbf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::nfbf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-nglt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::nglt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.822 -97.203</gml:lowerCorner>
+            <gml:upperCorner>27.822 -97.203</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2012-01-31T23:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nglt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nglt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::nglt2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::nglt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-pact2">
+        <gml:name>urn:x-noaa:def:station:ndbc::pact2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.633 -97.237</gml:lowerCorner>
+            <gml:upperCorner>27.633 -97.237</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pact2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pact2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pact2:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pact2:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::pact2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-pcnt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::pcnt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.45 -96.401</gml:lowerCorner>
+            <gml:upperCorner>28.45 -96.401</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pcnt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pcnt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::pcnt2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::pcnt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-plsf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::plsf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>24.693 -82.773</gml:lowerCorner>
+            <gml:upperCorner>24.693 -82.773</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2011-08-13T18:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::plsf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::plsf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::plsf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-port2">
+        <gml:name>urn:x-noaa:def:station:ndbc::port2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.867 -93.93</gml:lowerCorner>
+            <gml:upperCorner>29.867 -93.93</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::port2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::port2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::port2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::port2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-ptat2">
+        <gml:name>urn:x-noaa:def:station:ndbc::ptat2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.828 -97.05</gml:lowerCorner>
+            <gml:upperCorner>27.828 -97.05</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptat2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptat2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::ptat2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-ptrf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::ptrf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.285 -82.733</gml:lowerCorner>
+            <gml:upperCorner>28.285 -82.733</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptrf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptrf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptrf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::ptrf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::ptrf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-rlot2">
+        <gml:name>urn:x-noaa:def:station:ndbc::rlot2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.515 -94.513</gml:lowerCorner>
+            <gml:upperCorner>29.515 -94.513</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rlot2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rlot2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rlot2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::rlot2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-rsjt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::rsjt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.801 -97.483</gml:lowerCorner>
+            <gml:upperCorner>26.801 -97.483</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2012-01-31T23:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rsjt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rsjt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rsjt2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::rsjt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-rtat2">
+        <gml:name>urn:x-noaa:def:station:ndbc::rtat2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.84 -97.073</gml:lowerCorner>
+            <gml:upperCorner>27.84 -97.073</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rtat2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rtat2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rtat2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::rtat2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-redfishpass">
+        <gml:name>urn:x-noaa:def:station:ndbc::redfishpass</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.55448 -82.17147</gml:lowerCorner>
+            <gml:upperCorner>26.55448 -82.17147</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-08-05T20:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::redfishpass:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::redfishpass:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::redfishpass"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-sanf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::sanf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>24.46 -81.88</gml:lowerCorner>
+            <gml:upperCorner>24.46 -81.88</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sanf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sanf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::sanf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-sauf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::sauf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.857 -81.265</gml:lowerCorner>
+            <gml:upperCorner>29.857 -81.265</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2009-09-08T19:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sauf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sauf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::sauf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-saxg1">
+        <gml:name>urn:x-noaa:def:station:ndbc::saxg1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>31.418 -81.295</gml:lowerCorner>
+            <gml:upperCorner>31.418 -81.295</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::saxg1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::saxg1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::saxg1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-sdrt2">
+        <gml:name>urn:x-noaa:def:station:ndbc::sdrt2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.407 -96.712</gml:lowerCorner>
+            <gml:upperCorner>28.407 -96.712</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sdrt2:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sdrt2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sdrt2:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sdrt2:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::sdrt2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-sgof1">
+        <gml:name>urn:x-noaa:def:station:ndbc::sgof1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.407 -84.863</gml:lowerCorner>
+            <gml:upperCorner>29.407 -84.863</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2009-09-08T19:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sgof1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sgof1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::sgof1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-shpf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::shpf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.06 -84.291</gml:lowerCorner>
+            <gml:upperCorner>30.06 -84.291</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shpf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shpf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shpf1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shpf1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::shpf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-sipm6">
+        <gml:name>urn:x-noaa:def:station:ndbc::sipm6</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.267 -89.017</gml:lowerCorner>
+            <gml:upperCorner>30.267 -89.017</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2008-01-01T08:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::sipm6:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::sipm6"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-slpl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::slpl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.3096 -91.3341</gml:lowerCorner>
+            <gml:upperCorner>29.3096 -91.3341</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition>2008-01-01T08:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::slpl1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::slpl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-smkf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::smkf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>24.627 -81.11</gml:lowerCorner>
+            <gml:upperCorner>24.627 -81.11</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::smkf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::smkf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::smkf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-spll1">
+        <gml:name>urn:x-noaa:def:station:ndbc::spll1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.867 -90.483</gml:lowerCorner>
+            <gml:upperCorner>28.867 -90.483</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:salinity.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::spll1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::spll1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-srst2">
+        <gml:name>urn:x-noaa:def:station:ndbc::srst2</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.683 -94.033</gml:lowerCorner>
+            <gml:upperCorner>29.683 -94.033</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2008-01-01T08:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::srst2:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::srst2:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::srst2"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-shellpoint">
+        <gml:name>urn:x-noaa:def:station:ndbc::shellpoint</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.52548 -82.00315</gml:lowerCorner>
+            <gml:upperCorner>26.52548 -82.00315</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-08-05T20:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shellpoint:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::shellpoint:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::shellpoint"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-taml1">
+        <gml:name>urn:x-noaa:def:station:ndbc::taml1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.18737 -90.66542</gml:lowerCorner>
+            <gml:upperCorner>29.18737 -90.66542</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2011-08-25T04:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::taml1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::taml1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::taml1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::taml1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::taml1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-tarf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::tarf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.156 -82.758</gml:lowerCorner>
+            <gml:upperCorner>28.156 -82.758</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::tarf1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::tarf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::tarf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-trbl1">
+        <gml:name>urn:x-noaa:def:station:ndbc::trbl1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.167 -90.583</gml:lowerCorner>
+            <gml:upperCorner>29.167 -90.583</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2010-11-24T01:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::trbl1:waterLevel.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::trbl1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::trbl1:winds.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::trbl1:salinity.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterLevel"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::trbl1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-venf1">
+        <gml:name>urn:x-noaa:def:station:ndbc::venf1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.07 -82.45</gml:lowerCorner>
+            <gml:upperCorner>27.07 -82.45</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2009-09-08T19:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::venf1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::venf1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::venf1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-wdel1">
+        <gml:name>urn:x-noaa:def:station:ndbc::wdel1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.662 -89.551</gml:lowerCorner>
+            <gml:upperCorner>28.662 -89.551</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2010-02-15T17:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::wdel1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::wdel1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::wdel1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-wkxa1">
+        <gml:name>urn:x-noaa:def:station:ndbc::wkxa1</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.415 -87.826</gml:lowerCorner>
+            <gml:upperCorner>30.415 -87.826</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition></gml:beginPosition>
+            <gml:endPosition>2010-02-12T22:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::wkxa1:waterTemperature.1"/>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::wkxa1:winds.1"/>
+        <observedProperty xlink:href="http://www.csc.noaa.gov/ioos/schema/IOOS-DIF/IOOS/0.6.1/dictionaries/phenomenaDictionary.xml#waterTemperature"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::wkxa1"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-apaebwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::apaebwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>29.7858 -84.8752</gml:lowerCorner>
+            <gml:upperCorner>29.7858 -84.8752</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-01-03T00:45:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::apaebwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::apaebwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-gndbcwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::gndbcwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.3836 -88.4364</gml:lowerCorner>
+            <gml:upperCorner>30.3836 -88.4364</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:45:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gndbcwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::gndbcwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-gndbhwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::gndbhwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.4178 -88.4054</gml:lowerCorner>
+            <gml:upperCorner>30.4178 -88.4054</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:45:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gndbhwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::gndbhwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-gndpcwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::gndpcwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.3486 -88.4185</gml:lowerCorner>
+            <gml:upperCorner>30.3486 -88.4185</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:45:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::gndpcwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::gndpcwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-marabwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::marabwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.9798 -97.0287</gml:lowerCorner>
+            <gml:upperCorner>27.9798 -97.0287</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:45:00Z</gml:beginPosition>
+            <gml:endPosition>2012-02-23T17:00:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::marabwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::marabwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-marcewq">
+        <gml:name>urn:x-noaa:def:station:ndbc::marcewq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.1323 -97.0344</gml:lowerCorner>
+            <gml:upperCorner>28.1323 -97.0344</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:30:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::marcewq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::marcewq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-marcwwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::marcwwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.0841 -97.2009</gml:lowerCorner>
+            <gml:upperCorner>28.0841 -97.2009</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::marcwwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::marcwwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-marmbwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::marmbwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>28.1384 -96.8285</gml:lowerCorner>
+            <gml:upperCorner>28.1384 -96.8285</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::marmbwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::marmbwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-marscwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::marscwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>27.8383 -97.0503</gml:lowerCorner>
+            <gml:upperCorner>27.8383 -97.0503</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:00:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::marscwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::marscwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-rkblhwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::rkblhwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>26.0257 -81.7332</gml:lowerCorner>
+            <gml:upperCorner>26.0257 -81.7332</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T05:45:00Z</gml:beginPosition>
+            <gml:endPosition indeterminatePosition="unknown"></gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::rkblhwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::rkblhwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+      <ObservationOffering gml:id="offering-wkbfrwq">
+        <gml:name>urn:x-noaa:def:station:ndbc::wkbfrwq</gml:name>
+        <gml:srsName>EPSG:4326</gml:srsName>
+        <gml:boundedBy>
+          <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>30.4162 -87.8228</gml:lowerCorner>
+            <gml:upperCorner>30.4162 -87.8228</gml:upperCorner>
+          </gml:Envelope>
+        </gml:boundedBy>
+        <time>
+          <gml:TimePeriod>
+            <gml:beginPosition>2011-00-01T06:45:00Z</gml:beginPosition>
+            <gml:endPosition>2011-10-28T19:45:00Z</gml:endPosition>
+          </gml:TimePeriod>
+        </time>
+        <procedure xlink:href="urn:x-noaa:def:sensor:ndbc::wkbfrwq:salinity.1"/>
+        <featureOfInterest xlink:href="urn:x-noaa:def:station:ndbc::wkbfrwq"/>
+        <responseFormat>text/xml;schema="ioos/0.6.1"</responseFormat>
+        <responseFormat>application/ioos+xml;version=0.6.1</responseFormat>
+        <resultModel>om:Observation</resultModel>
+        <responseMode>inline</responseMode>
+      </ObservationOffering>
+    </ObservationOfferingList>
+  </Contents>
+</Capabilities>
