@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2013 Intelligent Automation Inc. 
+ * 
+ * All Rights Reserved.
+ */
 package com.iai.proteus.p2;
 
 import org.eclipse.equinox.p2.engine.query.UserVisibleRootQuery;

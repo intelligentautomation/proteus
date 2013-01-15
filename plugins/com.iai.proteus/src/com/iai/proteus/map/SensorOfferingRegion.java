@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2013 Intelligent Automation Inc. 
+ * 
+ * All Rights Reserved.
+ */
 package com.iai.proteus.map;
 
 import gov.nasa.worldwind.geom.Sector;

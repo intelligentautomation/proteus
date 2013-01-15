@@ -1,4 +1,9 @@
-package com.iai.smt.plot;
+/*
+ * Copyright (C) 2013 Intelligent Automation Inc. 
+ * 
+ * All Rights Reserved.
+ */
+package com.iai.proteus.plot;
 
 import java.awt.Color;
 
