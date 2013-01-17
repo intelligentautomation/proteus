@@ -111,6 +111,9 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		final ToolItem toolItemMaps = new ToolItem(toolBar, SWT.RADIO);
 		toolItemMaps.setText("Maps");
 		toolItemMaps.setImage(UIUtil.getImage("icons/fugue/map.png"));
+		// TODO: not yet implemented 
+		toolItemMaps.setEnabled(false);
+		toolItemMaps.setToolTipText("Not yet implemented");
 
 		tabFolder = new CTabFolder(composite, SWT.BORDER);
 		tabFolder.setSimple(false);
@@ -235,7 +238,8 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 				toolItemRename.setEnabled(true);
 				// we can switch between sensors and maps stacks
 				toolItemSensors.setEnabled(true);
-				toolItemMaps.setEnabled(true);
+				// TOOD: should be true
+				toolItemMaps.setEnabled(false);
 				// the sensors stack is shown by default  
 				toolItemSensors.setSelection(true);
 				toolItemMaps.setSelection(false);

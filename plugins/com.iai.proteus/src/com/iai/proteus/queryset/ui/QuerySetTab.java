@@ -354,8 +354,8 @@ public class QuerySetTab extends CTabItem
 		 * Resources
 		 */
 		imgDocument = UIUtil.getImage("icons/fugue/document.png");
-		imgSectorSelection = UIUtil.getImage("icons/select.png");
-		imgSectorClear = UIUtil.getImage("icons/select_clear.png");
+		imgSectorSelection = UIUtil.getImage("icons/fugue/zone--plus.png");
+		imgSectorClear = UIUtil.getImage("icons/fugue/zone--minus.png");
 		imgLike = UIUtil.getImage("icons/fugue/star.png");
 		imgDislike = UIUtil.getImage("icons/fugue/star-empty.png");
 		imgSensors = UIUtil.getImage("icons/fugue/chart.png");
@@ -1241,6 +1241,8 @@ public class QuerySetTab extends CTabItem
 		btnContour.setImage(UIUtil.getImage("icons/fugue/spectrum.png"));
 		gridData = new GridData(SWT.NONE, SWT.FILL, false, true);
 		gridData.heightHint = 38;
+		// TODO: should be included when supported 
+		gridData.exclude = true;
 		btnContour.setLayoutData(gridData);
 		
 
