@@ -7,8 +7,6 @@ package com.iai.proteus.views;
 
 import gov.nasa.worldwind.geom.Sector;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -23,18 +21,24 @@ import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.part.ViewPart;
 
-import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.map.MarkerSelection;
 import com.iai.proteus.map.NotifyProperties;
 import com.iai.proteus.map.SelectionNotifier;
@@ -67,6 +71,8 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 
 	// selection provider intermediator
 	private SelectionProviderIntermediate intermediator;
+	
+	static Menu chevronMenu = null;
 
 
 	/**
@@ -88,16 +94,30 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		composite.setLayout(new GridLayout());
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
-		ToolBar toolBar = new ToolBar(composite, SWT.FLAT | SWT.RIGHT);
+		// The "CoolBar" 
+		final CoolBar coolBar = new CoolBar(composite, SWT.FLAT | SWT.RIGHT);
+		coolBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// add a toolbar to the cool bar
+		ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT | SWT.RIGHT);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 
+		int minWidth = 0; 
+		
+		// add tool items to the toolbar 
 		ToolItem toolItemNew = new ToolItem(toolBar, SWT.NONE);
 		toolItemNew.setText("New Query Set");
 		toolItemNew.setImage(UIUtil.getImage("icons/fugue/document--plus.png"));
+		// find minimum width
+		if (toolItemNew.getWidth() > minWidth)
+			minWidth = toolItemNew.getWidth();
 
 		final ToolItem toolItemRename = new ToolItem(toolBar, SWT.NONE);
 		toolItemRename.setText("Rename");
 		toolItemRename.setImage(UIUtil.getImage("icons/fugue/document-rename.png"));
+		// find minimum width
+		if (toolItemRename.getWidth() > minWidth)
+			minWidth = toolItemRename.getWidth();
 
 		// separator 
 		new ToolItem(toolBar, SWT.SEPARATOR);
@@ -105,7 +125,10 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		final ToolItem toolItemSensors = new ToolItem(toolBar, SWT.RADIO);
 		toolItemSensors.setText("Sensors");
 		toolItemSensors.setImage(UIUtil.getImage("icons/fugue/chart.png"));
-		// selected by default 
+		// find minimum width
+		if (toolItemSensors.getWidth() > minWidth)
+			minWidth = toolItemSensors.getWidth();
+		// selected by default
 		toolItemSensors.setSelection(true);
 
 		final ToolItem toolItemMaps = new ToolItem(toolBar, SWT.RADIO);
@@ -114,6 +137,80 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		// TODO: not yet implemented 
 		toolItemMaps.setEnabled(false);
 		toolItemMaps.setToolTipText("Not yet implemented");
+		// find minimum width		
+		if (toolItemMaps.getWidth() > minWidth)
+			minWidth = toolItemMaps.getWidth();
+
+		// create drop down cool item to the cool bar
+		CoolItem coolItem = new CoolItem(coolBar, SWT.DROP_DOWN);
+		coolItem.setControl(toolBar);
+		
+		Point toolBarSize = toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		Point coolItemSize = coolItem.computeSize(toolBarSize.x, toolBarSize.y);
+		coolItem.setMinimumSize(minWidth, coolItemSize.y);
+		coolItem.setPreferredSize(coolItemSize);
+		coolItem.setSize(coolItemSize);
+		coolItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				/*
+				 * NOTE (jhenriksson): Taken from Snippet140.java 
+				 * 
+				 * org.eclipse.swt.snippets/src/org/eclipse/swt/snippets/Snippet140.java
+				 */
+				if (event.detail == SWT.ARROW) {
+					CoolItem item = (CoolItem) event.widget;
+					Rectangle itemBounds = item.getBounds ();
+					Point pt = coolBar.toDisplay(new Point(itemBounds.x, itemBounds.y));
+					itemBounds.x = pt.x;
+					itemBounds.y = pt.y;
+					ToolBar bar = (ToolBar) item.getControl ();
+					ToolItem[] tools = bar.getItems ();
+					
+					int i = 0;
+					while (i < tools.length) {
+						Rectangle toolBounds = tools[i].getBounds ();
+						pt = bar.toDisplay(new Point(toolBounds.x, toolBounds.y));
+						toolBounds.x = pt.x;
+						toolBounds.y = pt.y;
+						
+						/* Figure out the visible portion of the tool by looking at the
+						 * intersection of the tool bounds with the cool item bounds. */
+				  		Rectangle intersection = itemBounds.intersection (toolBounds);
+				  		
+						/* If the tool is not completely within the cool item bounds, then it
+						 * is partially hidden, and all remaining tools are completely hidden. */
+				  		if (!intersection.equals (toolBounds)) break;
+				  		i++;
+					}
+					
+					/* Create a menu with items for each of the completely hidden buttons. */
+					if (chevronMenu != null) chevronMenu.dispose();
+					chevronMenu = new Menu (coolBar);
+					for (int j = i; j < tools.length; j++) {
+						MenuItem menuItem = new MenuItem (chevronMenu, SWT.PUSH);
+						menuItem.setText (tools[j].getText());
+						// jhenriksson: using the image as well, if it exists
+						Image image = tools[j].getImage();
+						if (image != null) {
+							menuItem.setImage(image);
+						}
+						// jhenriksson: set status
+						menuItem.setEnabled(tools[j].getEnabled());
+					}
+					
+					/* Drop down the menu below the chevron, with the left edges aligned. */
+					pt = coolBar.toDisplay(new Point(event.x, event.y));
+					chevronMenu.setLocation (pt.x, pt.y);
+					chevronMenu.setVisible (true);					
+				}
+			}
+		});
+		
+//		toolBar.setSize(toolBarSize);
+//		Point p2 = coolItem.computeSize(toolBarSize.x, toolBarSize.y);
+//		coolItem.setControl(toolBar);
+//		coolItem.setSize(p2);		
 
 		tabFolder = new CTabFolder(composite, SWT.BORDER);
 		tabFolder.setSimple(false);
@@ -400,15 +497,15 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 	 * @param offeringItems
 	 * @return
 	 */
-	private Collection<String> collectAvailableFormats(Collection<SensorOfferingItem> offeringItems) {
-		Collection<String> formats = new HashSet<String>();
-		for (SensorOfferingItem offeringItem : offeringItems) {
-			SensorOffering sensorOffering = offeringItem.getSensorOffering();
-			// add all
-			formats.addAll(sensorOffering.getResponseFormats());
-		}
-		return formats;
-	}
+//	private Collection<String> collectAvailableFormats(Collection<SensorOfferingItem> offeringItems) {
+//		Collection<String> formats = new HashSet<String>();
+//		for (SensorOfferingItem offeringItem : offeringItems) {
+//			SensorOffering sensorOffering = offeringItem.getSensorOffering();
+//			// add all
+//			formats.addAll(sensorOffering.getResponseFormats());
+//		}
+//		return formats;
+//	}
 
 	@Override
 	public void setFocus() {
