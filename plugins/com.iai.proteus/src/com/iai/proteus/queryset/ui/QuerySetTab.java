@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,11 +24,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -35,26 +38,30 @@ import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -65,6 +72,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -72,12 +80,15 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.joda.time.Period;
 
@@ -96,9 +107,14 @@ import com.iai.proteus.dialogs.ManageServicesDialog;
 import com.iai.proteus.dialogs.ServiceContentProvider;
 import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.map.WorldWindUtils;
+import com.iai.proteus.map.wms.WmsLayerInfo;
+import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
+import com.iai.proteus.model.map.WmsMapLayer;
+import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceRoot;
+import com.iai.proteus.model.services.ServiceType;
 import com.iai.proteus.plot.Variables;
 import com.iai.proteus.plot.VariablesHolder;
 import com.iai.proteus.queryset.DataExporter;
@@ -260,7 +276,28 @@ public class QuerySetTab extends CTabItem
 
 	private ToolItem itemClearProperties;
 	
+	/*
+	 * Maps
+	 */
 	
+	private Collection<WmsSavedMap> savedMaps;
+	
+	/*
+	 * UI for maps
+	 */
+
+	private TreeViewer treeViewerSavedMaps; 
+	
+	private FilteredTree treeFiltered;
+	private TreeViewer treeViewerWmsLayers;
+	private Tree treeWmsLayers;
+	
+	private ToolItem tltmDeleteSavedMap;
+	private ToolItem tltmSaveSelected;
+	
+	// to keep track of selected items
+	private int countSelectedWmsLayers = 0;
+	private int countSelectedSavedLayers = 0; 
 
 
 	// UI elements status
@@ -276,15 +313,13 @@ public class QuerySetTab extends CTabItem
 	private Image imgLike; 
 	private Image imgDislike;
 	private Image imgSensors;
-	private Image imgMap; 
-
-	/*
-	 * Colors
-	 */
-	private Color colorActiveOk;
-	private Color colorActiveWarning;
-	private Color colorInactiveOk;
-	private Color colorInactiveWarning;
+	private Image imgMap;
+	private Image imgDatabase;
+	private Image imgDelete;
+	private Image imgSave;
+	private Image imgRefresh;
+	private Image imgDotRed;
+	private Image imgDotGreen;
 
 	/*
 	 * UI labels and values
@@ -318,23 +353,12 @@ public class QuerySetTab extends CTabItem
 		this.site = site;
 		this.intermediator = intermediator;
 
-		/*
-		 * Colors
-		 */
-		colorActiveOk = SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-//		colorActiveOk = new Color(Display.getCurrent(), 216, 255, 216);
-		colorActiveWarning = SWTResourceManager.getColor(SWT.COLOR_DARK_RED);
-//		colorActiveWarning = new Color(Display.getCurrent(), 255, 170, 170);
-
-//		colorInactiveOk = new Color(Display.getCurrent(), 216, 255, 216);
-		colorInactiveOk = SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-//		colorInactiveWarning = new Color(Display.getCurrent(), 255, 170, 170);
-		colorInactiveWarning = SWTResourceManager.getColor(SWT.COLOR_DARK_RED);
-
 		tileStatus = new HashMap<Tile, Status>();
 
 		activeFacets = new HashSet<FacetChangeToggle>();
-
+		
+		savedMaps = new HashSet<WmsSavedMap>();
+		
 		/*
 		 * Initialize statuses
 		 */
@@ -360,6 +384,12 @@ public class QuerySetTab extends CTabItem
 		imgDislike = UIUtil.getImage("icons/fugue/star-empty.png");
 		imgSensors = UIUtil.getImage("icons/fugue/chart.png");
 		imgMap = UIUtil.getImage("icons/fugue/map.png");
+		imgDatabase = UIUtil.getImage("icons/fugue/database.png");
+		imgDelete = UIUtil.getImage("icons/fugue/cross.png");
+		imgSave = UIUtil.getImage("icons/fugue/disk-black.png");
+		imgRefresh = UIUtil.getImage("icons/fugue/arrow-circle-double-135.png");
+		imgDotRed = UIUtil.getImage("icons/dot-red.png");
+		imgDotGreen = UIUtil.getImage("icons/dot-green.png");
 
 		cursor = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
 
@@ -464,7 +494,7 @@ public class QuerySetTab extends CTabItem
 		tileServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		tileServices.setCursor(cursor);
 
-		createLiveTop(tileServices, "Services >");
+		createLiveTop(Tile.SERVICES, tileServices, "Services");
 		liveServices = createLiveTile(tileServices);
 		// set and update the live tile text
 		liveServices.setText("");
@@ -483,7 +513,7 @@ public class QuerySetTab extends CTabItem
 		tileGeographic.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tileGeographic.setCursor(cursor);
 
-		createLiveTop(tileGeographic, "Geographic area >");
+		createLiveTop(Tile.GEOGRAPHIC, tileGeographic, "Geographic area");
 		liveGeographic = createLiveTile(tileGeographic);
 		// set and update the live tile text
 		liveGeographic.setText("");
@@ -501,7 +531,7 @@ public class QuerySetTab extends CTabItem
 		tileTime.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tileTime.setCursor(cursor);
 
-		createLiveTop(tileTime, "Time >");
+		createLiveTop(Tile.TIME, tileTime, "Time");
 		liveTime = createLiveTile(tileTime);
 		// set and update the live tile text
 		liveTime.setText("");
@@ -519,7 +549,7 @@ public class QuerySetTab extends CTabItem
 		tileProperties.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tileProperties.setCursor(cursor);
 
-		createLiveTop(tileProperties, "Observed properties >");
+		createLiveTop(Tile.PROPERTIES, tileProperties, "Observed properties");
 		liveProperties = createLiveTile(tileProperties);
 		// set and update the live tile text
 		liveProperties.setText("");
@@ -537,11 +567,12 @@ public class QuerySetTab extends CTabItem
 		tileFormats.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tileFormats.setCursor(cursor);
 
-		createLiveTop(tileFormats, "Data formats >");
+		createLiveTop(Tile.FORMATS, tileFormats, "Data formats");
 		liveFormats = createLiveTile(tileFormats);
 		// set and update the live tile text
 		liveFormats.setText("");
 		updateLiveTileFormats(getActiveFormatRestriction(), 0);
+		
 
 		/*
 		 * PREVIEW
@@ -555,7 +586,7 @@ public class QuerySetTab extends CTabItem
 		tilePreview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tilePreview.setCursor(cursor);
 
-		createLiveTop(tilePreview, "Preview >");
+		createLiveTop(Tile.PREVIEW, tilePreview, "Preview");
 		livePreview = createLiveTile(tilePreview);
 		// set and update the live tile text
 		livePreview.setText("");
@@ -573,7 +604,7 @@ public class QuerySetTab extends CTabItem
 		tileExport.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tileExport.setCursor(cursor);
 
-		createLiveTop(tileExport, "Export sensor data >");
+		createLiveTop(Tile.EXPORT, tileExport, "Export sensor data");
 		liveExport = createLiveTile(tileExport);
 		// set and update the live tile text
 		liveExport.setText("");
@@ -615,7 +646,7 @@ public class QuerySetTab extends CTabItem
 
 		ToolItem itemServicesManage = new ToolItem(toolBarServices, SWT.NONE);
 		itemServicesManage.setText("Manage services");
-		itemServicesManage.setImage(UIUtil.getImage("icons/fugue/database.png"));
+		itemServicesManage.setImage(imgDatabase);
 		// manage services listener
 		itemServicesManage.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -628,8 +659,6 @@ public class QuerySetTab extends CTabItem
 				}
 			}
 		});
-
-//		new ToolItem(toolBarServices, SWT.SEPARATOR);
 
 //		ToolItem itemServicesAll = new ToolItem(toolBarServices, SWT.NONE);
 //		itemServicesAll.setText("All");
@@ -1359,67 +1388,6 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 
-
-		/*
-		 * Listeners
-		 */
-
-		// SERVICES
-		tileServices.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.SERVICES);
-			}
-		});
-
-		// GEOGRAPHIC
-		tileGeographic.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.GEOGRAPHIC);
-			}
-		});
-
-		// PROPERTIES
-		tileProperties.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.PROPERTIES);
-			}
-		});
-
-		// TIME
-		tileTime.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.TIME);
-			}
-		});
-
-		// FORMATS
-		tileFormats.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.FORMATS);
-			}
-		});
-
-		// PREVIEW
-		tilePreview.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.PREVIEW);
-			}
-		});
-
-		// SUMMARY
-		tileExport.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseDown(MouseEvent e) {
-				activateTile(Tile.EXPORT);
-			}
-		});
-		
 		// default stack 
 		compositeOuterLayout.topControl = sashSensors;
 		compositeOuterStack.layout();
@@ -1431,11 +1399,605 @@ public class QuerySetTab extends CTabItem
 		 */
 		
 		compositeMaps = new Composite(compositeOuterStack, SWT.NONE);
-		compositeMaps.setLayout(new GridLayout());
-		Label labelHolder = new Label(compositeMaps, SWT.NONE);
-		labelHolder.setText("Maps - not implemented");
-		labelHolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		compositeMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+				
+		
+		createMapsContents(compositeMaps);
+		
+		
+		/* 
+		 * Dispose listener
+		 */
+		addDisposeListener(new DisposeListener() {
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				disposeResources();
+			}
+		});		
 
+	}
+	
+	/**
+	 * Creates the UI for the map section of a Query Set tab  
+	 * 
+	 * @param parent
+	 */
+	private void createMapsContents(Composite parent) {
+		
+		parent.setLayout(new GridLayout(1, false));
+		
+		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		/*
+		 * Saved maps
+		 */
+		
+		Group groupMaps = new Group(sashForm, SWT.BORDER);
+		groupMaps.setLayout(new GridLayout(1, false));
+		groupMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		groupMaps.setText("Saved maps");
+		
+		ToolBar toolBarSavedMaps = new ToolBar(groupMaps, SWT.FLAT | SWT.RIGHT);
+		toolBarSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		tltmDeleteSavedMap = new ToolItem(toolBarSavedMaps, SWT.NONE);
+		tltmDeleteSavedMap.setText("Delete selected maps");
+		tltmDeleteSavedMap.setImage(imgDelete);
+		// disabled by default
+		tltmDeleteSavedMap.setEnabled(false);
+		
+		// listener to remove maps saved in the Query Set 
+		tltmDeleteSavedMap.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				
+				Collection<MapId> mapIdsToDelete = new ArrayList<MapId>();
+				ISelection selection = treeViewerSavedMaps.getSelection();
+				if (selection instanceof StructuredSelection) {
+					StructuredSelection structuredSelection = 
+							(StructuredSelection) selection;
+
+					int size = structuredSelection.size();
+					MessageDialog dialog = 
+							UIUtil.getConfirmDialog(site.getShell(), 
+									"Delete saved maps", 
+									"Are you sure you want to delete the " +
+											(size > 1 ? size + " ": "") + "selected " + 
+											(size > 1 ? "maps" : "map") + " from this query set?");
+					
+					int result = dialog.open();
+					// return and do nothing if the user cancels the action
+					if (result != MessageDialog.OK) {
+						return;
+					}
+					
+					Iterator<?> iter = structuredSelection.iterator();
+					while (iter.hasNext()) {
+						Object model = iter.next();
+						if (model instanceof WmsSavedMap) {
+							WmsSavedMap map = (WmsSavedMap) model;
+							// remove the selected map from the viewer input collection 
+							savedMaps.remove(map);
+							// remember the map IDs to be deleted from the map viewer
+							mapIdsToDelete.addAll(map.getMapIds());
+						}
+					}
+				}
+				
+				// update the UI
+				UIUtil.update(new Runnable() {
+					@Override
+					public void run() {
+						treeViewerSavedMaps.refresh();
+					}
+				});	
+				
+				// notify listeners that the maps with the given IDs should
+				// be deleted 
+				QuerySetEventNotifier.getInstance().fireEvent(this,
+						QuerySetEventType.QUERYSET_LAYERS_DELETE, 
+						mapIdsToDelete);
+			}
+		});
+		
+		treeViewerSavedMaps = new CheckboxTreeViewer(groupMaps, SWT.BORDER | SWT.MULTI);
+		Tree treeSavedMaps = treeViewerSavedMaps.getTree();
+		treeSavedMaps.setHeaderVisible(true);
+		treeSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		TreeViewerColumn treeViewerSavedMapName = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
+		TreeColumn trclmnSavedMapName = treeViewerSavedMapName.getColumn();
+		trclmnSavedMapName.setWidth(100);
+		trclmnSavedMapName.setText("Name");
+		treeViewerSavedMapName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsSavedMap) {
+					WmsSavedMap model = (WmsSavedMap) element;
+					return model.getWmsLayerTitle();
+				}
+				return "-";
+			}
+		});
+		
+		TreeViewerColumn treeViewerSavedMapUrl = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
+		TreeColumn trclmnSavedMapUrl = treeViewerSavedMapUrl.getColumn();
+		trclmnSavedMapUrl.setWidth(200);
+		trclmnSavedMapUrl.setText("Service URL");
+		treeViewerSavedMapUrl.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsSavedMap) {
+					WmsSavedMap model = (WmsSavedMap) element;
+					return model.getServiceEndpoint();
+				}
+				return "-";
+			}
+		});	
+		
+		TreeViewerColumn treeViewerSavedMapNotes = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
+		TreeColumn trclmnSavedMapNotes = treeViewerSavedMapNotes.getColumn();
+		trclmnSavedMapNotes.setWidth(200);
+		trclmnSavedMapNotes.setText("Notes");
+		treeViewerSavedMapNotes.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsSavedMap) {
+					WmsSavedMap model = (WmsSavedMap) element;
+					return model.getNotes();
+				}
+				return "-";
+			}
+		});	
+		
+		// listener to update tool bar items, based on selection 
+		treeViewerSavedMaps.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof StructuredSelection) {
+					StructuredSelection structuredSelection = 
+							(StructuredSelection) selection; 
+					// activate or deactivate relevant toolbar items
+					tltmDeleteSavedMap.setEnabled(!structuredSelection.isEmpty());
+				}
+			}
+		});
+		
+		/*
+		 * Add a listener to detect when items are clicked, to:
+		 * 
+		 * 1. Maintain model status (active vs. inactive) 
+		 * 2. Activate or deactivate relevant toolbar items 
+		 * 3. Notify listeners that a map was activated/deactivated  
+		 * 
+		 */
+		treeSavedMaps.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+//				Object item = e.item;
+//				if (item instanceof TreeItem) {
+//					TreeItem treeItem = (TreeItem) item;
+//					Object data = treeItem.getData();
+//					// only react to items with the right data model 
+//					if (data instanceof WmsSavedMap) {
+//						WmsSavedMap map = (WmsSavedMap) data;
+//						
+//						// special handling if the item was checked 
+//						if (e.detail == SWT.CHECK) {
+//							// maintain activity status of model object 
+//							map.setActive(treeItem.getChecked());
+//							
+//							 // notify listeners that the layer should be toggled 
+//							QuerySetEventNotifier.getInstance().fireEvent(map,
+//									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);						
+//						}
+//
+//						// keep track of selected items
+//						countSelectedSavedLayers += treeItem.getChecked() ? 1 : -1;
+//
+//						// activate or deactivate relevant toolbar items
+//						tltmDeleteSavedMap.setEnabled(countSelectedSavedLayers > 0);
+//					}
+//				}
+				
+				
+				if (e.detail == SWT.CHECK) {
+					Object item = e.item;
+					if (item instanceof TreeItem) {
+						TreeItem treeItem = (TreeItem) item;
+						Object data = treeItem.getData();
+						// only react to items with the right data model 
+						if (data instanceof WmsSavedMap) {
+							WmsSavedMap map = (WmsSavedMap) data;
+							
+							// maintain activity status of model object 
+							map.setActive(treeItem.getChecked());
+							
+//							// keep track of selected items
+//							countSelectedSavedLayers += treeItem.getChecked() ? 1 : -1;
+//							
+//							// activate or deactivate relevant toolbar items
+//							tltmDeleteSavedMap.setEnabled(countSelectedSavedLayers > 0);
+							
+							 // notify listeners that the layer should be toggled 
+							QuerySetEventNotifier.getInstance().fireEvent(map,
+									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);
+						}
+					}
+				}
+			}			
+		});			
+		
+		treeViewerSavedMaps.setContentProvider(new ContentProvider());
+		treeViewerSavedMaps.setInput(savedMaps);
+		
+		/*
+		 * Available maps 
+		 */
+		
+		Group groupWmsMaps = new Group(sashForm, SWT.BORDER);
+		groupWmsMaps.setLayout(new GridLayout(1, false));
+		groupWmsMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		groupWmsMaps.setText("Available maps");
+
+		SashForm sashFormMaps = new SashForm(groupWmsMaps, SWT.VERTICAL);
+		sashFormMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Composite compositeServices = new Composite(sashFormMaps, SWT.NONE);
+		compositeServices.setLayout(new GridLayout(1, false));
+		compositeServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		ToolBar toolBarServices = new ToolBar(compositeServices, SWT.FLAT | SWT.RIGHT);
+		toolBarServices.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		ToolItem tltmRefreshServices = new ToolItem(toolBarServices, SWT.NONE);
+		tltmRefreshServices.setText("Refresh");
+		tltmRefreshServices.setImage(imgRefresh);
+		// check all listener
+		tltmRefreshServices.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO: implement 
+			}
+		});		
+		
+		new ToolItem(toolBarServices, SWT.SEPARATOR);			
+		
+		ToolItem tltmManageServices = new ToolItem(toolBarServices, SWT.NONE);
+		tltmManageServices.setText("Manage services");
+		tltmManageServices.setImage(imgDatabase);
+		tltmManageServices.setEnabled(false);
+		
+		TreeViewer treeViewerServices = new TreeViewer(compositeServices, SWT.BORDER | SWT.FULL_SELECTION);
+		Tree treeServices = treeViewerServices.getTree();
+		treeServices.setHeaderVisible(true);
+		treeServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		TreeViewerColumn treeViewerColumnServiceName = new TreeViewerColumn(treeViewerServices, SWT.NONE);
+		TreeColumn trclmnServiceName = treeViewerColumnServiceName.getColumn();
+		trclmnServiceName.setWidth(200);
+		trclmnServiceName.setText("Service name");
+		treeViewerColumnServiceName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Service) {
+					Service model = (Service) element;
+					return model.getName();
+				}
+				return "-";		
+			}
+		});
+		
+		TreeViewerColumn treeViewerColumnServiceUrl = new TreeViewerColumn(treeViewerServices, SWT.NONE);
+		TreeColumn trclmnServiceUrl = treeViewerColumnServiceUrl.getColumn();
+		trclmnServiceUrl.setWidth(200);
+		trclmnServiceUrl.setText("Service URL");
+		treeViewerColumnServiceUrl.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Service) {
+					Service model = (Service) element;
+					return model.getServiceUrl();
+				}
+				return "-";
+			}
+		});	
+		
+		final Service currentlySelectedService = new Service(ServiceType.WMS);
+		final Service oldSelectedService = new Service(ServiceType.WMS);
+		
+		treeViewerServices.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structuredSelection = 
+							(IStructuredSelection) selection;
+					Object elmt = structuredSelection.getFirstElement();
+					if (elmt instanceof Service) {
+						final Service service = (Service) elmt; 
+						
+						// check if we have changed selection 
+						String currentEndpoint = 
+								currentlySelectedService.getServiceUrl();
+						if (currentEndpoint != null) {
+							// if we haven't changed service selection, 
+							// do nothing
+							if (service.getServiceUrl().equals(currentEndpoint)) 
+								return; 
+						}
+						
+						// remember old selection
+						oldSelectedService.setServiceUrl(currentlySelectedService.getServiceUrl());
+						
+						// remember last selected end point 
+						currentlySelectedService.setServiceUrl(service.getServiceUrl());
+						
+						// reset number of selected layers 
+						countSelectedWmsLayers = 0;
+						
+						// remove layers from previously selected service 
+						String oldEndpoint = oldSelectedService.getServiceUrl();
+						if (oldEndpoint != null) {
+
+							/*
+							 * notify listeners that all layers from 
+							 * the old service should be removed 
+							 */
+							QuerySetEventNotifier.getInstance().fireEvent(this,
+									QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
+									oldEndpoint);
+						} 						
+
+						// avoid running job in UI thread 
+						Job job = new Job("Contacting WMS service") {
+							protected IStatus run(IProgressMonitor monitor) { 
+								monitor.beginTask("Retrieving map layers from WMS", 
+										IProgressMonitor.UNKNOWN);
+								
+								// contact WMS service and request layers
+								Collection<WmsLayerInfo> layers = 
+										WmsUtil.getLayers(service.getServiceUrl());
+								
+								if (layers != null) {
+									
+									final Collection<WmsMapLayer> maps = new ArrayList<WmsMapLayer>();
+									for (WmsLayerInfo layerInfo : layers) {
+										// add object to model collection 
+										WmsMapLayer layer = new WmsMapLayer();
+										// set map layer properties 
+										layer.setServiceEndpoint(service.getServiceUrl());
+										layer.setName(layerInfo.getName());
+										layer.setWmsLayerTitle(layerInfo.getTitle());
+										maps.add(layer);
+									}
+
+									System.out.println("Maps: " + maps.size());
+
+									// update UI component 
+									UIUtil.update(new Runnable() {
+										@Override
+										public void run() {
+											// enable viewer
+											treeFiltered.setEnabled(true);
+											treeWmsLayers.setEnabled(true);
+											// update the input to the layer tree viewer 
+											treeViewerWmsLayers.setInput(maps);
+											treeViewerWmsLayers.refresh();
+										}
+									});
+
+								} else {
+									log.error("Something went wrong when contacting " + 
+											"the WMS at " + service.getServiceUrl());
+									
+									// update UI component 
+									UIUtil.update(new Runnable() {
+										@Override
+										public void run() {
+											// disable viewer
+											treeFiltered.setEnabled(false);
+											treeWmsLayers.setEnabled(false);
+											// disable tool items 
+											tltmSaveSelected.setEnabled(false);
+											// update the input to the layer tree viewer 
+											treeViewerWmsLayers.setInput(new Object[0]);
+											treeViewerWmsLayers.refresh();
+										}
+									});									
+									
+									UIUtil.showErrorMessage("Something went wrong when contacting WMS at: \n\n" + 
+											service.getServiceUrl() + ". \n\nPlease try again later.");
+								}								
+								
+								monitor.done(); 
+								return org.eclipse.core.runtime.Status.OK_STATUS; 
+							} 
+						}; 
+						job.setUser(true);
+						job.schedule();						
+
+					}
+				}
+			}
+		});
+		
+		Service service = new Service(ServiceType.WMS);
+		service.setName("NASA JPL Web Mapping Server");
+		service.setServiceUrl("http://wms.jpl.nasa.gov/wms.cgi");
+		ServiceRoot.getInstance().addService(service);
+
+		Service service2 = new Service(ServiceType.WMS);
+		service2.setName("U.S. Atlantic East Coast");
+		service2.setServiceUrl("http://coastalmap.marine.usgs.gov/wmsconnector/com.esri.wms.Esrimap/atlanticcoast");
+		ServiceRoot.getInstance().addService(service2);
+		
+		treeViewerServices.setContentProvider(new ContentProvider());
+		// TODO: only include WMS services 
+		treeViewerServices.setInput(ServiceRoot.getInstance().getServices());
+		
+		Composite compositeAvailableMapLayers = new Composite(sashFormMaps, SWT.NONE);
+		compositeAvailableMapLayers.setLayout(new GridLayout(1, false));
+		compositeAvailableMapLayers.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		ToolBar toolBarLayers = new ToolBar(compositeAvailableMapLayers, SWT.FLAT | SWT.RIGHT);
+		
+		tltmSaveSelected = new ToolItem(toolBarLayers, SWT.NONE);
+		tltmSaveSelected.setText("Save checked layers");
+		tltmSaveSelected.setImage(imgSave);
+		tltmSaveSelected.setEnabled(false);
+		
+		// handles saving maps to the Query Set 
+		tltmSaveSelected.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+					for (TreeItem item : treeWmsLayers.getItems()) {
+						if (item.getChecked()) {
+							Object data = item.getData();
+							// add the object that are of the right type 
+							if (data instanceof WmsMapLayer) {
+								WmsMapLayer mapLayer = (WmsMapLayer) data;
+								// convert the object to a sub-class 
+								WmsSavedMap map = WmsSavedMap.from(mapLayer);
+								savedMaps.add(map);
+							}
+						}
+					}
+					// update the UI
+					UIUtil.update(new Runnable() {
+						@Override
+						public void run() {
+							treeViewerSavedMaps.refresh();
+						}
+					});						
+			}
+		});
+		
+		PatternFilter filter = new PatternFilter() {
+			@Override
+			protected boolean isLeafMatch(final Viewer viewer, final Object element) {
+				TreeViewer treeViewer = (TreeViewer) viewer;
+				int numberOfColumns = treeViewer.getTree().getColumnCount();
+				boolean isMatch = false;
+				for (int columnIndex = 0; columnIndex < numberOfColumns; columnIndex++) {
+					ColumnLabelProvider labelProvider = 
+							(ColumnLabelProvider)treeViewer.getLabelProvider(columnIndex);
+					String labelText = labelProvider.getText(element);
+					isMatch |= wordMatches(labelText);
+				}
+				return isMatch;	
+			}
+		};
+		
+		treeFiltered = 
+				new FilteredTree(compositeAvailableMapLayers, SWT.BORDER | SWT.CHECK, filter, true);
+		// disabled by default 
+		treeFiltered.setEnabled(false);
+		treeViewerWmsLayers = treeFiltered.getViewer();
+		
+		treeWmsLayers = treeViewerWmsLayers.getTree();
+		// show headers 
+		treeWmsLayers.setHeaderVisible(true);
+		// disabled by default 
+		treeFiltered.setEnabled(false);
+		treeWmsLayers.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		TreeViewerColumn treeViewerColumnName = new TreeViewerColumn(treeViewerWmsLayers, SWT.NONE);
+		TreeColumn trclmnLayerName = treeViewerColumnName.getColumn();
+		trclmnLayerName.setWidth(100);
+		trclmnLayerName.setText("Name");
+		treeViewerColumnName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsMapLayer) {
+					WmsMapLayer model = (WmsMapLayer) element;
+					return model.getName();
+				}
+				return "-";
+			}
+		});
+		
+		TreeViewerColumn treeViewerColumnTitle = new TreeViewerColumn(treeViewerWmsLayers, SWT.NONE);
+		TreeColumn trclmnLayerTitle = treeViewerColumnTitle.getColumn();
+		trclmnLayerTitle.setWidth(100);
+		trclmnLayerTitle.setText("Title");
+		treeViewerColumnTitle.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsMapLayer) {
+					WmsMapLayer model = (WmsMapLayer) element;
+					return model.getWmsLayerTitle();
+				}
+				return "-";
+			}
+		});
+		
+		TreeViewerColumn treeViewerColumnService = new TreeViewerColumn(treeViewerWmsLayers, SWT.NONE);
+		TreeColumn trclmnService = treeViewerColumnService.getColumn();
+		trclmnService.setWidth(200);
+		trclmnService.setText("Service");
+		treeViewerColumnService.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsMapLayer) {
+					WmsMapLayer model = (WmsMapLayer) element;
+					return model.getServiceEndpoint();
+				}
+				return "-";
+			}
+		});	
+		
+		/*
+		 * Add a listener to detect when items are clicked, to:
+		 * 
+		 * 1. Maintain model status (active vs. inactive) 
+		 * 2. Activate or deactivate relevant toolbar items 
+		 * 3. Notify listeners that a map was activated/deactivated  
+		 * 
+		 */
+		treeWmsLayers.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (e.detail == SWT.CHECK) {
+					Object item = e.item;
+					if (item instanceof TreeItem) {
+						TreeItem treeItem = (TreeItem) item;
+						Object data = treeItem.getData();
+						// only react to items with the right data model 
+						if (data instanceof WmsMapLayer) {
+							WmsMapLayer mapLayer = (WmsMapLayer) data;
+							
+							// maintain activity status of model object 
+							mapLayer.setActive(treeItem.getChecked());
+							
+							// keep track of selected items
+							countSelectedWmsLayers += treeItem.getChecked() ? 1 : -1;
+							
+							// activate or deactivate relevant toolbar items
+							tltmSaveSelected.setEnabled(countSelectedWmsLayers > 0);
+							
+							 // notify listeners that the layer should be toggled 
+							QuerySetEventNotifier.getInstance().fireEvent(mapLayer,
+									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);
+						}
+					}
+				}
+			}			
+		});	
+		
+//		Collection<WmsLayer> fakeLayers = new ArrayList<WmsLayer>();
+//		fakeLayers.add(new WmsLayer("http://www.google.com/wms", "Layer name"));
+//		fakeLayers.add(new WmsLayer("http://www.google.com/wms2", "Another layer name"));
+//		fakeLayers.add(new WmsLayer("http://www.google.com/wms2", "Super super super super super super super super super super long layer name - ok"));
+
+		treeViewerWmsLayers.setContentProvider(new ContentProvider());
+//		treeViewerLayers.setLabelProvider(new WmsLayerLabelProvider());
+		// default - empty input 
+		treeViewerWmsLayers.setInput(new Object[0]);
+//		treeViewerLayers.setInput(fakeLayers);
 	}
 	
 	/**
@@ -1593,17 +2155,27 @@ public class QuerySetTab extends CTabItem
 	/**
 	 * Generate a StyledText widget as a header
 	 *
+	 * @param tile 
 	 * @param parent
 	 * @param title
 	 * @return
 	 */
-	private StyledText createLiveTop(Composite parent, String title) {
+	private Composite createLiveTop(final Tile tile, Composite parent, String title) {
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(2, false));
+		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		composite.setLayoutData(gd);
 
-		StyledText styledText = new StyledText(parent, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setLeftMargin(10);
-		styledText.setTopMargin(10);
-		styledText.setRightMargin(10);
-		styledText.setBottomMargin(10);
+		Label label = new Label(composite, SWT.NONE);
+		// default image
+		label.setImage(imgDotRed);
+
+		StyledText styledText = new StyledText(composite, SWT.READ_ONLY | SWT.WRAP);
+//		styledText.setLeftMargin(10);
+//		styledText.setTopMargin(10);
+//		styledText.setRightMargin(10);
+//		styledText.setBottomMargin(10);
 		styledText.setEnabled(false);
 		styledText.setBlockSelection(true);
 		styledText.setEditable(false);
@@ -1611,13 +2183,53 @@ public class QuerySetTab extends CTabItem
 		styledText.setCaret(null);
 		styledText.setAlignment(SWT.RIGHT);
 		styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		// set and update the live tile text
 		styledText.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.BOLD));
 		styledText.setAlignment(SWT.LEFT);
 		styledText.setText(title);
 
-		return styledText;
+		// add listeners 
+		Composite c = null;
+		switch (tile) {
+		case SERVICES:
+			c = tileServices;
+			break;
+		case GEOGRAPHIC: 
+			c = tileGeographic;
+			break;
+		case TIME: 
+			c = tileTime;
+			break;
+		case PROPERTIES:
+			c = tileProperties;
+			break;
+		case FORMATS:
+			c = tileFormats;
+			break;
+		case PREVIEW:
+			c = tilePreview;
+			break;
+		case EXPORT:
+			c = tileExport;
+			break;
+		}
+		
+		MouseAdapter adapter = new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent e) {
+					activateTile(tile);
+				}
+			};
+		
+		if (c != null) {
+			c.addMouseListener(adapter);
+		}
+		
+		composite.addMouseListener(adapter);
+		label.addMouseListener(adapter);
+		
+		return composite;
 	}
 
 	/**
@@ -2257,7 +2869,7 @@ public class QuerySetTab extends CTabItem
 	 * Implements the {@link MapIdentifier} interface
 	 */
 	@Override
-	public ArrayList<MapId> getMapIds() {
+	public Collection<MapId> getMapIds() {
 		return mapIds;
 	}
 
@@ -2664,114 +3276,88 @@ public class QuerySetTab extends CTabItem
 	/**
 	 * Updates the status of the given control
 	 *
-	 * @param c
-	 * @param status
-	 */
-	private void updateTileStatusOld(Control c, Status status) {
-		Color color = null;
-		switch (status) {
-		case ACTIVE_OK:
-			color = colorActiveOk;
-			break;
-		case ACTIVE_WARNING:
-			color = colorActiveWarning;
-			break;
-		case INACTIVE_OK:
-			color = colorInactiveOk;
-			break;
-		case INACTIVE_WARNING:
-			color = colorInactiveWarning;
-			break;
-		default:
-			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
-			break;
-		}
-		if (color != null) {
-			c.setBackground(color);
-		}
-
-		// update font settings
-		if (c instanceof StyledText) {
-			StyledText text = (StyledText) c;
-
-			StyleRange styleRange = new StyleRange();
-			styleRange.start = 0;
-			styleRange.length = text.getText().length();
-//			styleRange.fontStyle = SWT.BOLD;
-
-			if (status.equals(Status.ACTIVE_OK) ||
-					status.equals(Status.ACTIVE_WARNING)) {
-				styleRange.foreground =
-						SWTResourceManager.getColor(SWT.COLOR_WHITE);
-			} else {
-				styleRange.foreground =
-						SWTResourceManager.getColor(SWT.COLOR_BLACK);
-			}
-
-			text.setStyleRange(styleRange);
-		}
-	}
-
-	/**
-	 * Updates the status of the given control
-	 *
 	 * @param composite
 	 * @param status
 	 */
 	private void updateTileStatus(Composite composite, Status status) {
-		Color color = null;
 
+//		Color color = null;
+//
 		// decide colors
-		switch (status) {
-		case ACTIVE_OK:
-			color = colorActiveOk;
-			break;
-		case ACTIVE_WARNING:
-			color = colorActiveWarning;
-			break;
-		case INACTIVE_OK:
-			color = colorInactiveOk;
-			break;
-		case INACTIVE_WARNING:
-			color = colorInactiveWarning;
-			break;
-		case NONE:
-			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
-		default:
-			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
-			break;
-		}
-
-		// update color
-		if (color != null) {
-			composite.setBackground(color);
-		}
+//		switch (status) {
+//		case ACTIVE_OK:
+//			color = colorActiveOk;
+//			break;
+//		case ACTIVE_WARNING:
+//			color = colorActiveWarning;
+//			break;
+//		case INACTIVE_OK:
+//			color = colorInactiveOk;
+//			break;
+//		case INACTIVE_WARNING:
+//			color = colorInactiveWarning;
+//			break;
+//		case NONE:
+//			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
+//		default:
+//			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
+//			break;
+//		}
+//
+//		// update color
+//		if (color != null) {
+////			composite.setBackground(color);
+//		}
 
 		Control[] controls = composite.getChildren();
 		if (controls.length == 2) {
 			Control top = controls[0];
-			if (top instanceof StyledText) {
-				StyledText styledText = (StyledText) top;
-				// switch
-				switch (status) {
-				case ACTIVE_OK:
-				case ACTIVE_WARNING:
-//					styledText.setAlignment(SWT.RIGHT);
-					styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-					break;
-				case INACTIVE_OK:
-				case INACTIVE_WARNING:
-//					styledText.setAlignment(SWT.LEFT);
-					styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-					break;
+			if (top instanceof Composite) {
+				Composite comp = (Composite) top;
+				for (Control child : comp.getChildren()) {
+					if (child instanceof Label) {
+						Label label = (Label) child;
+						switch (status) {
+						case ACTIVE_OK:
+						case INACTIVE_OK:
+							label.setImage(imgDotGreen);
+							break;
+						case ACTIVE_WARNING:
+						case INACTIVE_WARNING:
+							label.setImage(imgDotRed);
+							break;
 
+						}	
+					} else if (child instanceof StyledText) {
+						StyledText styledText = (StyledText) child;
+						// switch
+						switch (status) {
+						case ACTIVE_OK:
+						case ACTIVE_WARNING:
+							styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+//							SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
+//							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+//							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
+							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+							break;
+						case INACTIVE_OK:
+						case INACTIVE_WARNING:
+							styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+							break;
+
+						}						
+					}
 				}
 			}
-			Control live = controls[1];
-			if (live instanceof Composite && color != null) {
-				live.setBackground(color);
-				live.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-			}
+			
+//			Control live = controls[1];
+//			if (live instanceof Composite && color != null) {
+////				live.setBackground(color);
+////				live.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+//			}
 		}
 	}
 
@@ -3217,24 +3803,49 @@ public class QuerySetTab extends CTabItem
 		INACTIVE_WARNING
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		imgDocument.dispose();
+	/*
+	 * Dispose of used resources 
+	 */
+	private void disposeResources() {
+		if (imgDocument != null)
+			imgDocument.dispose();
 		imgDocument = null;
-		imgSectorSelection.dispose();
+		if (imgSectorSelection != null)
+			imgSectorSelection.dispose();
 		imgSectorSelection = null;
-		imgSectorClear.dispose();
+		if (imgSectorClear != null)
+			imgSectorClear.dispose();
 		imgSectorClear = null;
-		imgLike.dispose();
+		if (imgLike != null)
+			imgLike.dispose();
 		imgLike = null;
-		imgDislike.dispose();
+		if (imgDislike != null)
+			imgDislike.dispose();
 		imgDislike = null;
-		imgSensors.dispose();
+		if (imgSensors != null)
+			imgSensors.dispose();
 		imgSensors = null;
-		imgMap.dispose();
+		if (imgMap != null)
+			imgMap.dispose();
 		imgMap = null;
-
+		if (imgDatabase != null)
+			imgDatabase.dispose();
+		imgDatabase = null;
+		if (imgDelete != null)
+			imgDelete.dispose();
+		imgDelete = null;
+		if (imgSave != null)
+			imgSave.dispose();
+		imgSave = null;
+		if (imgRefresh != null)
+			imgRefresh.dispose();
+		imgRefresh = null;
+		if (imgDotRed != null)
+			imgDotRed.dispose();
+		imgDotRed = null;
+		if (imgDotGreen != null)
+			imgDotGreen.dispose();
+		imgDotGreen = null;
 	}
 
 	/**

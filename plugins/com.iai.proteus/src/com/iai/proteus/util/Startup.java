@@ -47,11 +47,11 @@ import com.iai.proteus.BundleUtils;
 import com.iai.proteus.common.sos.GetCapabilities;
 import com.iai.proteus.common.sos.SosCapabilitiesCache;
 import com.iai.proteus.common.sos.model.SosCapabilities;
+import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.parser.LayerConfigParser;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceRoot;
 import com.iai.proteus.model.workspace.LayerRoot;
-import com.iai.proteus.model.workspace.MapLayer;
 import com.iai.proteus.model.workspace.Project;
 import com.iai.proteus.model.workspace.WorkspaceRoot;
 

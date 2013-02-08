@@ -38,11 +38,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.iai.proteus.Activator;
-import com.iai.proteus.map.wms.WMSUtil;
+import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.Model;
+import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceType;
-import com.iai.proteus.model.services.WmsMapLayer;
 import com.iai.proteus.model.workspace.Project;
 import com.iai.proteus.model.workspace.Provenance;
 import com.iai.proteus.model.workspace.QueryLayer;
@@ -189,7 +189,7 @@ public class WmsMapLayerViewer extends ViewPart
 
 									// update input
 									final Object[] layers =
-											WMSUtil.loadLayersFromWMS(service);
+											WmsUtil.loadLayersFromWMS(service);
 
 									UIUtil.update(new Runnable() {
 										@Override
@@ -433,7 +433,7 @@ public class WmsMapLayerViewer extends ViewPart
 			QueryWmsMap query = new QueryWmsMap();
 			query.setName(mapLayer.getName());
 			// set the map layer name
-			query.setWmsLayerName(mapLayer.getWmsLayerName());
+			query.setWmsLayerName(mapLayer.getWmsLayerTitle());
 			// set the provenance information for the query
 			query.setProvenance(new Provenance((Service)service.clone()));
 
@@ -472,7 +472,7 @@ public class WmsMapLayerViewer extends ViewPart
 			QueryWmsMap query = new QueryWmsMap();
 			query.setName(mapLayer.getName());
 			// set the map layer name
-			query.setWmsLayerName(mapLayer.getWmsLayerName());
+			query.setWmsLayerName(mapLayer.getWmsLayerTitle());
 			// set the provenance information for the query
 			query.setProvenance(new Provenance((Service)service.clone()));
 

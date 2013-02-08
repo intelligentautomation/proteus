@@ -41,7 +41,12 @@ public enum QuerySetEventType {
 	// used to plot data
 	QUERYSET_PREVIEW_PLOT,
 	
-
 	// used to notify filtered offering set changed
 	OFFERING_SET_OFFERING_LAYER_CONTRIBUTION_CHANGED,
+	
+	// used to toggle map layers
+	QUERYSET_MAP_TOGGLE_LAYER,
+	// used to remove layers from a given service 
+	QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
+	
 }

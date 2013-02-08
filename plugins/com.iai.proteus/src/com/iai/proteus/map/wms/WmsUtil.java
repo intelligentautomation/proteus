@@ -23,92 +23,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
+import org.apache.log4j.Logger;
 
 import com.iai.proteus.model.event.WorkspaceEventNotifier;
 import com.iai.proteus.model.event.WorkspaceEventType;
+import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.services.WmsMapLayer;
 
-public class WMSUtil {
+public class WmsUtil {
 	
-//	private static final Logger log = Logger.getLogger(WMSUtil.class);
-	
-	public static void test2(final Service service) {
-		Job job = new Job("Finding layers") {
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-
-					monitor.beginTask("Finding layers", 
-							IProgressMonitor.UNKNOWN);
-
-//					test3(service);
-
-				} finally {
-					monitor.done();
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		job.setUser(true);
-		job.schedule();		
-	}
-	
-	
-//	public static Collection<LayerInfo> test3(Service service) {
-//		
-//		String serviceUrl = service.getServiceUrl();
-//
-//		
-//		WMSCache cache = WMSCache.getInstance();
-//
-//		if (cache.contains(serviceUrl)) {
-//
-//			return cache.get(serviceUrl);
-//
-//		} else {
-//
-//			try {
-//
-//				String capabilities = Util.get(serviceUrl);
-//				File tmp = File.createTempFile("smt", "wms");
-//				FileUtils.write(tmp, capabilities);
-//
-//				Collection<LayerInfo> layerInfos = WMSUtil.getLayers(tmp);
-//
-//				cache.commit(serviceUrl, layerInfos);
-//				
-//				return layerInfos;
-//
-//			} catch (MalformedURLException e) {
-//				UIUtil.showErrorMessage("There was an error fetching the data");
-//				log.error("Malformed URL: " + e.getMessage());
-//			} catch (IOException e) {
-//				UIUtil.showErrorMessage("There was an error fetching the data");
-//				log.error("IOException: " + e.getMessage());
-//			}
-//
-//		}
-//
-//		if (layerInfos != null) {
-//
-//			treeLayers.removeAll();
-//
-//			for (LayerInfo layer : layerInfos) {
-//				TreeItem resultItem = new TreeItem(treeLayers, SWT.NONE);
-//				resultItem.setText(layer.getTitle());
-//				Service service = new Service(ServiceType.WMS);
-//				service.setServiceUrl(serviceUrl);
-//				resultItem.setData("service", service);
-//				resultItem.setData("layer", layer);
-//			}
-//		}
-//	}					
-
+	private static final Logger log = Logger.getLogger(WmsUtil.class);
 	
 	/**
 	 * Loads layers from a WMS 
@@ -118,20 +42,20 @@ public class WMSUtil {
 	 */
 	public static Object[] loadLayersFromWMS(Service service) {
 		
-		Collection<LayerInfo> layerInfos = 
-				WMSUtil.getLayers(service.getServiceUrl());
+		Collection<WmsLayerInfo> layerInfos = 
+				WmsUtil.getLayers(service.getServiceUrl());
 		
 		if (layerInfos == null || layerInfos.size() == 0)
 			// empty 
 			return new Object[0];
 		
 		Collection<WmsMapLayer> mapLayers = new ArrayList<WmsMapLayer>();
-		for (LayerInfo layerInfo : layerInfos) {
+		for (WmsLayerInfo layerInfo : layerInfos) {
 			WmsMapLayer mapLayer = new WmsMapLayer();
 			// set name of the model object 
 			mapLayer.setName(layerInfo.getTitle());
 			// set name of the WMS layer 
-			mapLayer.setWmsLayerName(layerInfo.getName());
+			mapLayer.setWmsLayerTitle(layerInfo.getName());
 			mapLayer.setParent(service);
 			
 			mapLayers.add(mapLayer);
@@ -145,7 +69,7 @@ public class WMSUtil {
 	 * @param file
 	 * @return
 	 */
-	public static Collection<LayerInfo> getLayers(File file) {
+	public static Collection<WmsLayerInfo> getLayers(File file) {
 		try {
 			WMSCapabilities caps = new WMSCapabilities(file);
 			caps.parse();
@@ -162,7 +86,7 @@ public class WMSUtil {
 	 * @return
 	 */
 	public static String getTitleFromCache(String serviceUrl) {
-		WMSCache cache = WMSCache.getInstance();
+		WmsCache cache = WmsCache.getInstance();
 		if (cache.contains(serviceUrl)) {
 			WMSCapabilities capabilities = cache.get(serviceUrl);
 			return capabilities.getServiceInformation().getServiceTitle();
@@ -172,22 +96,23 @@ public class WMSUtil {
 
 	/**
 	 * 
+	 * 
 	 * @param serviceUrl
 	 * @return
 	 */
-	public static Collection<LayerInfo> getLayers(String serviceUrl) {
+	public static Collection<WmsLayerInfo> getLayers(String serviceUrl) {
 
 		// check cache 
-		WMSCache cache = WMSCache.getInstance();
+		WmsCache cache = WmsCache.getInstance();
 		if (cache.containsLayers(serviceUrl))
 			return cache.getLayers(serviceUrl);
 		
-        try
-        {
+        try {
+        	
             WMSCapabilities caps = WMSCapabilities.retrieve(new URI(serviceUrl));
             caps.parse(); 
             
-            Collection<LayerInfo> layerInfos = getLayers(caps);
+            Collection<WmsLayerInfo> layerInfos = getLayers(caps);
 
             // commit Capabilities document 
             cache.commit(serviceUrl, caps);
@@ -195,13 +120,10 @@ public class WMSUtil {
             cache.commitLayers(serviceUrl, layerInfos);
         
             return layerInfos;
-        }
-        catch (URISyntaxException e) 
-        {
+            
+        } catch (URISyntaxException e) {
         	e.printStackTrace();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
@@ -210,13 +132,14 @@ public class WMSUtil {
 	
 	
 	/**
+	 * From NASA World Wind example 
 	 * 
 	 * @param serviceUrl
 	 * @return
 	 */
-	public static Collection<LayerInfo> getLayers(WMSCapabilities caps) {
+	public static Collection<WmsLayerInfo> getLayers(WMSCapabilities caps) {
 		
-		Collection<LayerInfo> layerInfos = new ArrayList<LayerInfo>();
+		Collection<WmsLayerInfo> layerInfos = new ArrayList<WmsLayerInfo>();
 		
         // Gather up all the named layers and make a world wind layer for each.
         final List<WMSLayerCapabilities> namedLayerCaps = caps.getNamedLayers();
@@ -227,29 +150,19 @@ public class WMSUtil {
             for (WMSLayerCapabilities lc : namedLayerCaps) {
             	
                 Set<WMSLayerStyle> styles = lc.getStyles();
-                if (styles == null || styles.size() == 0)
-                {
-                    LayerInfo layerInfo = createLayerInfo(caps, lc, null);
+                if (styles == null || styles.size() == 0) {
+                    WmsLayerInfo layerInfo = createLayerInfo(caps, lc, null);
                     layerInfos.add(layerInfo);
-                }
-                else
-                {
-                    for (WMSLayerStyle style : styles)
-                    {
-                        LayerInfo layerInfo = createLayerInfo(caps, lc, style);
+                } else {
+                    for (WMSLayerStyle style : styles) {
+                        WmsLayerInfo layerInfo = createLayerInfo(caps, lc, style);
                         layerInfos.add(layerInfo);
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-        
-        for (LayerInfo info : layerInfos) {
-        	System.out.println("NAME:" + info.getName()); 
         }
         
         return layerInfos;
@@ -261,11 +174,11 @@ public class WMSUtil {
 	 * @param layerName
 	 * @return
 	 */
-	public static LayerInfo getLayer(String serviceUrl, String layerName) 
+	public static WmsLayerInfo getLayer(String serviceUrl, String layerName) 
 	{
 		
-		Collection<LayerInfo> layerInfos = getLayers(serviceUrl);
-		for (LayerInfo layerInfo : layerInfos) {
+		Collection<WmsLayerInfo> layerInfos = getLayers(serviceUrl);
+		for (WmsLayerInfo layerInfo : layerInfos) {
 			if (layerInfo.getName().equals(layerName))
 				return layerInfo; 
 		}
@@ -278,82 +191,28 @@ public class WMSUtil {
 	 * @param service
 	 * @param name
 	 */
-	public static void toggleLayer(Service service, LayerInfo layerInfo, boolean checked) {
+	public static void toggleLayer(Service service, WmsLayerInfo layerInfo, boolean checked) {
 
 		WorkspaceEventNotifier.getInstance().fireEvent(layerInfo, 
 				WorkspaceEventType.WORKSPACE_WMS_TOGGLE, checked);
 
 	}
 
-	private void test() {
-		
-		String server = "http://firefly.geog.umd.edu/wms/wms";
-		
-		Collection<LayerInfo> layerInfos = new ArrayList<LayerInfo>();
-		
-        WMSCapabilities caps;
-
-        try
-        {
-            caps = WMSCapabilities.retrieve(new URI(server));
-            caps.parse();
-        }
-        catch (URISyntaxException e) 
-        {
-        	e.printStackTrace();
-        	return;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return;
-        }
-        
-        
-        // Gather up all the named layers and make a world wind layer for each.
-        final List<WMSLayerCapabilities> namedLayerCaps = caps.getNamedLayers();
-        if (namedLayerCaps == null)
-            return;
-
-        try
-        {
-            for (WMSLayerCapabilities lc : namedLayerCaps)
-            {
-                Set<WMSLayerStyle> styles = lc.getStyles();
-                if (styles == null || styles.size() == 0)
-                {
-                    LayerInfo layerInfo = createLayerInfo(caps, lc, null);
-                    layerInfos.add(layerInfo);
-                }
-                else
-                {
-                    for (WMSLayerStyle style : styles)
-                    {
-                        LayerInfo layerInfo = createLayerInfo(caps, lc, style);
-                        layerInfos.add(layerInfo);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return;
-        }
-        
-        
-        for (LayerInfo info : layerInfos) {
-        	System.out.println("NAME:" + info.getName()); 
-        }
-	}
-	
-    protected static LayerInfo createLayerInfo(WMSCapabilities caps, 
+	/**
+	 * From NASA World Wind example
+	 * 
+	 * @param caps
+	 * @param layerCaps
+	 * @param style
+	 * @return
+	 */
+    protected static WmsLayerInfo createLayerInfo(WMSCapabilities caps, 
     		WMSLayerCapabilities layerCaps, WMSLayerStyle style)
     {
         // Create the layer info specified by the layer's capabilities 
     	// entry and the selected style.
 
-        LayerInfo linfo = new LayerInfo();
+        WmsLayerInfo linfo = new WmsLayerInfo();
         linfo.caps = caps;
         linfo.params = new AVListImpl();
         linfo.params.setValue(AVKey.LAYER_NAMES, layerCaps.getName());
@@ -368,7 +227,14 @@ public class WMSUtil {
         return linfo;
     }
 
-    protected static String makeTitle(WMSCapabilities caps, LayerInfo layerInfo)
+    /**
+     * From NASA World Wind example 
+     * 
+     * @param caps
+     * @param layerInfo
+     * @return
+     */
+    protected static String makeTitle(WMSCapabilities caps, WmsLayerInfo layerInfo)
     {
         String layerNames = layerInfo.params.getStringValue(AVKey.LAYER_NAMES);
         String styleNames = layerInfo.params.getStringValue(AVKey.STYLE_NAMES);
@@ -403,17 +269,19 @@ public class WMSUtil {
     }
     
 	/**
-	 * 
+	 * From NASA World Wind example 
 	 * 
 	 * @param layerInfo
 	 * @return
 	 */
-	public static Object getWMSLayer(LayerInfo layerInfo) {
+	public static Object getWMSLayer(WmsLayerInfo layerInfo) {
 		
 		AVList params = layerInfo.getParams();
-        AVList configParams = params.copy(); // Copy to insulate changes from the caller.
+		// copy to insulate changes from the caller
+        AVList configParams = params.copy(); 
 
-        // Some wms servers are slow, so increase the timeouts and limits used by world wind's retrievers.
+        // Some wms servers are slow, so increase the timeouts and limits 
+        // used by world wind's retrievers.
         configParams.setValue(AVKey.URL_CONNECT_TIMEOUT, 30000);
         configParams.setValue(AVKey.URL_READ_TIMEOUT, 30000);
         configParams.setValue(AVKey.RETRIEVAL_QUEUE_STALE_REQUEST_LIMIT, 60000);
@@ -425,13 +293,12 @@ public class WMSUtil {
             String factoryKey = getFactoryKeyForCapabilities(caps);
             Factory factory = (Factory) WorldWind.createConfigurationComponent(factoryKey);
             
-            System.out.println("Contacting service...");
+            log.trace("Contacting WMS...");
             
             return factory.createFromConfigSource(caps, configParams);
-        }
-        catch (Exception e)
-        {
-            // Ignore the exception, and just return null.
+            
+        } catch (Exception e) {
+            // ignore the exception, and just return null.
         }
 
         return null;
@@ -439,6 +306,7 @@ public class WMSUtil {
 	}   
 	
 	/**
+	 * From NASA World Wind example 
 	 * 
 	 * @param caps
 	 * @return
@@ -448,10 +316,8 @@ public class WMSUtil {
         boolean hasApplicationBilFormat = false;
 
         Set<String> formats = caps.getImageFormats();
-        for (String s : formats)
-        {
-            if (s.contains("application/bil"))
-            {
+        for (String s : formats) {
+            if (s.contains("application/bil")) {
                 hasApplicationBilFormat = true;
                 break;
             }
@@ -460,9 +326,4 @@ public class WMSUtil {
         return hasApplicationBilFormat ? AVKey.ELEVATION_MODEL_FACTORY : AVKey.LAYER_FACTORY;
     }	
 	
-	
-	public static void main(String[] args) {
-		new WMSUtil().test();
-	}
-
 }

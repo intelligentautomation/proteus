@@ -16,6 +16,7 @@ import com.iai.proteus.common.sos.model.GetObservationRequest;
 import com.iai.proteus.model.Deletable;
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.Model;
+import com.iai.proteus.model.map.MapLayer;
 
 /**
  * Represents a workspace layer consisting of queries to Web services 

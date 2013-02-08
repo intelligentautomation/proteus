@@ -11,8 +11,8 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.workspace.MapLayer;
 
 /**
  * Represents all details for a query set

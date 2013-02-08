@@ -75,13 +75,14 @@ import com.iai.proteus.map.SensorOfferingMarker;
 import com.iai.proteus.map.SensorOfferingPlacemark;
 import com.iai.proteus.map.SensorOfferingRegion;
 import com.iai.proteus.map.WorldWindUtils;
-import com.iai.proteus.map.wms.LayerInfo;
-import com.iai.proteus.map.wms.WMSCache;
-import com.iai.proteus.map.wms.WMSUtil;
+import com.iai.proteus.map.wms.MapAVKey;
+import com.iai.proteus.map.wms.WmsCache;
+import com.iai.proteus.map.wms.WmsLayerInfo;
+import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
+import com.iai.proteus.model.map.MapLayer;
+import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.services.WmsMapLayer;
-import com.iai.proteus.model.workspace.MapLayer;
 import com.iai.proteus.model.workspace.Query;
 import com.iai.proteus.model.workspace.QuerySos;
 import com.iai.proteus.model.workspace.QueryWmsMap;
@@ -218,6 +219,10 @@ public class WorldWindView extends ViewPart
 		getWwd().getModel().getLayers().add(geoRssLayer);
 	}
 
+	/**
+	 * Create the control 
+	 * 
+	 */
 	@Override
 	public void createPartControl(final Composite parent) {
 
@@ -391,7 +396,7 @@ public class WorldWindView extends ViewPart
 	 *
 	 * @param mapId
 	 */
-	private void deleteLayers(List<MapId> mapIds) {
+	private void deleteLayers(Collection<MapId> mapIds) {
 		for (MapId mapId : mapIds) {
 			deleteLayer(mapId);
 		}
@@ -530,12 +535,12 @@ public class WorldWindView extends ViewPart
 
 				Service service = mapQuery.getProvenance().getService();
 
-				LayerInfo layerInfo =
-						WMSUtil.getLayer(service.getServiceUrl(),
+				WmsLayerInfo layerInfo =
+						WmsUtil.getLayer(service.getServiceUrl(),
 								mapQuery.getWmsLayerName());
 
 				// try and get the WMS layer from the source
-				Object wmsLayer = WMSUtil.getWMSLayer(layerInfo);
+				Object wmsLayer = WmsUtil.getWMSLayer(layerInfo);
 
 				if (wmsLayer != null && wmsLayer instanceof Layer) {
 					log.info("A layer was returned from WMS");
@@ -738,6 +743,7 @@ public class WorldWindView extends ViewPart
 		Object value = event.getValue();
 
 		switch (type) {
+		
 		case QUERYSET_INITIALIZE_LAYER:
 			/*
 			 * Initialize layer
@@ -763,9 +769,8 @@ public class WorldWindView extends ViewPart
 			/*
 			 * Delete layers
 			 */
-			if (value instanceof ArrayList<?>) {
-
-				deleteLayers((List<MapId>) value);
+			if (value instanceof Collection<?>) {
+				deleteLayers((Collection<MapId>)value);
 			}
 
 			break;
@@ -774,9 +779,9 @@ public class WorldWindView extends ViewPart
 			/*
 			 * Show a specific set of layers
 			 */
-			if (value instanceof ArrayList<?>) {
+			if (value instanceof Collection<?>) {
 
-				activateLayers((List<MapId>) value);
+				activateLayers((Collection<MapId>) value);
 			}
 
 			break;
@@ -846,6 +851,70 @@ public class WorldWindView extends ViewPart
 			}
 
 			break;
+			
+		case QUERYSET_MAP_TOGGLE_LAYER:
+
+			if (obj instanceof WmsMapLayer) {
+				WmsMapLayer mapLayer = (WmsMapLayer) obj;
+
+				/*
+				 * Check if it exists
+				 */
+				Layer layer = getLayer(mapLayer.getDefaultMapId());
+				if (layer != null) {
+					// if it does, toggle it and we're done
+					layer.setEnabled(mapLayer.isActive());
+					break;
+				}
+
+				/*
+				 * If it did not, try and get it
+				 */
+				Object wmsLayer = getWMSLayer(mapLayer);
+				
+				if (wmsLayer != null && wmsLayer instanceof Layer) {
+					log.trace("A layer was returned from WMS: " + wmsLayer);
+					Layer newLayer = (Layer) wmsLayer;
+					newLayer.setName(mapLayer.getDefaultMapId().toString());
+					newLayer.setEnabled(true);
+					// add attributes
+					newLayer.setValue(MapAVKey.WMS_SERVICE, 
+							mapLayer.getServiceEndpoint());
+					// add layer
+					getWwd().getModel().getLayers().add(newLayer);
+				} else {
+					log.warn("Return object was not a Layer object");
+				}
+				
+			}
+			
+			break;
+			
+		case QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE:
+			
+			/*
+			 * Removes layers from a WMS service that is no longer 
+			 * active. When the service is activated, new layers
+			 * will be created 
+			 */
+			if (value instanceof String) {
+				int count = 0;
+				LayerList layerList = getWwd().getModel().getLayers();
+				for (Layer layer : layerList) {
+					Object keyValue = layer.getValue(MapAVKey.WMS_SERVICE);
+					if (keyValue != null && keyValue instanceof String) {
+						if (keyValue.equals(value)) {
+							layerList.remove(layer);
+							log.trace("Removed layer " + layer.getName());
+							count++;
+						}
+					}
+				}
+				log.trace("Removed " + count + " layers related to: " + 
+						value);
+			}
+			
+			break;
 		}
 	}
 
@@ -899,7 +968,7 @@ public class WorldWindView extends ViewPart
 	 *
 	 * @param mapIds
 	 */
-	private void activateLayers(List<MapId> mapIds) {
+	private void activateLayers(Collection<MapId> mapIds) {
 
 		// hide other layers
 		for (Layer layer : getWwd().getModel().getLayers()) {
@@ -1205,7 +1274,7 @@ public class WorldWindView extends ViewPart
 
 					while (iterator.hasNext()) {
 						Object element = iterator.next();
-
+						
 						if (element instanceof SensorOfferingItem) {
 
 							SensorOffering sensorOffering =
@@ -1263,34 +1332,45 @@ public class WorldWindView extends ViewPart
 	}
 
 	/**
+	 * TODO: to write 
 	 *
 	 * @param mapLayer
 	 * @return
 	 */
 	private Object getWMSLayer(WmsMapLayer mapLayer) {
 
-		WMSCache cache = WMSCache.getInstance();
+		WmsCache cache = WmsCache.getInstance();
+		
+		String serviceEndpoint = mapLayer.getServiceEndpoint();
 
-		com.iai.proteus.model.Model parent = mapLayer.getParent();
-		if (parent instanceof Service) {
-			Service service = (Service) parent;
-
-			if (cache.containsLayers(service.getServiceUrl())) {
-				Collection<LayerInfo>  layerInfos =
-						cache.getLayers(service.getServiceUrl());
-				for (LayerInfo layerInfo : layerInfos) {
-
-					if (layerInfo.getName().equals(mapLayer.getWmsLayerName())) {
-
-						return WMSUtil.getWMSLayer(layerInfo);
-					}
+		if (cache.containsLayers(serviceEndpoint)) {
+			
+			System.out.println("OK, container the layers");
+			
+			Collection<WmsLayerInfo> layerInfos =
+					cache.getLayers(serviceEndpoint);
+			
+			System.out.println("Found " + layerInfos.size() + " layers");
+			
+			for (WmsLayerInfo layerInfo : layerInfos) {
+				
+				System.out.println("Comparing: " + layerInfo.getName() + 
+						" AND " + mapLayer.getName());
+				
+				System.out.println("TITLE: " + layerInfo.getTitle());
+				
+				if (layerInfo.getName().equals(mapLayer.getName())) {
+					return WmsUtil.getWMSLayer(layerInfo);
 				}
 			}
+			
+		} else {
 
+			// TODO: implement 
+			log.debug("Should try and fetch the layers...");
 		}
-
+		
 		log.warn("Something went wrong when getting a WMS layer");
-
 		return null;
 	}
 

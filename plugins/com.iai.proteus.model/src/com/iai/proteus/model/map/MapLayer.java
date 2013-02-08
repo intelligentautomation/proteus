@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.model.workspace;
+package com.iai.proteus.model.map;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.Model;
 import com.iai.proteus.model.event.WorkspaceEventType;
 import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.services.WmsMapLayer;
+import com.iai.proteus.model.workspace.QueryLayer;
 
 /**
  * A workspace model object that corresponds to a map layer 
@@ -223,4 +223,36 @@ public abstract class MapLayer extends Model {
 	public String toString() {
 		return "Map layer, IDs: " + Util.join(getMapIds(), ",");
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((mapIds == null) ? 0 : mapIds.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MapLayer other = (MapLayer) obj;
+		if (mapIds == null) {
+			if (other.mapIds != null)
+				return false;
+		} else if (!mapIds.equals(other.mapIds))
+			return false;
+		return true;
+	}
+	
 }

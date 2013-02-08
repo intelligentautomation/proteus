@@ -5,6 +5,8 @@
  */
 package com.iai.proteus.queryset.ui;
 
+import java.util.Collection;
+
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -15,10 +17,14 @@ public class ContentProvider implements ITreeContentProvider {
 	@Override
     public Object[] getChildren(Object parent) {
 
+		if (parent instanceof Collection) {
+			return ((Collection) parent).toArray();
+		}		
+		
 		/*
 		 * Sensor offerings
 		 */
-		if (parent instanceof SensorOfferingsHolder) {
+		else if (parent instanceof SensorOfferingsHolder) {
 			return ((SensorOfferingsHolder) parent).getSensorOfferings().toArray();
 		}
 		/*

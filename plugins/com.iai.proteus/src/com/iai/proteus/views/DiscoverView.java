@@ -135,7 +135,7 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		toolItemMaps.setText("Maps");
 		toolItemMaps.setImage(UIUtil.getImage("icons/fugue/map.png"));
 		// TODO: not yet implemented 
-		toolItemMaps.setEnabled(false);
+		toolItemMaps.setEnabled(true);
 		toolItemMaps.setToolTipText("Not yet implemented");
 		// find minimum width		
 		if (toolItemMaps.getWidth() > minWidth)
@@ -336,7 +336,7 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 				// we can switch between sensors and maps stacks
 				toolItemSensors.setEnabled(true);
 				// TOOD: should be true
-				toolItemMaps.setEnabled(false);
+				toolItemMaps.setEnabled(true);
 				// the sensors stack is shown by default  
 				toolItemSensors.setSelection(true);
 				toolItemMaps.setSelection(false);

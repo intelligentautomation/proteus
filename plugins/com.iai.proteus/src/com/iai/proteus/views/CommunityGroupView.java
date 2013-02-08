@@ -54,7 +54,8 @@ public class CommunityGroupView extends ViewPart {
 	}
 
 	/**
-	 * Create contents of the view part.
+	 * Create contents of the view part
+	 * 
 	 * @param parent
 	 */
 	@Override

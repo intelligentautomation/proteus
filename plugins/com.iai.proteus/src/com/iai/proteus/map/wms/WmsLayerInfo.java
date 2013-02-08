@@ -10,13 +10,16 @@ import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.ogc.wms.WMSCapabilities;
 
-public class LayerInfo {
+public class WmsLayerInfo {
 	
 	public WMSCapabilities caps;
 	public AVListImpl params = new AVListImpl();
 	
-	public LayerInfo() {
-		
+	/**
+	 * Constructor 
+	 */
+	public WmsLayerInfo() {
+
 	}
 
 	public String getTitle() {

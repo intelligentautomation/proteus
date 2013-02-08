@@ -15,8 +15,8 @@ import org.w3c.dom.Element;
 
 import com.iai.proteus.model.Deletable;
 import com.iai.proteus.model.Likable;
+import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.properties.SosServicePropertySource;
-import com.iai.proteus.model.workspace.MapLayer;
 
 /**
  * Represents a layer visible on a map 
