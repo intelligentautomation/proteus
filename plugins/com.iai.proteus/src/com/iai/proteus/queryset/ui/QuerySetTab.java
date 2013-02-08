@@ -285,6 +285,13 @@ public class QuerySetTab extends CTabItem
 	/*
 	 * UI for maps
 	 */
+	
+	private Composite compositeStackMaps;
+	private StackLayout compositeStackMapsLayout;
+	
+	// stack composites
+	private Composite compositeSavedMaps;
+	private Composite compositeAvailableMaps;
 
 	private TreeViewer treeViewerSavedMaps; 
 	
@@ -297,7 +304,6 @@ public class QuerySetTab extends CTabItem
 	
 	// to keep track of selected items
 	private int countSelectedWmsLayers = 0;
-	private int countSelectedSavedLayers = 0; 
 
 
 	// UI elements status
@@ -320,6 +326,8 @@ public class QuerySetTab extends CTabItem
 	private Image imgRefresh;
 	private Image imgDotRed;
 	private Image imgDotGreen;
+	private Image imgAddMap;
+	private Image imgBackControl;
 
 	/*
 	 * UI labels and values
@@ -390,6 +398,8 @@ public class QuerySetTab extends CTabItem
 		imgRefresh = UIUtil.getImage("icons/fugue/arrow-circle-double-135.png");
 		imgDotRed = UIUtil.getImage("icons/dot-red.png");
 		imgDotGreen = UIUtil.getImage("icons/dot-green.png");
+		imgAddMap = UIUtil.getImage("icons/fugue/map--plus.png");
+		imgBackControl = UIUtil.getImage("icons/fugue/control-180.png");
 
 		cursor = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
 
@@ -1401,9 +1411,7 @@ public class QuerySetTab extends CTabItem
 		compositeMaps = new Composite(compositeOuterStack, SWT.NONE);
 		compositeMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 				
-		
 		createMapsContents(compositeMaps);
-		
 		
 		/* 
 		 * Dispose listener
@@ -1422,18 +1430,37 @@ public class QuerySetTab extends CTabItem
 	 * 
 	 * @param parent
 	 */
-	private void createMapsContents(Composite parent) {
-		
-		parent.setLayout(new GridLayout(1, false));
-		
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+	private void createMapsContents(final Composite parent) {
+
+		compositeStackMapsLayout = new StackLayout();
+		parent.setLayout(compositeStackMapsLayout);
 		
 		/*
 		 * Saved maps
 		 */
 		
-		Group groupMaps = new Group(sashForm, SWT.BORDER);
+		compositeSavedMaps = new Composite(parent, SWT.NONE);
+		compositeSavedMaps.setLayout(new GridLayout(1, false));
+		compositeSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		// this is the default stack on top 
+		compositeStackMapsLayout.topControl = compositeSavedMaps;
+
+		// button for switching the stack to find more maps 
+		Button btnSwitchStackMoreMaps = new Button(compositeSavedMaps, SWT.NONE);
+		btnSwitchStackMoreMaps.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		btnSwitchStackMoreMaps.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// top the right stack on top 
+				compositeStackMapsLayout.topControl = compositeAvailableMaps;
+				parent.layout();				
+			}
+		});
+		btnSwitchStackMoreMaps.setText("Find maps");
+		btnSwitchStackMoreMaps.setImage(imgAddMap);		
+		
+		Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
 		groupMaps.setLayout(new GridLayout(1, false));
 		groupMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		groupMaps.setText("Saved maps");
@@ -1442,7 +1469,7 @@ public class QuerySetTab extends CTabItem
 		toolBarSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		tltmDeleteSavedMap = new ToolItem(toolBarSavedMaps, SWT.NONE);
-		tltmDeleteSavedMap.setText("Delete selected maps");
+		tltmDeleteSavedMap.setText("Delete maps");
 		tltmDeleteSavedMap.setImage(imgDelete);
 		// disabled by default
 		tltmDeleteSavedMap.setEnabled(false);
@@ -1515,11 +1542,41 @@ public class QuerySetTab extends CTabItem
 			public String getText(Object element) {
 				if (element instanceof WmsSavedMap) {
 					WmsSavedMap model = (WmsSavedMap) element;
+					return model.getName();
+				}
+				return "-";
+			}
+		});
+		
+		TreeViewerColumn treeViewerSavedMapTitle = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
+		TreeColumn trclmnSavedMapTitle = treeViewerSavedMapTitle.getColumn();
+		trclmnSavedMapTitle.setWidth(100);
+		trclmnSavedMapTitle.setText("Title");
+		treeViewerSavedMapTitle.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsSavedMap) {
+					WmsSavedMap model = (WmsSavedMap) element;
 					return model.getWmsLayerTitle();
 				}
 				return "-";
 			}
 		});
+
+		TreeViewerColumn treeViewerSavedMapNotes = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
+		TreeColumn trclmnSavedMapNotes = treeViewerSavedMapNotes.getColumn();
+		trclmnSavedMapNotes.setWidth(200);
+		trclmnSavedMapNotes.setText("Notes");
+		treeViewerSavedMapNotes.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof WmsSavedMap) {
+					WmsSavedMap model = (WmsSavedMap) element;
+					return model.getNotes();
+				}
+				return "-";
+			}
+		});		
 		
 		TreeViewerColumn treeViewerSavedMapUrl = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
 		TreeColumn trclmnSavedMapUrl = treeViewerSavedMapUrl.getColumn();
@@ -1531,21 +1588,6 @@ public class QuerySetTab extends CTabItem
 				if (element instanceof WmsSavedMap) {
 					WmsSavedMap model = (WmsSavedMap) element;
 					return model.getServiceEndpoint();
-				}
-				return "-";
-			}
-		});	
-		
-		TreeViewerColumn treeViewerSavedMapNotes = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
-		TreeColumn trclmnSavedMapNotes = treeViewerSavedMapNotes.getColumn();
-		trclmnSavedMapNotes.setWidth(200);
-		trclmnSavedMapNotes.setText("Notes");
-		treeViewerSavedMapNotes.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				if (element instanceof WmsSavedMap) {
-					WmsSavedMap model = (WmsSavedMap) element;
-					return model.getNotes();
 				}
 				return "-";
 			}
@@ -1569,40 +1611,12 @@ public class QuerySetTab extends CTabItem
 		 * Add a listener to detect when items are clicked, to:
 		 * 
 		 * 1. Maintain model status (active vs. inactive) 
-		 * 2. Activate or deactivate relevant toolbar items 
-		 * 3. Notify listeners that a map was activated/deactivated  
+		 * 2. Notify listeners that a map was activated/deactivated  
 		 * 
 		 */
 		treeSavedMaps.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				Object item = e.item;
-//				if (item instanceof TreeItem) {
-//					TreeItem treeItem = (TreeItem) item;
-//					Object data = treeItem.getData();
-//					// only react to items with the right data model 
-//					if (data instanceof WmsSavedMap) {
-//						WmsSavedMap map = (WmsSavedMap) data;
-//						
-//						// special handling if the item was checked 
-//						if (e.detail == SWT.CHECK) {
-//							// maintain activity status of model object 
-//							map.setActive(treeItem.getChecked());
-//							
-//							 // notify listeners that the layer should be toggled 
-//							QuerySetEventNotifier.getInstance().fireEvent(map,
-//									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);						
-//						}
-//
-//						// keep track of selected items
-//						countSelectedSavedLayers += treeItem.getChecked() ? 1 : -1;
-//
-//						// activate or deactivate relevant toolbar items
-//						tltmDeleteSavedMap.setEnabled(countSelectedSavedLayers > 0);
-//					}
-//				}
-				
-				
 				if (e.detail == SWT.CHECK) {
 					Object item = e.item;
 					if (item instanceof TreeItem) {
@@ -1614,12 +1628,6 @@ public class QuerySetTab extends CTabItem
 							
 							// maintain activity status of model object 
 							map.setActive(treeItem.getChecked());
-							
-//							// keep track of selected items
-//							countSelectedSavedLayers += treeItem.getChecked() ? 1 : -1;
-//							
-//							// activate or deactivate relevant toolbar items
-//							tltmDeleteSavedMap.setEnabled(countSelectedSavedLayers > 0);
 							
 							 // notify listeners that the layer should be toggled 
 							QuerySetEventNotifier.getInstance().fireEvent(map,
@@ -1633,11 +1641,48 @@ public class QuerySetTab extends CTabItem
 		treeViewerSavedMaps.setContentProvider(new ContentProvider());
 		treeViewerSavedMaps.setInput(savedMaps);
 		
+	
 		/*
 		 * Available maps 
 		 */
 		
-		Group groupWmsMaps = new Group(sashForm, SWT.BORDER);
+		// helps to keep track of selected WMS services 
+		final Service currentlySelectedService = new Service(ServiceType.WMS);
+		final Service oldSelectedService = new Service(ServiceType.WMS);
+		
+		
+		compositeAvailableMaps = new Composite(parent, SWT.NONE);
+		compositeAvailableMaps.setLayout(new GridLayout(1, false));
+		compositeAvailableMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		// button to switch stack to go back to saved maps 
+		Button btnSwitchStackBack = new Button(compositeAvailableMaps, SWT.NONE);
+		btnSwitchStackBack.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		btnSwitchStackBack.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				// remove layers from previously selected services 
+//				String endpoint = currentlySelectedService.getServiceUrl();
+//				if (endpoint != null) {
+//					/*
+//					 * notify listeners that all layers from 
+//					 * the old service should be removed 
+//					 */
+//					QuerySetEventNotifier.getInstance().fireEvent(this,
+//							QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
+//							endpoint);
+//				} 							
+				
+				// top the right stack on top 
+				compositeStackMapsLayout.topControl = compositeSavedMaps;
+				parent.layout();
+			}
+		});
+		btnSwitchStackBack.setText("Back to saved maps");
+		btnSwitchStackBack.setImage(imgBackControl);
+		
+		Group groupWmsMaps = new Group(compositeAvailableMaps, SWT.BORDER);
 		groupWmsMaps.setLayout(new GridLayout(1, false));
 		groupWmsMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		groupWmsMaps.setText("Available maps");
@@ -1661,7 +1706,8 @@ public class QuerySetTab extends CTabItem
 			public void widgetSelected(SelectionEvent e) {
 				// TODO: implement 
 			}
-		});		
+		});	
+		tltmRefreshServices.setEnabled(false);
 		
 		new ToolItem(toolBarServices, SWT.SEPARATOR);			
 		
@@ -1705,9 +1751,14 @@ public class QuerySetTab extends CTabItem
 			}
 		});	
 		
-		final Service currentlySelectedService = new Service(ServiceType.WMS);
-		final Service oldSelectedService = new Service(ServiceType.WMS);
-		
+		/*
+		 * Selection listener to the services viewer. 
+		 * 
+		 * The listener help to maintain which maps that should be visible in 
+		 * the map viewer. Maps from non-selected services are removed 
+		 * from preview.  
+		 * 
+		 */
 		treeViewerServices.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -1742,7 +1793,6 @@ public class QuerySetTab extends CTabItem
 						// remove layers from previously selected service 
 						String oldEndpoint = oldSelectedService.getServiceUrl();
 						if (oldEndpoint != null) {
-
 							/*
 							 * notify listeners that all layers from 
 							 * the old service should be removed 
@@ -1750,7 +1800,7 @@ public class QuerySetTab extends CTabItem
 							QuerySetEventNotifier.getInstance().fireEvent(this,
 									QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
 									oldEndpoint);
-						} 						
+						} 			
 
 						// avoid running job in UI thread 
 						Job job = new Job("Contacting WMS service") {
@@ -1846,7 +1896,7 @@ public class QuerySetTab extends CTabItem
 		ToolBar toolBarLayers = new ToolBar(compositeAvailableMapLayers, SWT.FLAT | SWT.RIGHT);
 		
 		tltmSaveSelected = new ToolItem(toolBarLayers, SWT.NONE);
-		tltmSaveSelected.setText("Save checked layers");
+		tltmSaveSelected.setText("Save checked maps");
 		tltmSaveSelected.setImage(imgSave);
 		tltmSaveSelected.setEnabled(false);
 		
@@ -1854,25 +1904,38 @@ public class QuerySetTab extends CTabItem
 		tltmSaveSelected.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-					for (TreeItem item : treeWmsLayers.getItems()) {
-						if (item.getChecked()) {
-							Object data = item.getData();
-							// add the object that are of the right type 
-							if (data instanceof WmsMapLayer) {
-								WmsMapLayer mapLayer = (WmsMapLayer) data;
-								// convert the object to a sub-class 
-								WmsSavedMap map = WmsSavedMap.from(mapLayer);
-								savedMaps.add(map);
-							}
+				int count = 0;
+				for (TreeItem item : treeWmsLayers.getItems()) {
+					if (item.getChecked()) {
+						Object data = item.getData();
+						// add the object that are of the right type 
+						if (data instanceof WmsMapLayer) {
+							WmsMapLayer mapLayer = (WmsMapLayer) data;
+							// convert the object to a sub-class 
+							WmsSavedMap map = WmsSavedMap.from(mapLayer);
+							savedMaps.add(map);
+							count++;
 						}
 					}
+				}
+				
+				if (count > 0) {
+				
+					// show message 
+					String msg = 
+							(count > 1 ? count : "One") + 
+							" map" + (count > 1 ? "s were" : " was") + 
+							" saved to your query set!";
+					UIUtil.showInfoMessage("Maps added to query set", msg);
+					
 					// update the UI
 					UIUtil.update(new Runnable() {
 						@Override
 						public void run() {
 							treeViewerSavedMaps.refresh();
 						}
-					});						
+					});
+				}
 			}
 		});
 		
@@ -3846,6 +3909,12 @@ public class QuerySetTab extends CTabItem
 		if (imgDotGreen != null)
 			imgDotGreen.dispose();
 		imgDotGreen = null;
+		if (imgAddMap != null)
+			imgAddMap.dispose();
+		imgAddMap = null;
+		if (imgBackControl != null) 
+			imgBackControl.dispose();
+		imgBackControl = null;
 	}
 
 	/**

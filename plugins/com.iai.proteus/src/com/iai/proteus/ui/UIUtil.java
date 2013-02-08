@@ -180,11 +180,19 @@ public class UIUtil {
 	 * @param msg
 	 */
 	public static void showInfoMessage(String msg) {
+		showInfoMessage("Information", msg);
+	}
+	
+	/**
+	 * Displays an information dialog box
+	 *
+	 * @param msg
+	 */
+	public static void showInfoMessage(String title, String msg) {
 		Shell shell =
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-//		Shell shell = new Shell(Display.getCurrent(), SWT.NONE);
-		MessageDialog.openInformation(shell, "Infomation", msg);
-	}
+		MessageDialog.openInformation(shell, title, msg);
+	}	
 
 	/**
 	 *
