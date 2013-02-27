@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Sensor Management" uid="com.iai.proteus.product" id="com.iai.proteus.product" application="com.iai.proteus.application" version="1.1.0" useFeatures="true" includeLaunchers="true">
+<product name="Sensor Management" uid="com.iai.proteus.product" id="com.iai.proteus.product" application="com.iai.proteus.application" version="1.2.0.beta" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/com.iai.proteus/icons/about.png"/>

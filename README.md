@@ -4,7 +4,7 @@ This repository contains the source code for Proteus. Proteus is a
 desktop client for sensor discovery and management developed by
 [Intelligent Automation Inc.](http://www.i-a-i.com)
 
-![proteus](https://raw.github.com/intelligentautomation/proteus/master/utilities/screenshots/proteus-1.1.0.beta.png)
+![proteus](https://raw.github.com/intelligentautomation/proteus/master/utilities/screenshots/proteus-1.2.0.beta.png)
 
 # Dependencies 
 

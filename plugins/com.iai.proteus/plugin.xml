@@ -397,7 +397,7 @@
          </property>
          <property
                name="aboutText"
-               value="A Client for Sensor Discovery and Management&#x0A;&#x0A;Version 1.1.0.beta&#x0A;&#x0A;Acknowledgments&#x0A;--&#x0A;Using Yusuke Kamiyamane's Fugue icon set under&#x0A;Creative Commons Attribution 3.0 License.&#x0A;http://p.yusukekamiyamane.com/">
+               value="Sensor Discovery Client&#x0A;&#x0A;Version 1.2.0.beta&#x0A;&#x0A;Acknowledgments&#x0A;--&#x0A;Using Yusuke Kamiyamane's Fugue icon set under&#x0A;Creative Commons Attribution 3.0 License.&#x0A;http://p.yusukekamiyamane.com/&#x0A;&#x0A;Developed under NASA funding.">
          </property>
          <property
                name="aboutImage"
