@@ -10,10 +10,6 @@ import java.io.Serializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.iai.proteus.model.event.WorkspaceEvent;
-import com.iai.proteus.model.event.WorkspaceEventNotifier;
-import com.iai.proteus.model.event.WorkspaceEventType;
-
 /**
  * Represents and abstract model object 
  * 
@@ -51,56 +47,6 @@ public abstract class Model implements Namable, Serializable {
 	@Override
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	
-	/**
-	 * Notifies listeners that there has been an update
-	 * 
-	 * @param instance The exact instance that was modified  
-	 */
-	public void fireUpdated() {
-		fireEvent(WorkspaceEventType.WORKSPACE_MODEL_UPDATED);
-	}
-	
-	/**
-	 * Update listeners 
-	 * 
-	 * @param eventObject
-	 * @param eventType 
-	 */	
-	public void fireEvent(WorkspaceEventType eventType) {
-		fireEvent(this, eventType, null);
-	}	
-	
-	/**
-	 * Update listeners 
-	 * 
-	 * @param eventObject
-	 * @param eventType 
-	 */	
-	public void fireEvent(WorkspaceEventType eventType, Object value) {
-		fireEvent(this, eventType, value);
-	}		
-	
-	/**
-	 * Update listeners 
-	 * 
-	 * @param eventObject
-	 * @param eventType 
-	 * @param value 
-	 */	
-	private void fireEvent(Object eventObject, WorkspaceEventType eventType, Object value) {
-		WorkspaceEvent event = new WorkspaceEvent(eventObject); 
-		event.setEventType(eventType); 
-		if (value != null)
-			event.setValue(value); 
-		
-		/*
-		 * The event is fired on listeners to the below object instead of 
-		 * listeners to the underlying event, this is done for convenience   
-		 */
-		WorkspaceEventNotifier.getInstance().fireEvent(this, eventType, value);
 	}
 	
 	@Override

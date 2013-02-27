@@ -17,21 +17,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -39,8 +28,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.iai.proteus.Activator;
 import com.iai.proteus.BundleUtils;
@@ -48,12 +35,8 @@ import com.iai.proteus.common.sos.GetCapabilities;
 import com.iai.proteus.common.sos.SosCapabilitiesCache;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.model.map.MapLayer;
-import com.iai.proteus.model.parser.LayerConfigParser;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceRoot;
-import com.iai.proteus.model.workspace.LayerRoot;
-import com.iai.proteus.model.workspace.Project;
-import com.iai.proteus.model.workspace.WorkspaceRoot;
 
 public class Startup {
 
@@ -68,42 +51,7 @@ public class Startup {
 	/*
 	 * File names
 	 */
-	public static String fileWorkspace = "workspace.xml";
 	public static String fileServices = "services.xml";
-	private static String fileFields = "fields.xml";
-
-    /**
-     * Loads the workspace from persisted state
-     *
-     */
-    public static void loadWorkspace() {
-
-    	File parent = Activator.stateLocation.toFile();
-    	File workspace = new File(parent, fileWorkspace);
-
-    	try {
-
-    		XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(
-    				new FileInputStream(workspace)));
-    		Object object = decoder.readObject();
-    		if (object instanceof WorkspaceRoot) {
-    			WorkspaceRoot root = (WorkspaceRoot) object;
-    			for (Project project : root) {
-    				WorkspaceRoot.getInstance().addProject(project);
-    				// deactivate all layers by default
-//    				for (QueryLayer layer : project) {
-//    					layer.deactivate();
-//    				}
-
-    			}
-    		}
-
-    	} catch (FileNotFoundException e) {
-    		log.error("Persisted workspace file: " +
-    				workspace.getAbsolutePath() + " not found");
-    	}
-    }
-
 
     /**
      * Loads the layer configuration from a configuration file
@@ -111,24 +59,6 @@ public class Startup {
      */
     public static void loadSetup() {
 
-		File parent = Activator.stateLocation.toFile();
-		File workspace = new File(parent, fileWorkspace);
-
-		/*
-		 * Create a parser and parse the configuration file
-		 */
-		new LayerConfigParser().createProjectsModel(workspace);
-    }
-
-    /**
-     * Returns true if the projects file exists, false otherwise
-     *
-     * @return
-     */
-    public static boolean workspaceFileExists() {
-		File parent = Activator.stateLocation.toFile();
-		File workspace = new File(parent, fileWorkspace);
-		return workspace.exists();
     }
 
     /**
@@ -149,23 +79,21 @@ public class Startup {
      */
     public static void createDefaultSetup() {
 
-    	/*
-    	 * First, project file
-    	 */
-    	String contents =
-    		BundleUtils.readBundleContents(Activator.PLUGIN_ID,
-    				"resources/" + Startup.fileWorkspace);
-
-		File parent = Activator.stateLocation.toFile();
-		File projects = new File(parent, fileWorkspace);
-
-		try {
-
-			FileUtils.write(projects, contents);
-
-		} catch (IOException e) {
-			log.error("Error writing default project: " + e.getMessage());
-		}
+//    	// get default file
+//    	String contents =
+//    		BundleUtils.readBundleContents(Activator.PLUGIN_ID,
+//    				"resources/" + "file.extension");
+//
+//		File parent = Activator.stateLocation.toFile();
+//		File projects = new File(parent, "file.extension");
+//
+//		try {
+//
+//			FileUtils.write(projects, contents);
+//
+//		} catch (IOException e) {
+//			log.error("Error writing default project: " + e.getMessage());
+//		}
 
 		/*
 		 * Second, capabilities documents
@@ -232,32 +160,6 @@ public class Startup {
     }
 
     /**
-     * Persists the workspace to disk
-     *
-     */
-    public static void saveWorkspace() {
-
-    	File parent = Activator.stateLocation.toFile();
-    	File workspace = new File(parent, fileWorkspace);
-
-    	// set specific bean serialization options
-    	controlBeanSerialization();
-
-    	try {
-
-    		XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(
-    				new FileOutputStream(workspace)));
-    		encoder.writeObject(WorkspaceRoot.getInstance());
-    		encoder.close();
-
-    	} catch (FileNotFoundException e) {
-    		log.error("Persisted workspace file: " +
-    				workspace.getAbsolutePath() + " not found");
-    	}
-
-    }
-
-    /**
      * Persists the services to disk
      *
      */
@@ -313,58 +215,6 @@ public class Startup {
     				e.getMessage());
     	}
     }
-
-    /**
-     * Saves the projects and sources setup to disk (serialized as XML)
-     *
-     */
-    public static void saveSetup() {
-
-		try {
-
-	        DocumentBuilderFactory factory =
-	        	DocumentBuilderFactory.newInstance();
-	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        Document document = builder.newDocument();
-
-	        Element root = LayerRoot.getInstance().serialize(document);
-	        document.appendChild(root);
-
-			// set up a transformer
-            TransformerFactory transfac = TransformerFactory.newInstance();
-            Transformer trans = transfac.newTransformer();
-            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-            trans.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            trans.setOutputProperty(OutputKeys.VERSION, "1.0");
-            trans.setOutputProperty(OutputKeys.INDENT, "yes");
-            trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount",
-            		"2");
-
-			// write XML tree to disk
-			File parent = Activator.stateLocation.toFile();
-			File projects = new File(parent, fileWorkspace);
-
-			FileWriter fw = new FileWriter(projects);
-
-			StreamResult result = new StreamResult(fw);
-			DOMSource source = new DOMSource(document);
-			trans.transform(source, result);
-
-			fw.close();
-
-			log.trace("Serialized layers to disk");
-
-		} catch (ParserConfigurationException e) {
-			log.error("Parser configuration error while serializing layers: " +
-					e.getMessage());
-		} catch (TransformerException e) {
-			log.error("Error while serializing layers: " + e.getMessage());
-		} catch (IOException e) {
-			log.error("IOException while serializing layers: " +
-					e.getMessage());
-		}
-    }
-
 
 	public static void storeCapabilities() {
 

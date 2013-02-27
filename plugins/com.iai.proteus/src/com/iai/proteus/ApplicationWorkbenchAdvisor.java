@@ -43,13 +43,11 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	public void preStartup() {
 		
 		/*
-		 * Check that a projects setup exists, otherwise create a default
-		 * one
+		 * Create default setup
 		 */
-		if (!Startup.workspaceFileExists()) {
-
+//		if (!Startup.workspaceFileExists()) {
 //			Startup.createDefaultSetup();
-		}
+//		}
 
 		/*
 		 * Create a default service if none exists
@@ -67,11 +65,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 		Startup.loadCapabilities();
 
 		/*
-		 * Load configuration file
-		 */
-		Startup.loadWorkspace();
-
-		/*
 		 * Load the services
 		 */
 		Startup.loadServices();
@@ -79,11 +72,6 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
 	@Override
 	public void postShutdown() {
-
-		/*
-		 * Saves the project and sources setup to disk
-		 */
-		Startup.saveWorkspace();
 
 		/*
 		 * Saves the services

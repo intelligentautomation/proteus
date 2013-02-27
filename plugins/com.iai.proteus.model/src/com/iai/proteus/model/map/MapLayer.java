@@ -9,9 +9,6 @@ import java.awt.Color;
 
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.Model;
-import com.iai.proteus.model.event.WorkspaceEventType;
-import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.workspace.QueryLayer;
 
 /**
  * A workspace model object that corresponds to a map layer 
@@ -131,62 +128,6 @@ public abstract class MapLayer extends Model implements IMapLayer {
 		return color;
 	}
 		
-
-	/**
-	 * Fire event stating that a layer was toggled 
-	 * 
-	 * (sending the relevant model object as an argument to the listener)
-	 * 
-	 */
-	public void fireToggleLayer() {
-		if (this instanceof QueryLayer) {
-			/*
-			 * Fire update to projects root
-			 */
-			QueryLayer queryLayer = (QueryLayer) this;
-			queryLayer.fireEvent(WorkspaceEventType.WORKSPACE_LAYER_TOGGLE);
-			
-		} else if (this instanceof Service) {
-			Service service = (Service) this;
-			/*
-			 * Fire update event
-			 */
-			service.fireEvent(WorkspaceEventType.WORKSPACE_LAYER_TOGGLE);
-			
-		} else if (this instanceof WmsMapLayer) {
-			WmsMapLayer mapLayer = (WmsMapLayer) this;
-			
-			mapLayer.fireEvent(WorkspaceEventType.WORKSPACE_WMS_TOGGLE);
-		}
-	}
-	
-	/**
-	 * Fire event stating that the layer should be deleted 
-	 * 
-	 * (sending the relevant model object as an argument to the listener)
-	 * 
-	 */
-	public void fireDeleteLayer() {
-		if (this instanceof Service) {
-			Service service = (Service)this;
-			/*
-			 * Fire update to delete layer 
-			 */
-			service.fireEvent(WorkspaceEventType.WORKSPACE_LAYER_DELETE);
-			
-		} else if (this instanceof WmsMapLayer) {
-			WmsMapLayer mapLayer = (WmsMapLayer) this;
-			/*
-			 * Request map layer to be deleted 
-			 */
-			mapLayer.fireEvent(WorkspaceEventType.WORKSPACE_LAYER_DELETE);
-		}
-	}
-	
-	public void fireChangeColor() {
-		fireEvent(WorkspaceEventType.WORKSPACE_LAYER_COLOR_CHANGE);
-	}
-	
 	@Override
 	public String toString() {
 		return "Map layer, ID: " + getMapId();

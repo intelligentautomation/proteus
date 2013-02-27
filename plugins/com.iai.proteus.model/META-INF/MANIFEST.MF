@@ -11,8 +11,6 @@ Require-Bundle: com.iai.proteus.common;bundle-version="1.0.0",
 Export-Package: com.iai.proteus.model,
  com.iai.proteus.model.event,
  com.iai.proteus.model.map,
- com.iai.proteus.model.parser,
  com.iai.proteus.model.properties,
- com.iai.proteus.model.services,
- com.iai.proteus.model.workspace
+ com.iai.proteus.model.services
 Bundle-ClassPath: .
