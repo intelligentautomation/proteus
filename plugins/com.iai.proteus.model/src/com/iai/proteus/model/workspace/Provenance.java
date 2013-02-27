@@ -27,7 +27,7 @@ public class Provenance extends Model implements IAdaptable {
 	
 	private Service service; 
 	
-	private transient SosServicePropertySource property; 	
+	private transient SosServicePropertySource property;
 	
 	/**
 	 * Default constructor

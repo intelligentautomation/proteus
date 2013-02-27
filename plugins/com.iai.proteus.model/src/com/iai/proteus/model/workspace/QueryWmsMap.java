@@ -19,38 +19,55 @@ public class QueryWmsMap extends Query {
 	private static final long serialVersionUID = 1L;
 	
 	/*
-	 * The name of the WMS layer 
+	 * The title of the WMS layer 
 	 */
-	private String wmsLayerName; 
+	private String wmsLayerTitle; 
+
+	/*
+	 * User's notes on the query/map 
+	 */
+	private String notes;
 	
 	/**
 	 * Default constructor 
 	 * 
 	 */
 	public QueryWmsMap() {
-		wmsLayerName = null;
+		wmsLayerTitle = null;
 	}
 	
 	/**
-	 * Returns the WMS layer name 
+	 * Returns the WMS layer title 
 	 * 
-	 * @return the wmsLayerName
+	 * @return the wmsLayerTitle
 	 */
-	public String getWmsLayerName() {
-		return wmsLayerName;
+	public String getWmsLayerTitle() {
+		return wmsLayerTitle;
 	}
 
 
 	/**
-	 * Sets the WMS layer name 
+	 * Sets the WMS layer title 
 	 * 
-	 * @param wmsLayerName the wmsLayerName to set
+	 * @param wmsLayerTitle the wmsLayerTitle to set
 	 */
-	public void setWmsLayerName(String wmsLayerName) {
-		this.wmsLayerName = wmsLayerName;
+	public void setWmsLayerTitle(String wmsLayerTitle) {
+		this.wmsLayerTitle = wmsLayerTitle;
 	}
 
+	/**
+	 * @return the notes
+	 */
+	public String getNotes() {
+		return notes;
+	}
 
+	/**
+	 * @param notes the notes to set
+	 */
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 	@Override
 	public Element serialize(Document document) {

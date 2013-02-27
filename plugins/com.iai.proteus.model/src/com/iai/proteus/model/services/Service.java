@@ -25,7 +25,7 @@ import com.iai.proteus.model.properties.SosServicePropertySource;
  *
  */
 public class Service extends MapLayer 
-	implements Cloneable, Deletable, Likable, IAdaptable 
+	implements Cloneable, Deletable, Likable, IAdaptable
 {
 	
 //	private static final Logger log = Logger.getLogger(Source.class);

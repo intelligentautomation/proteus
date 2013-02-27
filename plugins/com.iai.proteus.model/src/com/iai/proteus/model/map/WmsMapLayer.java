@@ -25,7 +25,7 @@ public class WmsMapLayer extends MapLayer {
 	private String serviceEndpoint;
 	
 	/*
-	 * The name of the WMS layer 
+	 * The title of the WMS layer 
 	 */
 	private String wmsLayerTitle;
 	

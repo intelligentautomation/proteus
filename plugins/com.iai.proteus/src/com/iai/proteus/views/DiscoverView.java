@@ -87,6 +87,10 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		intermediator = new SelectionProviderIntermediate();
 	}
 
+	/**
+	 * Create part contents 
+	 * 
+	 */
 	@Override
 	public void createPartControl(Composite parent) {
 
@@ -207,15 +211,9 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 			}
 		});
 		
-//		toolBar.setSize(toolBarSize);
-//		Point p2 = coolItem.computeSize(toolBarSize.x, toolBarSize.y);
-//		coolItem.setControl(toolBar);
-//		coolItem.setSize(p2);		
-
 		tabFolder = new CTabFolder(composite, SWT.BORDER);
 		tabFolder.setSimple(false);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
 
 		// create default query set
 		QuerySetTab querySetTab =
@@ -223,15 +221,13 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		// make the new tab the active one
 		tabFolder.setSelection(querySetTab);
 
-
 		/*
 		 * Add listeners
 		 *
 		 */
 		tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
-			/*
-			 * Listen to when tabs are closed and take appropriate action
-			 */
+			
+			// listen to when tabs are closed and take appropriate action
 			public void close(CTabFolderEvent event) {
 				if (event.item instanceof QuerySetTab) {
 					QuerySetTab querySetTab = (QuerySetTab) event.item;
@@ -241,7 +237,7 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 
 					QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
 							QuerySetEventType.QUERYSET_LAYERS_DELETE,
-							querySetTab.getMapIds());
+							querySetTab.getMapLayers());
 
 					/*
 					 * Disable actions if this was the last item
@@ -267,13 +263,18 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 				if (widget instanceof QuerySetTab) {
 					QuerySetTab querySetTab = (QuerySetTab) widget;
 
+					// clear the selection of services and maps for this 
+					// query set 
+					querySetTab.mapDiscoveryClearSelection();
+					
+					// refresh viewers, if necessary 
 					querySetTab.refreshViewers(); 
 					
 					// notify that we should switch tab 'context'
 					QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
 							QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-							querySetTab.getMapIds());
-
+							querySetTab.getMapLayers());
+					
 					// switch the selection provider
 					intermediator.setSelectionProviderDelegate(
 							querySetTab.getActiveSelectionProvider());
@@ -322,7 +323,7 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 				// notify that we should switch tab 'context'
 				QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
 						QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-						querySetTab.getMapIds());
+						querySetTab.getMapLayers());
 
 				// set the default selection provider
 				intermediator.setSelectionProviderDelegate(

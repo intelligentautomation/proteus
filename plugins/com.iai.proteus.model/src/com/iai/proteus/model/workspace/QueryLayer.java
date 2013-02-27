@@ -190,7 +190,7 @@ public class QueryLayer extends MapLayer
 				// associate the query with this ID 
 				query.setMapId(mapId);
 				// also inform the map layer about this ID  
-				addMapId(mapId);
+//				addMapId(mapId);
 			} else { 
 				log.warn("Did not expect Map ID to be null");
 			}
@@ -199,7 +199,7 @@ public class QueryLayer extends MapLayer
 			/*
 			 * If the query layer is empty, reuse the 'default' ID 
 			 */
-			query.setMapId(getDefaultMapId());
+			query.setMapId(getMapId());
 		}		
 		
 		// make this query layer the parent of the added query  

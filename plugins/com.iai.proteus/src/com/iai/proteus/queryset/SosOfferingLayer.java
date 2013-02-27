@@ -35,6 +35,7 @@ import com.iai.proteus.map.SensorOfferingMarker;
 import com.iai.proteus.map.SensorOfferingPlacemark;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.model.MapId;
+import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.queryset.ui.SensorOfferingItem;
 
 /**
@@ -45,14 +46,26 @@ import com.iai.proteus.queryset.ui.SensorOfferingItem;
  */
 public class SosOfferingLayer extends RenderableLayer
 	implements PropertyChangeListener, QuerySetContributor,
-		QuerySetMap
+		IMapLayer 
 {
 
 	private static final Logger log =
 		Logger.getLogger(SosOfferingLayer.class);
 
 	private WorldWindow world;
+	
+	// the map ID 
 	private MapId mapId;
+	
+	/*
+	 * Determines if the layer is active (visible) on the Map
+	 * 
+	 * NOTE: Currently we do not save the active state of a map layer. 
+	 *       It should be noted that XMLEncoder does not respect the
+	 *       transient keyword, instead we have to set the transient 
+	 *       status before serializing the object to disk. 
+	 */
+	private transient boolean active;	
 
 	// internal tools and layers
 	private SectorSelector selector;
@@ -98,6 +111,9 @@ public class SosOfferingLayer extends RenderableLayer
 		this.world = worldWindow;
 		this.selector = selector;
 		this.mapId = mapId;
+		
+		// default 
+		active = false;
 
 		// selection layer
 		layerSelection = new SelectionLayer(getWwd());
@@ -742,9 +758,9 @@ public class SosOfferingLayer extends RenderableLayer
 	}
 
 	/**
-	 * Returns the map layer model object
+	 * Returns the map ID
 	 *
-	 * Implements {@link QuerySetMap}
+	 * Implements {@link IMapLayer}
 	 *
 	 * @return
 	 */
@@ -753,6 +769,36 @@ public class SosOfferingLayer extends RenderableLayer
 		return mapId;
 	}
 
+	/**
+	 * Sets the map ID
+	 * 
+	 * Implements {@link IMapLayer}
+	 */
+	@Override
+	public void setMapId(MapId mapId) {
+		this.mapId = mapId;
+	}
+	
+	/**
+	 * Returns true if the layer is active, false otherwise 
+	 * 
+	 * Implements {@link IMapLayer}
+	 */
+	@Override
+	public boolean isActive() {
+		return active;
+	}
+	
+	/**
+	 * Sets the activity status of this layer 
+	 * 
+	 * Implements {@link IMapLayer}
+	 */
+	@Override
+	public void setActive(boolean status) {
+		this.active = status;
+	}
+	
 	/**
 	 * Clears the sector
 	 *

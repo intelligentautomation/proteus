@@ -78,13 +78,6 @@
             restorable="true">
       </view>
       <view
-            category="com.iai.proteus.views.category.proteus.extra"
-            class="com.iai.proteus.views.WmsMapLayerViewer"
-            icon="icons/fugue/map.png"
-            id="com.iai.proteus.discovery.views.WmsMapLayerViewer"
-            name="WMS Layers">
-      </view>
-      <view
             class="com.iai.proteus.views.CommunityGroupView"
             id="com.iai.proteus.views.CommunityGroupView"
             name="Community Groups">

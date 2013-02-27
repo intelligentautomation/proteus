@@ -80,12 +80,12 @@ import com.iai.proteus.map.wms.WmsCache;
 import com.iai.proteus.map.wms.WmsLayerInfo;
 import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
+import com.iai.proteus.model.SensorOfferingLayer;
+import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
+import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
-import com.iai.proteus.model.workspace.Query;
-import com.iai.proteus.model.workspace.QuerySos;
-import com.iai.proteus.model.workspace.QueryWmsMap;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
 import com.iai.proteus.queryset.QuerySetEvent;
@@ -329,16 +329,31 @@ public class WorldWindView extends ViewPart
 	}
 
 	/**
+	 * Returns the layer for the given @{link IMapLayer} 
+	 * 
+	 * @param mapLayer
+	 * @return
+	 */
+	private Layer getLayer(IMapLayer mapLayer) {
+		return getLayer(mapLayer.getMapId());
+	}
+	
+	/**
 	 * Returns the layer with the given map ID, null if it does not exist
 	 *
 	 * @param mapId
 	 * @return
 	 */
 	private Layer getLayer(MapId mapId) {
-		LayerList allLayers = getWwd().getModel().getLayers();
-		Layer layer = allLayers.getLayerByName(mapId.toString());
-		if (layer != null)
-			return layer;
+		for (Layer layer : getWwd().getModel().getLayers()) {
+			Object value = layer.getValue(MapAVKey.MAP_ID);
+			if (value != null && value instanceof String) {
+				String mapIdStr = (String) value;
+				if (mapId.toString().equals(mapIdStr)) {
+					return layer;
+				}
+			}
+		}
 		log.warn("Could not find the layer with map id: " + mapId);
 		return null;
 	}
@@ -350,17 +365,19 @@ public class WorldWindView extends ViewPart
 	 * @param mapLayer
 	 * @return
 	 */
-	private List<Layer> getLayers(MapLayer mapLayer) {
-		List<Layer> foundLayers = new ArrayList<Layer>();
-		LayerList allLayers = getWwd().getModel().getLayers();
-		for (MapId mapId : mapLayer.getMapIds()) {
-			Layer layer = allLayers.getLayerByName(mapId.toString());
-			if (layer != null)
-				// only add the layer if it did not already exist
-				if (!foundLayers.contains(layer))
-					foundLayers.add(layer);
-			else
-				log.warn("No layer found with ID: " + mapId);
+	private Collection<Layer> getLayers(MapLayer mapLayer) {
+		Collection<Layer> foundLayers = new ArrayList<Layer>();
+		LayerList layers = getWwd().getModel().getLayers();
+		for (Layer layer : layers) {
+			Object value = layer.getValue(MapAVKey.MAP_ID);
+			if (value != null && value instanceof String) {
+				String mapIdStr = (String) value;
+				if (mapLayer.getMapId().toString().equals(mapIdStr)) {
+					// only add the layer if it did not already exist
+					if (!foundLayers.contains(layer))
+						foundLayers.add(layer);
+				}
+			}
 		}
 		return foundLayers;
 	}
@@ -392,23 +409,23 @@ public class WorldWindView extends ViewPart
 
 
 	/**
-	 * Deletes layers with the given MapIds, if they exist
+	 * Deletes the given map layers (by @{link MapId}), if they exist
 	 *
-	 * @param mapId
+	 * @param mapLayers
 	 */
-	private void deleteLayers(Collection<MapId> mapIds) {
-		for (MapId mapId : mapIds) {
-			deleteLayer(mapId);
+	private void deleteLayers(Collection<IMapLayer> mapLayers) {
+		for (IMapLayer mapLayer : mapLayers) {
+			deleteLayer(mapLayer);
 		}
 	}
 
 	/**
-	 * Deletes a layer with a given MapId, if it exists
+	 * Deletes the given map layer (by @{link MapId}), if it exists
 	 *
-	 * @param mapId
+	 * @param mapLayer
 	 */
-	private void deleteLayer(MapId mapId) {
-		Layer layer = getLayer(mapId);
+	private void deleteLayer(IMapLayer mapLayer) {
+		Layer layer = getLayer(mapLayer);
 		if (layer != null) {
 			if (layer instanceof SosOfferingLayer) {
 				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
@@ -429,7 +446,7 @@ public class WorldWindView extends ViewPart
 		});
 	}
 
-	private void createOrUpdateSosLayer(final MapId mapId, final List<Service> services) {
+	private void createOrUpdateSosLayer(final IMapLayer mapLayer, final List<Service> services) {
 
 		Job job = new Job("Downloading Capabilities documents...") {
 			@Override
@@ -457,7 +474,7 @@ public class WorldWindView extends ViewPart
 					}
 
 					// create layer with markers using the default map ID
-					createOrUpdateSosLayerWithMarkers(mapId, allMarkers);
+					createOrUpdateSosLayerWithMarkers(mapLayer, allMarkers);
 
 				} finally {
 					monitor.done();
@@ -496,89 +513,28 @@ public class WorldWindView extends ViewPart
 
 
 	/**
-	 * Creates a layer from a list of queries. All queries are assumed
-	 * to be of the same type
-	 *
-	 * @param mapLayer
-	 * @param mapId
-	 * @param queries
-	 */
-	private void createLayerFromQueries(MapLayer mapLayer, MapId mapId,
-			List<Query> queries)
-	{
-
-		if (queries.size() > 0) {
-			Query query = queries.get(0);
-
-			/*
-			 * Since we assume all queries are of the same type we
-			 * do a type check based on the first element, if there is one
-			 */
-			if (query instanceof QuerySos) {
-
-				// collect the renderables for this layer
-				List<Renderable> markers =
-						WorldWindUtils.getOfferingMarkers(mapLayer,
-								queries);
-
-				// create layer with markers
-				createLayerWithMarkers(mapLayer, mapId, markers);
-
-			} else if (query instanceof QueryWmsMap) {
-
-				QueryWmsMap mapQuery = (QueryWmsMap) query;
-
-				/*
-				 * Assumption: each WMS map query has a unique
-				 *             map Id (hence, layer)
-				 */
-
-				Service service = mapQuery.getProvenance().getService();
-
-				WmsLayerInfo layerInfo =
-						WmsUtil.getLayer(service.getServiceUrl(),
-								mapQuery.getWmsLayerName());
-
-				// try and get the WMS layer from the source
-				Object wmsLayer = WmsUtil.getWMSLayer(layerInfo);
-
-				if (wmsLayer != null && wmsLayer instanceof Layer) {
-					log.info("A layer was returned from WMS");
-					Layer newLayer = (Layer) wmsLayer;
-					newLayer.setName(mapId.toString());
-					newLayer.setEnabled(true);
-					// add layer
-					getWwd().getModel().getLayers().add(newLayer);
-				}
-
-			}
-		} else {
-			log.warn("A qurey layer did not contain any queries, " +
-					"this was not expected.");
-		}
-
-	}
-
-	/**
 	 * Initialize a #{link SosOfferingLayer}
 	 *
-	 * @param mapId
+	 * @param offeringLayer
 	 */
-	private void initializeSosLayer(MapId mapId) {
-		SosOfferingLayer offeringLayer =
+	private void initializeSosLayer(SensorOfferingLayer offeringLayer) {
+		// create layer 
+		SosOfferingLayer layer =
 				new SosOfferingLayer(getWwd(),
-						createSectorSelector(), mapId);
+						createSectorSelector(), offeringLayer.getMapId());
+		// associate ID with layer 
+		layer.setValue(MapAVKey.MAP_ID, offeringLayer.getMapId().toString());
 		// add marker layer to World Wind
-		getWwd().getModel().getLayers().add(offeringLayer);
+		getWwd().getModel().getLayers().add(layer);
 	}
 
 	/**
 	 * Creates a layer with the given markers
 	 *
-	 * @param mapId
+	 * @param mapLayer
 	 * @param markers
 	 */
-	private void createOrUpdateSosLayerWithMarkers(final MapId mapId, final List<Renderable> markers)
+	private void createOrUpdateSosLayerWithMarkers(final IMapLayer mapLayer, final List<Renderable> markers)
 	{
 		/*
 		 * Create the layer if there are markers to add to it
@@ -587,7 +543,7 @@ public class WorldWindView extends ViewPart
 			@Override
 			public void run() {
 
-				Layer layer = getLayer(mapId);
+				Layer layer = getLayer(mapLayer);
 
 				if (layer != null && layer instanceof SosOfferingLayer) {
 
@@ -606,7 +562,10 @@ public class WorldWindView extends ViewPart
 						// the name of the layer is set automatically
 						SosOfferingLayer offeringLayer =
 								new SosOfferingLayer(getWwd(),
-										createSectorSelector(), mapId);
+										createSectorSelector(), mapLayer.getMapId());
+						// associate ID with layer 
+						offeringLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
+						// associate id with 
 						offeringLayer.setRenderables(markers);
 						offeringLayer.setEnabled(true);
 
@@ -617,16 +576,6 @@ public class WorldWindView extends ViewPart
 						log.warn("Tried to create a layer, but there were no markers.");
 					}
 				}
-
-
-				// the name of the layer is set automatically
-				//					SosOfferingLayer offeringLayer =
-				//							new SosOfferingLayer(getWwd(), selector, mapId);
-				//					offeringLayer.setRenderables(markers);
-				//					offeringLayer.setEnabled(true);
-
-				/* add marker layer to World Wind */
-				//					layers.add(offeringLayer);
 			}
 		}).start();
 	}
@@ -653,6 +602,8 @@ public class WorldWindView extends ViewPart
 					// the name of the layer is set automatically
 					SosOfferingLayer offeringLayer =
 							new SosOfferingLayer(getWwd(), selector, mapId);
+					// associate ID with layer 
+					offeringLayer.setValue(MapAVKey.MAP_ID, mapId.toString());
 					offeringLayer.setRenderables(markers);
 					offeringLayer.setEnabled(true);
 
@@ -667,44 +618,6 @@ public class WorldWindView extends ViewPart
 	}
 
 	/**
-	 * Creates a layer with the given markers
-	 *
-	 * @param mapLayer
-	 * @param mapId
-	 * @param markers
-	 */
-	private void createLayerWithMarkers(final MapLayer mapLayer,
-			final MapId mapId, final List<Renderable> markers)
-	{
-		/*
-		 * Create the layer if there are markers to add to it
-		 */
-		if (markers.size() > 0) {
-
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-
-					LayerList layers = getWwd().getModel().getLayers();
-
-					// the name of the layer is set automatically
-					SosOfferingLayer offeringLayer =
-							new SosOfferingLayer(getWwd(), selector, mapId);
-					offeringLayer.setRenderables(markers);
-					offeringLayer.setEnabled(mapLayer.isActive());
-
-					/* add marker layer to World Wind */
-					layers.add(offeringLayer);
-				}
-			}).start();
-
-		} else {
-			log.warn("Tried to create a layer, but there were no markers.");
-		}
-	}
-
-
-	/**
 	 * Initializes the selection of a sector
 	 *
 	 */
@@ -714,7 +627,6 @@ public class WorldWindView extends ViewPart
 		this.selector.setInteriorColor(new Color(1f, 1f, 1f, 0.1f));
 		this.selector.setBorderColor(new Color(1f, 0f, 0f, 0.5f));
 		this.selector.setBorderWidth(3);
-
 	}
 
 	/**
@@ -748,8 +660,8 @@ public class WorldWindView extends ViewPart
 			/*
 			 * Initialize layer
 			 */
-			if (value instanceof MapId) {
-				initializeSosLayer((MapId) value);
+			if (value instanceof SensorOfferingLayer) {
+				initializeSosLayer((SensorOfferingLayer) value);
 			}
 
 			break;
@@ -758,9 +670,9 @@ public class WorldWindView extends ViewPart
 			/*
 			 * Toggle layer
 			 */
-			if (obj instanceof List<?> && value instanceof MapId) {
+			if (obj instanceof List<?> && value instanceof IMapLayer) {
 
-				setServices((MapId) value, (ArrayList<?>) obj);
+				setServices((IMapLayer) value, (ArrayList<?>) obj);
 			}
 
 			break;
@@ -770,7 +682,8 @@ public class WorldWindView extends ViewPart
 			 * Delete layers
 			 */
 			if (value instanceof Collection<?>) {
-				deleteLayers((Collection<MapId>)value);
+				
+				deleteLayers((Collection<IMapLayer>)value);
 			}
 
 			break;
@@ -780,8 +693,8 @@ public class WorldWindView extends ViewPart
 			 * Show a specific set of layers
 			 */
 			if (value instanceof Collection<?>) {
-
-				activateLayers((Collection<MapId>) value);
+				
+				activateLayers((Collection<IMapLayer>) value);
 			}
 
 			break;
@@ -857,29 +770,41 @@ public class WorldWindView extends ViewPart
 			if (obj instanceof WmsMapLayer) {
 				WmsMapLayer mapLayer = (WmsMapLayer) obj;
 
-				/*
-				 * Check if it exists
-				 */
-				Layer layer = getLayer(mapLayer.getDefaultMapId());
+				// check if the layer exists
+				Layer layer = getLayer(mapLayer.getMapId());
 				if (layer != null) {
-					// if it does, toggle it and we're done
+					
+					// toggle the layer  
 					layer.setEnabled(mapLayer.isActive());
+					
+					// check if we should remove the 'preview' tag 
+					if (obj instanceof WmsSavedMap)
+						layer.removeKey(MapAVKey.WMS_MAP_PREVIEW);
+
+					// we're done
 					break;
 				}
-
+				
 				/*
 				 * If it did not, try and get it
 				 */
-				Object wmsLayer = getWMSLayer(mapLayer);
+				Object wmsLayer = getWmsLayer(mapLayer);
 				
 				if (wmsLayer != null && wmsLayer instanceof Layer) {
 					log.trace("A layer was returned from WMS: " + wmsLayer);
 					Layer newLayer = (Layer) wmsLayer;
-					newLayer.setName(mapLayer.getDefaultMapId().toString());
+					newLayer.setName(mapLayer.getMapId().toString());
 					newLayer.setEnabled(true);
-					// add attributes
-					newLayer.setValue(MapAVKey.WMS_SERVICE, 
+
+					// set attributes
+					newLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
+					newLayer.setValue(MapAVKey.WMS_SERVICE_URL, 
 							mapLayer.getServiceEndpoint());
+					if (!(obj instanceof WmsSavedMap))
+						// indicates that the layer is a preview from a WMS
+						// in contrast to a saved map 
+						newLayer.setValue(MapAVKey.WMS_MAP_PREVIEW, true);
+						
 					// add layer
 					getWwd().getModel().getLayers().add(newLayer);
 				} else {
@@ -888,22 +813,45 @@ public class WorldWindView extends ViewPart
 				
 			}
 			
-			break;
+			break;			
 			
 		case QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE:
-			
+
+			/*
+			 * Remove all layers with associated 
+			 */
+			if (value == null) {
+				
+				LayerList layerList = getWwd().getModel().getLayers();
+				for (Layer layer : layerList) {
+					Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
+					Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
+					// only remove the layer if it has an associated service
+					// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
+					if (valueServiceUrl != null && valueServiceUrl instanceof String
+							&& valuePreview != null && (Boolean)valuePreview) {
+						layerList.remove(layer);
+						log.trace("Removed layer " + layer.getName());
+					}
+				}
+			}
 			/*
 			 * Removes layers from a WMS service that is no longer 
 			 * active. When the service is activated, new layers
 			 * will be created 
 			 */
-			if (value instanceof String) {
+			else if (value instanceof String) {
+				
 				int count = 0;
 				LayerList layerList = getWwd().getModel().getLayers();
 				for (Layer layer : layerList) {
-					Object keyValue = layer.getValue(MapAVKey.WMS_SERVICE);
-					if (keyValue != null && keyValue instanceof String) {
-						if (keyValue.equals(value)) {
+					Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
+					Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
+					// only remove the layer if it has an associated service
+					// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
+					if (valueServiceUrl != null && valueServiceUrl instanceof String
+							&& valuePreview != null && (Boolean)valuePreview) {
+						if (valueServiceUrl.equals(value)) {
 							layerList.remove(layer);
 							log.trace("Removed layer " + layer.getName());
 							count++;
@@ -912,7 +860,7 @@ public class WorldWindView extends ViewPart
 				}
 				log.trace("Removed " + count + " layers related to: " + 
 						value);
-			}
+			} 
 			
 			break;
 		}
@@ -921,10 +869,10 @@ public class WorldWindView extends ViewPart
 	/**
 	 * Toggles the services on or off for the given map (query set)
 	 *
-	 * @param mapId
+	 * @param mapLayer
 	 * @param serviceObjects
 	 */
-	private void setServices(MapId mapId, List<?> serviceObjects) {
+	private void setServices(IMapLayer mapLayer, List<?> serviceObjects) {
 		List<Service> services = new ArrayList<Service>();
 		for (Object obj : serviceObjects) {
 			if (obj instanceof Service) {
@@ -932,60 +880,60 @@ public class WorldWindView extends ViewPart
 			}
 		}
 		// create the layer for the first time
-		createOrUpdateSosLayer(mapId, services);
+		createOrUpdateSosLayer(mapLayer, services);
 	}
-
-	/**
-	 * Toggles the services on or off for the given map (query set)
-	 *
-	 * @param map
-	 * @param service
-	 */
-	private void toggleService(MapIdentifier map, Service service) {
-		Layer layer = getLayer(map.getDefaultMapId());
-		if (layer != null) {
-			if (layer instanceof SosOfferingLayer) {
-				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
-				if (service.isActive()) {
-					// add the service
-//					offeringLayer.
-//					service.get
-
-				} else {
-					// remove the service
-				}
-			} else {
-				log.error("The layer we are modifying is not an SosOfferingLayer.");
-			}
-		} else {
-			// create the layer for the first time
-			createSosLayer(map.getDefaultMapId(), service);
-		}
-	}
-
+	
 	/**
 	 * Activate the layers with the matching IDs, hide other layers
 	 *
-	 * @param mapIds
+	 * @param mapLayers
 	 */
-	private void activateLayers(Collection<MapId> mapIds) {
+	private void activateLayers(Collection<IMapLayer> mapLayers) {
 
-		// hide other layers
 		for (Layer layer : getWwd().getModel().getLayers()) {
-			if (layer instanceof SosOfferingLayer) {
-				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
-				if (mapIds.contains(offeringLayer.getMapId())) {
-					// show layers with given IDs
-					offeringLayer.setEnabled(true);
-					offeringLayer.showSector();
-				} else {
-					// hide other layers
-					offeringLayer.setEnabled(false);
-					offeringLayer.hideSector();
+			
+			boolean found = false;
+			
+			Object obj = layer.getValue(MapAVKey.MAP_ID);
+			if (obj != null && obj instanceof String) {
+				String mapIdStr = (String) obj;
+
+				for (IMapLayer mapLayer : mapLayers) {
+					// we found a matching map layer
+					if (mapLayer.getMapId().toString().equals(mapIdStr)) {
+
+						// enable layers appropriately 
+						if (layer instanceof SosOfferingLayer) {
+							layer.setEnabled(true);
+						} else {
+							layer.setEnabled(mapLayer.isActive());
+						}
+						
+						// indicate that we found the layer we were looking for
+						found = true;
+						break;
+					}
+				}
+				
+				// if the layer was not found, but did have a 
+				// {@link MapAVKey.MAP_ID} value, disable the layer
+				// because it is not part of our context
+				if (!found) {
+					layer.setEnabled(false);
+				}
+				
+				// special handling of @{link SosOfferingLayer} 
+				if (layer instanceof SosOfferingLayer) {
+					SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
+					if (found) {
+						offeringLayer.showSector();
+					} else {
+						offeringLayer.hideSector();
+					}					
 				}
 			}
 		}
-	}
+	}	
 
 	/**
 	 * Enables geographical region selection in a @{link SosOfferingLayer}.
@@ -1017,190 +965,6 @@ public class WorldWindView extends ViewPart
 			}
 		}
 	}
-
-//
-//	/**
-//	 * Handles events
-//	 *
-//	 * @param event
-//	 */
-//	@Override
-//	public void workspaceModelUpdate(WorkspaceEvent event) {
-//
-//		Object obj = event.getEventObject();
-//		final Object value = event.getValue();
-//		WorkspaceEventType type = event.getEventType();
-//
-//		switch (type) {
-//			case WORKSPACE_LAYER_TOGGLE:
-//				/*
-//				 * Toggle layer
-//				 */
-//				if (obj instanceof MapLayer)
-//					toggleLayer((MapLayer) obj);
-//
-//				break;
-//
-//			case WORKSPACE_LAYER_DELETE:
-//				/*
-//				 * Delete layer
-//				 */
-//				if (obj instanceof MapLayer) {
-//					deleteLayers((MapLayer) obj);
-//				}
-//
-//				break;
-//
-//			case WORKSPACE_LAYER_RECREATE:
-//				/*
-//				 * Re-create layer
-//				 */
-//				if (obj instanceof MapLayer) {
-//					recreateMapLayer((MapLayer)obj);
-//				}
-//
-//				break;
-//
-//			case WORKSPACE_LAYER_COLOR_CHANGE:
-//				/*
-//				 * Update layer
-//				 */
-//				if (obj instanceof MapLayer)
-//					updateColorOfLayer((MapLayer) obj);
-//
-//				break;
-//
-//			case WORKSPACE_MODEL_UPDATED:
-//
-//				/*
-//				 * Recreate layer reflecting changes to query layer
-//				 */
-//				if (obj instanceof QueryLayer) {
-//
-//					// if we are based a Query as the value of the event
-//					// make use of it to optimize the re-creation process
-//					if (value != null && value instanceof Query) {
-//						Query query = (Query) value;
-//
-//						recreateMapLayer((QueryLayer) obj, query);
-//
-//					} else {
-//
-//						recreateMapLayer((QueryLayer) obj);
-//					}
-//				}
-//
-//				break;
-//
-//			case WORKSPACE_FLY_TO_OFFERING:
-//				if (value instanceof LatLon) {
-//					LatLon ll = (LatLon)value;
-//					/*
-//					 * Fly to location
-//					 */
-//					PointOfInterest point =
-//						WorldWindUtils.getPointOfInterest(ll.getLat(),
-//								ll.getLon());
-//
-//					WorldWindUtils.moveToLocation(getWwd().getView(), point);
-//				}
-//				break;
-//
-//			case WORKSPACE_WMS_TOGGLE:
-//
-//				if (obj instanceof WmsMapLayer) {
-//					WmsMapLayer mapLayer = (WmsMapLayer) obj;
-//
-//					/*
-//					 * Check if it exists
-//					 */
-//					Layer layer = getLayer(mapLayer.getDefaultMapId());
-//					if (layer != null) {
-//						// if it does, toggle it and we're done
-//						layer.setEnabled(mapLayer.isActive());
-//						break;
-//					}
-//
-//					/*
-//					 * If it did not, try and get it
-//					 */
-//					Object wmsLayer = getWMSLayer(mapLayer);
-//
-//					if (wmsLayer != null && wmsLayer instanceof Layer) {
-//						log.info("A layer was returned from WMS");
-//						Layer newLayer = (Layer) wmsLayer;
-//						newLayer.setName(mapLayer.getDefaultMapId().toString());
-//						newLayer.setEnabled(true);
-//						// add layer
-//						getWwd().getModel().getLayers().add(newLayer);
-//					}
-//				}
-//
-//
-//
-//				if (obj instanceof LayerInfo) {
-//					LayerInfo layerInfo = (LayerInfo) obj;
-//					LayerList layers = getWwd().getModel().getLayers();
-//
-//					String name = layerInfo.getName();
-//
-//					if ((Boolean) value) {
-//						// show layer
-//						Layer layer = layers.getLayerByName(name);
-//						if (layer != null) {
-//							// show layer if it already was there
-//							layer.setEnabled(true);
-//						} else {
-//							// we need to get the layer
-//							Object wmsLayer = WMSUtil.getWMSLayer(layerInfo);
-//							if (wmsLayer instanceof Layer) {
-//								log.info("A layer was returned from WMS");
-//								layer = (Layer) wmsLayer;
-//								layer.setName(name);
-//								layer.setEnabled(true);
-//								layers.add(layer);
-//							} else if (wmsLayer instanceof ElevationModel) {
-//								log.info("An elevation model was returned from WMS");
-//								ElevationModel model = (ElevationModel) wmsLayer;
-//								model.setName(name);
-//								CompoundElevationModel compoundModel =
-//									(CompoundElevationModel) getWwd().getModel().getGlobe().getElevationModel();
-//								if (!compoundModel.getElevationModels().contains(model))
-//									compoundModel.addElevationModel(model);
-//							} else {
-//								log.info("A layer was not returned from WMS, " +
-//										"but a different object: " +  wmsLayer);
-//							}
-//						}
-//					} else {
-//						// hide layer
-//						Layer layer = layers.getLayerByName(name);
-//						if (layer != null) {
-//							layer.setEnabled(false);
-//						} else {
-//							// try elevation models...
-//							CompoundElevationModel compoundModel =
-//									(CompoundElevationModel) getWwd().getModel().getGlobe().getElevationModel();
-//							ElevationModel ourModel = null;
-//							for (ElevationModel model : compoundModel.getElevationModels()) {
-//								if (model.getName().equals(name)) {
-//									ourModel = model;
-//									break;
-//								}
-//							}
-//							if (ourModel != null) {
-//								compoundModel.removeElevationModel(ourModel);
-//							} else {
-//								log.info("Layer should be hidden, but was not found");
-//							}
-//						}
-//					}
-//
-//				}
-//
-//				break;
-//		}
-//	}
 
 	/**
 	 * Handles events
@@ -1337,7 +1101,7 @@ public class WorldWindView extends ViewPart
 	 * @param mapLayer
 	 * @return
 	 */
-	private Object getWMSLayer(WmsMapLayer mapLayer) {
+	private Object getWmsLayer(WmsMapLayer mapLayer) {
 
 		WmsCache cache = WmsCache.getInstance();
 		
@@ -1345,19 +1109,10 @@ public class WorldWindView extends ViewPart
 
 		if (cache.containsLayers(serviceEndpoint)) {
 			
-			System.out.println("OK, container the layers");
-			
 			Collection<WmsLayerInfo> layerInfos =
 					cache.getLayers(serviceEndpoint);
 			
-			System.out.println("Found " + layerInfos.size() + " layers");
-			
 			for (WmsLayerInfo layerInfo : layerInfos) {
-				
-				System.out.println("Comparing: " + layerInfo.getName() + 
-						" AND " + mapLayer.getName());
-				
-				System.out.println("TITLE: " + layerInfo.getTitle());
 				
 				if (layerInfo.getName().equals(mapLayer.getName())) {
 					return WmsUtil.getWMSLayer(layerInfo);

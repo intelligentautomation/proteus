@@ -110,6 +110,10 @@ import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.map.wms.WmsLayerInfo;
 import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
+import com.iai.proteus.model.SensorOfferingLayer;
+import com.iai.proteus.model.map.IMapLayer;
+import com.iai.proteus.model.map.MapIdentifier;
+import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
@@ -131,7 +135,6 @@ import com.iai.proteus.queryset.TimeFacet;
 import com.iai.proteus.ui.UIUtil;
 import com.iai.proteus.views.DataPreviewEvent;
 import com.iai.proteus.views.DataPreviewView;
-import com.iai.proteus.views.MapIdentifier;
 import com.iai.proteus.views.TimeSeriesUtil;
 
 /**
@@ -162,8 +165,13 @@ public class QuerySetTab extends CTabItem
 	 * This array holds the map IDs that are used to
 	 * synchronize between workspace views and the map views
 	 */
-	private ArrayList<MapId> mapIds;
-
+//	private ArrayList<MapId> mapIds;
+	
+	/*
+	 * The basic sensor offering layer part of this context (query set) 
+	 */
+	private SensorOfferingLayer offeringLayer;
+	
 	/*
 	 * Holds all the sensor offerings
 	 */
@@ -250,8 +258,8 @@ public class QuerySetTab extends CTabItem
 
 
 	// JFace viewers
-	private CheckboxTableViewer tableViewerLikedServices;
-	private Table tableLikedServices;
+	private CheckboxTableViewer tableViewerServices;
+	private Table tableServices;
 
 	private CheckboxTreeViewer treeViewerObservedProperties;
 	private Tree treeObservedProperties;
@@ -280,7 +288,11 @@ public class QuerySetTab extends CTabItem
 	 * Maps
 	 */
 	
-	private Collection<WmsSavedMap> savedMaps;
+	private Collection<MapLayer> savedMaps;
+	
+	// true if no selection of a service has been made in the 
+	// find/discover map view, false otherwise  
+	private boolean findMapsNoServiceSelection = true;
 	
 	/*
 	 * UI for maps
@@ -294,9 +306,10 @@ public class QuerySetTab extends CTabItem
 	private Composite compositeAvailableMaps;
 
 	private TreeViewer treeViewerSavedMaps; 
+	private TreeViewer treeViewerServices;
+	private TreeViewer treeViewerWmsLayers;
 	
 	private FilteredTree treeFiltered;
-	private TreeViewer treeViewerWmsLayers;
 	private Tree treeWmsLayers;
 	
 	private ToolItem tltmDeleteSavedMap;
@@ -365,7 +378,7 @@ public class QuerySetTab extends CTabItem
 
 		activeFacets = new HashSet<FacetChangeToggle>();
 		
-		savedMaps = new HashSet<WmsSavedMap>();
+		savedMaps = new HashSet<MapLayer>();
 		
 		/*
 		 * Initialize statuses
@@ -416,16 +429,16 @@ public class QuerySetTab extends CTabItem
 		// unsaved
 		dirty = false;
 
-		mapIds = new ArrayList<MapId>();
+//		mapIds = new ArrayList<MapId>();
+		offeringLayer = new SensorOfferingLayer();
+		
 		/*
 		 * Generate and add the default map Id for this map layer
 		 */
-		MapId defaultMapId = MapId.generateNewMapId();
-		mapIds.add(defaultMapId);
+//		MapId defaultMapId = MapId.generateNewMapId();
+//		mapIds.add(defaultMapId);
 
-		/*
-		 * Create tab interface
-		 */
+		// Create tab interface
 		createTab(parent);
 
 		// highlight the Services section by default
@@ -446,7 +459,7 @@ public class QuerySetTab extends CTabItem
 		// force the creation of the default map (so we at least can use
 		// the selector tool)
 		QuerySetEventNotifier.getInstance().fireEvent(this,
-				QuerySetEventType.QUERYSET_INITIALIZE_LAYER, defaultMapId);
+				QuerySetEventType.QUERYSET_INITIALIZE_LAYER, offeringLayer);
 
 		// make this class listener for events
 		QuerySetEventNotifier.getInstance().addListener(this);
@@ -665,7 +678,7 @@ public class QuerySetTab extends CTabItem
 						new ManageServicesDialog(site.getShell());
 				int res = dialog.open();
 				if (res == IDialogConstants.OK_ID) {
-					tableViewerLikedServices.refresh();
+					tableViewerServices.refresh();
 				}
 			}
 		});
@@ -696,42 +709,19 @@ public class QuerySetTab extends CTabItem
 //			}
 //		});
 		
-		// "liked" services 
+		// services 
 
-		tableViewerLikedServices = createServiceTableViewer(stackServices);
+		tableViewerServices = createServiceTableViewer(stackServices);
 		
-		tableLikedServices = tableViewerLikedServices.getTable();
-		tableLikedServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableLikedServices.setHeaderVisible(true);
-		tableLikedServices.setLinesVisible(false);
+		tableServices = tableViewerServices.getTable();
+		tableServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		tableServices.setHeaderVisible(true);
+		tableServices.setLinesVisible(false);
 
-		tableViewerLikedServices.setContentProvider(new ServiceContentProvider());
-		tableViewerLikedServices.setUseHashlookup(true);
-		tableViewerLikedServices.setInput(ServiceRoot.getInstance());
+		tableViewerServices.setContentProvider(new ServiceContentProvider());
+		tableViewerServices.setUseHashlookup(true);
+		tableViewerServices.setInput(ServiceRoot.getInstance());
 		
-		// "disliked" services
-		
-//		tableViewerDislikedServices = createServiceTableViewer(stackServices);
-//		
-//		tableDislikedServices = tableViewerDislikedServices.getTable();
-//		tableDislikedServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-//		tableDislikedServices.setHeaderVisible(true);
-//		tableDislikedServices.setLinesVisible(false);
-//
-//		tableViewerDislikedServices.setContentProvider(new ServiceContentProvider());
-//		tableViewerDislikedServices.setUseHashlookup(true);
-//		tableViewerDislikedServices.setInput(ServiceRoot.getInstance());
-//		
-		Collection<TableViewer> viewers = new ArrayList<TableViewer>();
-		viewers.add(tableViewerLikedServices);
-//		viewers.add(tableViewerDislikedServices);
-		
-		
-		// add listeners 
-//		addDoubleClickListener(tableViewerLikedServices, viewers); 
-//		addDoubleClickListener(tableViewerDislikedServices, viewers);
-
-
 		/*
 		 * STACK: geographic
 		 */
@@ -770,7 +760,7 @@ public class QuerySetTab extends CTabItem
 				// send notification that sector is enabled
 				QuerySetEventNotifier.getInstance().fireEvent(this,
 						QuerySetEventType.QUERYSET_REGION_ENABLED,
-						getDefaultMapId());
+						getMapId());
 				// enable 'clear region' button
 				btnClearRegion.setEnabled(true);
 			}
@@ -782,7 +772,7 @@ public class QuerySetTab extends CTabItem
 				// send notification that sector should be cleared
 				QuerySetEventNotifier.getInstance().fireEvent(this,
 						QuerySetEventType.QUERYSET_REGION_DISABLE,
-						getDefaultMapId());
+						getMapId());
 				// disable 'clear region' button
 				btnClearRegion.setEnabled(false);
 			}
@@ -811,7 +801,7 @@ public class QuerySetTab extends CTabItem
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// clear OBSERVED PROPERTIES facets
-				QuerySetEventNotifier.getInstance().fireEvent(getDefaultMapId(),
+				QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
 						QuerySetEventType.QUERYSET_FACET_CLEAR,
 						Facet.OBSERVED_PROPERTY);
 			}
@@ -849,7 +839,7 @@ public class QuerySetTab extends CTabItem
 					// fire event
 					new Thread(new Runnable() {
 						public void run() {
-							QuerySetEventNotifier.getInstance().fireEvent(getDefaultMapId(),
+							QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
 									QuerySetEventType.QUERYSET_FACET_CHANGE, changes);
 						}
 					}).start();
@@ -1449,16 +1439,20 @@ public class QuerySetTab extends CTabItem
 		// button for switching the stack to find more maps 
 		Button btnSwitchStackMoreMaps = new Button(compositeSavedMaps, SWT.NONE);
 		btnSwitchStackMoreMaps.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		btnSwitchStackMoreMaps.setText("Find maps");
+		btnSwitchStackMoreMaps.setImage(imgAddMap);
 		btnSwitchStackMoreMaps.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// top the right stack on top 
+				// reset variable to indicate that no WMS service selection
+				// has been made
+				findMapsNoServiceSelection = true;
+				
+				// put the right stack on top 
 				compositeStackMapsLayout.topControl = compositeAvailableMaps;
-				parent.layout();				
+				parent.layout();
 			}
-		});
-		btnSwitchStackMoreMaps.setText("Find maps");
-		btnSwitchStackMoreMaps.setImage(imgAddMap);		
+		});		
 		
 		Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
 		groupMaps.setLayout(new GridLayout(1, false));
@@ -1506,8 +1500,10 @@ public class QuerySetTab extends CTabItem
 							WmsSavedMap map = (WmsSavedMap) model;
 							// remove the selected map from the viewer input collection 
 							savedMaps.remove(map);
+							// remove the maps IDs
+//							mapIds.remove(map.getMapId());
 							// remember the map IDs to be deleted from the map viewer
-							mapIdsToDelete.addAll(map.getMapIds());
+							mapIdsToDelete.add(map.getMapId());
 						}
 					}
 				}
@@ -1658,29 +1654,28 @@ public class QuerySetTab extends CTabItem
 		// button to switch stack to go back to saved maps 
 		Button btnSwitchStackBack = new Button(compositeAvailableMaps, SWT.NONE);
 		btnSwitchStackBack.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		btnSwitchStackBack.setText("Back to saved maps");
+		btnSwitchStackBack.setImage(imgBackControl);
 		btnSwitchStackBack.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
+				// clear the selection of services and maps for this 
+				// query set 
+				mapDiscoveryClearSelection();
+			
+				/*
+				 * notify listeners that all layers from 
+				 * the map discovery (with service) should be removed 
+				 */
+				QuerySetEventNotifier.getInstance().fireEvent(this,
+						QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE);
 				
-				// remove layers from previously selected services 
-//				String endpoint = currentlySelectedService.getServiceUrl();
-//				if (endpoint != null) {
-//					/*
-//					 * notify listeners that all layers from 
-//					 * the old service should be removed 
-//					 */
-//					QuerySetEventNotifier.getInstance().fireEvent(this,
-//							QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
-//							endpoint);
-//				} 							
-				
-				// top the right stack on top 
+				// put the right stack on top 
 				compositeStackMapsLayout.topControl = compositeSavedMaps;
 				parent.layout();
 			}
-		});
-		btnSwitchStackBack.setText("Back to saved maps");
-		btnSwitchStackBack.setImage(imgBackControl);
+		});		
 		
 		Group groupWmsMaps = new Group(compositeAvailableMaps, SWT.BORDER);
 		groupWmsMaps.setLayout(new GridLayout(1, false));
@@ -1716,7 +1711,7 @@ public class QuerySetTab extends CTabItem
 		tltmManageServices.setImage(imgDatabase);
 		tltmManageServices.setEnabled(false);
 		
-		TreeViewer treeViewerServices = new TreeViewer(compositeServices, SWT.BORDER | SWT.FULL_SELECTION);
+		treeViewerServices = new TreeViewer(compositeServices, SWT.BORDER | SWT.FULL_SELECTION);
 		Tree treeServices = treeViewerServices.getTree();
 		treeServices.setHeaderVisible(true);
 		treeServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -1768,17 +1763,25 @@ public class QuerySetTab extends CTabItem
 					IStructuredSelection structuredSelection = 
 							(IStructuredSelection) selection;
 					Object elmt = structuredSelection.getFirstElement();
+					
+					// make sure we are handling the right model object 
 					if (elmt instanceof Service) {
 						final Service service = (Service) elmt; 
-						
-						// check if we have changed selection 
-						String currentEndpoint = 
-								currentlySelectedService.getServiceUrl();
-						if (currentEndpoint != null) {
-							// if we haven't changed service selection, 
-							// do nothing
-							if (service.getServiceUrl().equals(currentEndpoint)) 
-								return; 
+
+						// check if we have actually changed selection 
+						// if this is not the first time a selection is made
+						// (i.e. only if there was a previous selection)
+						if (!findMapsNoServiceSelection) {
+							// check if we have actually changed selection
+							String currentEndpoint = 
+									currentlySelectedService.getServiceUrl();
+							if (currentEndpoint != null) {
+								// if we haven't changed service selection, 
+								// do nothing
+								if (service.getServiceUrl().equals(currentEndpoint)) 
+									return; 
+							}
+							findMapsNoServiceSelection = false;
 						}
 						
 						// remember old selection
@@ -1800,7 +1803,7 @@ public class QuerySetTab extends CTabItem
 							QuerySetEventNotifier.getInstance().fireEvent(this,
 									QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
 									oldEndpoint);
-						} 			
+						}
 
 						// avoid running job in UI thread 
 						Job job = new Job("Contacting WMS service") {
@@ -1825,7 +1828,7 @@ public class QuerySetTab extends CTabItem
 										maps.add(layer);
 									}
 
-									System.out.println("Maps: " + maps.size());
+									System.out.println("Number of maps: " + maps.size());
 
 									// update UI component 
 									UIUtil.update(new Runnable() {
@@ -1913,7 +1916,10 @@ public class QuerySetTab extends CTabItem
 							WmsMapLayer mapLayer = (WmsMapLayer) data;
 							// convert the object to a sub-class 
 							WmsSavedMap map = WmsSavedMap.from(mapLayer);
+							// add the map to the list of saved maps
 							savedMaps.add(map);
+							// add the maps IDs
+//							mapIds.add(map.getMapId());
 							count++;
 						}
 					}
@@ -2132,7 +2138,7 @@ public class QuerySetTab extends CTabItem
 //			}
 //		});	
 		
-		final Table table = tableViewer.getTable();
+//		final Table table = tableViewer.getTable();
 		
 //		TableLayout tableLayout = new TableLayout();
 //		tableLayout.addColumnData(new ColumnWeightData(1, true));
@@ -2143,17 +2149,16 @@ public class QuerySetTab extends CTabItem
 		tableViewer.addCheckStateListener(new ICheckStateListener() {
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
-
 				java.util.List<Service> services = new ArrayList<Service>();
-				for (TableItem item : table.getItems()) {
-					if (item.getChecked()) {
-						Object data = item.getData();
-						if (data instanceof Service) {
-							Service service = (Service) data;
-							service.setActive(true);
-							services.add(service);
-						}
-					}
+				
+				Object elmt = event.getElement();
+				if (elmt instanceof Service) {
+					Service service = (Service) elmt;
+					service.setActive(event.getChecked());
+//					service.setActive(true);
+					// collect the checked services 
+					if (event.getChecked())
+						services.add(service);
 				}
 
 				/*
@@ -2162,15 +2167,14 @@ public class QuerySetTab extends CTabItem
 				 */
 				QuerySetEventNotifier.getInstance().fireEvent(services,
 						QuerySetEventType.QUERYSET_SERVICE_TOGGLE,
-						getDefaultMapId());
-
+						offeringLayer);
+				
 				/*
 				 * Update live services tile
 				 */
 				updateLiveTileServices(services.size());
 			}
 		});
-		
 		
 		return tableViewer;
 	}
@@ -2212,7 +2216,7 @@ public class QuerySetTab extends CTabItem
 	 * Refresh viewers 
 	 */
 	public void refreshViewers() {
-		tableViewerLikedServices.refresh();
+		tableViewerServices.refresh();
 	}
 
 	/**
@@ -2403,7 +2407,7 @@ public class QuerySetTab extends CTabItem
 			/*
 			 * Make the services table viewer the selection provider
 			 */
-			setActiveSelectionProvider(tableViewerLikedServices);
+			setActiveSelectionProvider(tableViewerServices);
 			intermediator.setSelectionProviderDelegate(getActiveSelectionProvider());
 
 			break;
@@ -2737,7 +2741,6 @@ public class QuerySetTab extends CTabItem
 //						findCheckedObservedProperties(
 //								treeObservedProperties.getItems());
 				int checked = getSelectedObservedProperties().size();
-				System.out.println("CHECKED: " + checked);
 
 				// update the viewer model
 				observedPropertiesHolder.setObservedProperties(facetData);
@@ -2925,6 +2928,19 @@ public class QuerySetTab extends CTabItem
 		});
 	}
 
+	/**
+	 * Returns the map layers that are part of this query set  
+	 * 
+	 * @return
+	 */
+	public Collection<IMapLayer> getMapLayers() {
+		Collection<IMapLayer> maps = new ArrayList<IMapLayer>();
+		// add the sensor offering layer
+		maps.add(offeringLayer);
+		// add all other maps 
+		maps.addAll(savedMaps);
+		return maps;
+	}
 
 	/**
 	 * Returns map IDs associated with this query set
@@ -2932,20 +2948,20 @@ public class QuerySetTab extends CTabItem
 	 * Implements the {@link MapIdentifier} interface
 	 */
 	@Override
-	public Collection<MapId> getMapIds() {
-		return mapIds;
+	public MapId getMapId() {
+		return offeringLayer.getMapId();
 	}
 
 	/**
-	 * Returns the default (first) map id
+	 * Sets the map IDs 
 	 *
 	 * Implements the {@link MapIdentifier} interface
-	 */
-	@Override
-	public MapId getDefaultMapId() {
-		return mapIds.get(0);
+	 */	
+	@Override 
+	public void setMapId(MapId mapId) {
+		offeringLayer.setMapId(mapId);
 	}
-
+	
 	/**
 	 * Selects an offering, invoked by the map view
 	 *
@@ -3516,7 +3532,7 @@ public class QuerySetTab extends CTabItem
 		FacetChangeToggle change =
 				new FacetChangeToggle(Facet.TIME_PERIOD, true,
 						timeFacet.toString());
-		QuerySetEventNotifier.getInstance().fireEvent(getDefaultMapId(),
+		QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
 				QuerySetEventType.QUERYSET_FACET_CHANGE, change);
 	}
 
@@ -3534,7 +3550,7 @@ public class QuerySetTab extends CTabItem
 		case ALL:
 
 			// clear response FORMAT facets
-			QuerySetEventNotifier.getInstance().fireEvent(getDefaultMapId(),
+			QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
 					QuerySetEventType.QUERYSET_FACET_CLEAR, Facet.RESPONSE_FORMAT);
 
 			break;
@@ -3552,7 +3568,7 @@ public class QuerySetTab extends CTabItem
 				changes.add(change);
 			}
 
-			QuerySetEventNotifier.getInstance().fireEvent(getDefaultMapId(),
+			QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
 					QuerySetEventType.QUERYSET_FACET_CHANGE, changes);
 
 			break;
@@ -3572,7 +3588,7 @@ public class QuerySetTab extends CTabItem
 			MapId mapId = (MapId) obj;
 
 			// only listen to info about our own query set
-			if (mapId.equals(getDefaultMapId())) {
+			if (mapId.equals(getMapId())) {
 
 				switch (event.getEventType()) {
 				case QUERYSET_FACET_CLEAR:
@@ -3840,6 +3856,19 @@ public class QuerySetTab extends CTabItem
 			// 24 hours
 			return new Period(24, 0, 0, 0);
 		}
+	}
+	
+	/**
+	 * Clears the selection of services and map layers for this 
+	 * query set 
+	 * 
+	 */
+	public void mapDiscoveryClearSelection() {
+		// clear selection of services 
+		treeViewerServices.setSelection(new StructuredSelection());	
+
+		// clear selection of layers from previously selected service
+		treeViewerWmsLayers.setInput(new Object[0]);
 	}
 
 	/**

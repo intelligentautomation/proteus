@@ -17,9 +17,10 @@ public class ContentProvider implements ITreeContentProvider {
 	@Override
     public Object[] getChildren(Object parent) {
 
-		if (parent instanceof Collection) {
-			return ((Collection) parent).toArray();
-		}		
+		// handles collections 
+		if (parent instanceof Collection<?>) {
+			return ((Collection<?>) parent).toArray();
+		} 
 		
 		/*
 		 * Sensor offerings

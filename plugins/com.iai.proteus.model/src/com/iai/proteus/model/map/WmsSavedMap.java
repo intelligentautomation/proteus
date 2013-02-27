@@ -5,7 +5,7 @@
  */
 package com.iai.proteus.model.map;
 
-import com.iai.proteus.model.MapId;
+
 
 /**
  * Model object for WMS maps saved with a Query Set 
@@ -53,9 +53,7 @@ public class WmsSavedMap extends WmsMapLayer {
 		// from {@link com.iai.proteus.model.Model}
 		map.setName(mapLayer.getName());
 		// from {@link com.iai.proteus..model.workspace.MapLayer}
-		for (MapId mapId : mapLayer.getMapIds()) {
-			map.addMapId(mapId);
-		}
+		map.setMapId(mapLayer.getMapId());
 		map.setActive(mapLayer.isActive());
 		map.setColor(mapLayer.getColor());
 		// from {@link WmsMapLayer}

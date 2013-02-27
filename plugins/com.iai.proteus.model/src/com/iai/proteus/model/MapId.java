@@ -30,6 +30,15 @@ public class MapId implements Serializable {
 	}
 	
 	/**
+	 * Constructor 
+	 * 
+	 * @param mapId
+	 */
+	public MapId(String mapId) {
+		this.mapId = mapId;
+	}
+	
+	/**
 	 * @return the mapId
 	 */
 	public String getMapId() {

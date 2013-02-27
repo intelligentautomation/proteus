@@ -6,9 +6,7 @@
 package com.iai.proteus.model.map;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
-import com.iai.proteus.common.Util;
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.Model;
 import com.iai.proteus.model.event.WorkspaceEventType;
@@ -21,15 +19,14 @@ import com.iai.proteus.model.workspace.QueryLayer;
  * @author Jakob Henriksson
  *
  */
-public abstract class MapLayer extends Model {
+public abstract class MapLayer extends Model implements IMapLayer {
 	
 	private static final long serialVersionUID = 1L;
 	
 	/*
-	 * This array holds the map IDs that are used to 
-	 * synchronize between workspace views and the map views
+	 * The map ID
 	 */
-	private ArrayList<MapId> mapIds;
+	private MapId mapId;
 
 	/*
 	 * Determines if the layer is active (visible) on the Map
@@ -47,58 +44,29 @@ public abstract class MapLayer extends Model {
 	 * Default constructor 
 	 */
 	public MapLayer() {
-		mapIds = new ArrayList<MapId>();
 		/*
-		 * Generate and add the default map Id for this map layer 
+		 * Generate a default map Id for this map layer 
 		 */
-		mapIds.add(MapId.generateNewMapId()); 
+		mapId = MapId.generateNewMapId(); 
 		active = false;
 	}
 	
 	/**
-	 * Returns the map IDs for this map layer 
+	 * Returns the map ID for this map layer 
 	 * 
-	 * @return the map IDs
+	 * @return the map ID
 	 */
-	public ArrayList<MapId> getMapIds() {
-		ArrayList<MapId> ids = new ArrayList<MapId>();
-		for (MapId mapId : mapIds) {
-			if (!ids.contains(mapId))
-				ids.add(mapId);
-		}
-		return ids;
+	public MapId getMapId() {
+		return mapId;
 	}
 
 	/**
-	 * Sets the map IDs for this map layer 
+	 * Sets the map ID for this map layer 
 	 * 
-	 * @param mapIds the map IDs to set
+	 * @param mapId the map IDs to set
 	 */
-	public void setMapIds(ArrayList<MapId> mapIds) {
-		for (MapId mapId : mapIds) {
-			if (!this.mapIds.contains(mapId))
-				this.mapIds.add(mapId);
-		}
-	}
-	
-	/**
-	 * Adds a map ID to this map layer 
-	 * 
-	 * @param mapId
-	 */
-	public void addMapId(MapId mapId) {
-		if (!mapIds.contains(mapId)) {
-			mapIds.add(mapId);
-		}
-	}
-	
-	/**
-	 * Returns the 'default' map ID 
-	 * 
-	 * @return
-	 */
-	public MapId getDefaultMapId() {
-		return mapIds.get(0);
+	public void setMapId(MapId mapId) {
+		this.mapId = mapId;
 	}
 	
 	/**
@@ -221,7 +189,7 @@ public abstract class MapLayer extends Model {
 	
 	@Override
 	public String toString() {
-		return "Map layer, IDs: " + Util.join(getMapIds(), ",");
+		return "Map layer, ID: " + getMapId();
 	}
 
 	/* (non-Javadoc)
@@ -231,7 +199,7 @@ public abstract class MapLayer extends Model {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((mapIds == null) ? 0 : mapIds.hashCode());
+		result = prime * result + ((mapId == null) ? 0 : mapId.hashCode());
 		return result;
 	}
 
@@ -247,12 +215,11 @@ public abstract class MapLayer extends Model {
 		if (getClass() != obj.getClass())
 			return false;
 		MapLayer other = (MapLayer) obj;
-		if (mapIds == null) {
-			if (other.mapIds != null)
+		if (mapId == null) {
+			if (other.mapId != null)
 				return false;
-		} else if (!mapIds.equals(other.mapIds))
+		} else if (!mapId.equals(other.mapId))
 			return false;
 		return true;
 	}
-	
 }
