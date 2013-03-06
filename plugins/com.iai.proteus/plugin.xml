@@ -118,7 +118,7 @@
       <command
             defaultHandler="com.iai.proteus.command.ToggleMapLayerHandler"
             id="com.iai.proteus.map.layer.toggle"
-            name="Compass">
+            name="Toggle Map Layer">
          <commandParameter
                id="com.iai.proteus.map.layer.name"
                name="layer"
@@ -128,6 +128,11 @@
                class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
+      </command>
+      <command
+            defaultHandler="com.iai.proteus.command.ManageServicesHandler"
+            id="com.iai.proteus.services.manage"
+            name="Manage services">
       </command>
    </extension>
    <extension
@@ -183,6 +188,15 @@
             <command
                   commandId="org.eclipse.ui.views.showView"
                   label="Show Views..."
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="services"
+               label="Services">
+            <command
+                  commandId="com.iai.proteus.services.manage"
+                  label="Manage services..."
                   style="push">
             </command>
          </menu>
