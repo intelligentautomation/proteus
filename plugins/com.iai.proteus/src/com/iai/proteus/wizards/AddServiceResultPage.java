@@ -64,6 +64,8 @@ public class AddServiceResultPage extends WizardPage implements Listener {
 		
 		serviceName = new Text(composite, SWT.BORDER);
 		serviceName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		// default
+		serviceName.setText("Untitled");
 		
 		serviceName.addListener(SWT.CHANGED, this);
 		

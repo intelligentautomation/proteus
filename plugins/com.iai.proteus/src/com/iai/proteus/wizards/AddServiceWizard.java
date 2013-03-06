@@ -22,7 +22,7 @@ import com.iai.proteus.ui.UIUtil;
 public class AddServiceWizard extends Wizard {
 
 	AddServicePage pageService;
-	AddServiceResultPage pageName;
+	AddServiceResultPage pageResult;
 
 	/**
 	 * Constructor
@@ -47,21 +47,21 @@ public class AddServiceWizard extends Wizard {
 	{
 		pageService = new AddServicePage(AddServicePage.pageId);
 		addPage(pageService);
-		pageName = new AddServiceResultPage(AddServiceResultPage.pageId);
-		addPage(pageName);
+		pageResult = new AddServiceResultPage(AddServiceResultPage.pageId);
+		addPage(pageResult);
 	}
 
 	@Override
 	public boolean canFinish() {
 		return pageService.isSuccessful() &&
-			!pageName.getServiceName().trim().equals("");
+			!pageResult.getServiceName().trim().equals("");
 	}
 
 	@Override
 	public boolean performFinish() {
 		// get and update source with details
 		Service service = pageService.getService();
-		String name = pageName.getServiceName();
+		String name = pageResult.getServiceName();
 		service.setName(name);
 		// add source to list of known sources
 		ServiceRoot.getInstance().addService(service);
