@@ -21,16 +21,11 @@ public class ContentProvider implements ITreeContentProvider {
 		if (parent instanceof Collection<?>) {
 			return ((Collection<?>) parent).toArray();
 		} 
-		
-		/*
-		 * Sensor offerings
-		 */
+		// sensor offerings
 		else if (parent instanceof SensorOfferingsHolder) {
 			return ((SensorOfferingsHolder) parent).getSensorOfferings().toArray();
 		}
-		/*
-		 * Observed properties
-		 */
+		// observed properties
 		else if (parent instanceof ObservedPropertiesHolder) {
 			ObservedPropertiesHolder holder =
 					(ObservedPropertiesHolder) parent;
@@ -39,9 +34,7 @@ public class ContentProvider implements ITreeContentProvider {
 			Category category = (Category) parent;
 			return category.getObservedProperties().toArray();
 		}
-		/*
-		 * Formats
-		 */
+		// formats
 		else if (parent instanceof AvailableFormatsHolder) {
 			return ((AvailableFormatsHolder) parent).getAvailableFormats().toArray();
 		}

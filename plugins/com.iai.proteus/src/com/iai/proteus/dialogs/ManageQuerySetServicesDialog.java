@@ -254,6 +254,26 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 		tltmAddService.setImage(imgAdd);
 		// default 
 		tltmAddService.setEnabled(false);
+		// listener 
+		tltmAddService.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// adds the services to the provided service manager
+				for (Object elmt : 
+					SwtUtil.getSelection(tableViewerServicesAvailable)) {
+					if (elmt instanceof Service) {
+						Service service = (Service) elmt;
+						// make sure that the service is deactivated by default
+						service.deactivate();
+						// add the service to the manager
+						manager.addService(service);
+					}
+				}
+				// update the viewers whose input may have changed 
+				tableViewerServicesQuerySet.refresh();
+				tableViewerServicesAvailable.refresh();
+			}
+		});
 		
 		ToolItem tltmManageServices = new ToolItem(toolBarAvailable, SWT.NONE);
 		tltmManageServices.setText("Manage services...");
@@ -298,22 +318,6 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 			}
 		});		
 
-		// listener 
-		tltmAddService.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				// adds the services to the provided service manager
-				for (Object elmt : 
-					SwtUtil.getSelection(tableViewerServicesAvailable)) {
-					if (elmt instanceof Service) {
-						manager.addService((Service) elmt);
-					}
-				}
-				// update the viewers whose input may have changed 
-				tableViewerServicesQuerySet.refresh();
-				tableViewerServicesAvailable.refresh();
-			}
-		});
 		
 		/*
 		 * Available services 

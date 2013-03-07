@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -39,6 +38,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
@@ -669,9 +669,22 @@ public class QuerySetTab extends CTabItem
 								QuerySetTab.this, ServiceType.SOS);
 				int res = dialog.open();
 				if (res == IDialogConstants.OK_ID) {
-					// refresh viewer as input might have changed 
-					tableViewerSosServices.refresh();
 					
+					// deactivate the services 
+					QuerySetEventNotifier.getInstance().fireEvent(offeringLayer,
+							QuerySetEventType.QUERYSET_SERVICE_TOGGLE, 
+							getServices());
+
+					// count active services 
+					int countActiveServices = 0;
+					for (Service service : getServices()) 
+						countActiveServices += service.isActive() ? 1 : 0;
+					// update live services tile
+					updateLiveTileServices(countActiveServices);				
+
+					// refresh viewer as input might have changed 
+					tableViewerSosServices.refresh();					
+
 					// TODO: need to update layers as layers might have been 
 					//       deleted
 				}
@@ -694,9 +707,8 @@ public class QuerySetTab extends CTabItem
 					// just make sure we are dealing with the right type
 					if (o instanceof Service) {
 						Service service = (Service) o;
-						// important: update the model status, deactivate
-						// the service to force its removal from the 
-						// sensor offering layer 
+						// important: update the model status, 
+						// deactivate the service
 						service.deactivate();
 						// add the service to be removed 
 						servicesToRemove.add(service); 
@@ -783,7 +795,7 @@ public class QuerySetTab extends CTabItem
 		});
 
 		// input has to be set after the @{link TableViewerColumns} are defined		
-		tableViewerSosServices.setContentProvider(new InnerContentProvider(ServiceType.SOS));
+		tableViewerSosServices.setContentProvider(new ServiceContentProvider(ServiceType.SOS));
 		tableViewerSosServices.setUseHashlookup(true);
 		tableViewerSosServices.setInput(services);
 		
@@ -1076,7 +1088,7 @@ public class QuerySetTab extends CTabItem
 		TableViewer tableViewerSupportedFormats =
 				CheckboxTableViewer.newCheckList(stackFormats, SWT.BORDER);
 
-		tableViewerSupportedFormats.setContentProvider(ArrayContentProvider.getInstance());
+		tableViewerSupportedFormats.setContentProvider(contentProvider);
 		tableViewerSupportedFormats.setInput(SupportedResponseFormats.values());
 
 		final Table tableSupportedFormats = tableViewerSupportedFormats.getTable();
@@ -1112,10 +1124,7 @@ public class QuerySetTab extends CTabItem
 		tableViewerUnsupportedFormats =
 				CheckboxTableViewer.newCheckList(stackFormats, SWT.BORDER);
 
-//		tableViewerUnsupportedFormats.setContentProvider(ArrayContentProvider.getInstance());
 		tableViewerUnsupportedFormats.setContentProvider(contentProvider);
-//		tableViewerUnsupportedFormats.setLabelProvider(labelProvider);
-//		tableViewerUnsupportedFormats.setUseHashlookup(true);
 		tableViewerUnsupportedFormats.setInput(availableFormatsHolder);
 
 		Table tableUnsupportedFormats = tableViewerUnsupportedFormats.getTable();
@@ -1563,7 +1572,7 @@ public class QuerySetTab extends CTabItem
 						// remember the map IDs to be deleted from the map viewer
 						mapsToDelete.add(map);
 						// remove the selected map from the viewer input collection 
-						savedMaps.remove(map);
+						getSavedMaps().remove(map);
 					}
 				}
 
@@ -1688,7 +1697,7 @@ public class QuerySetTab extends CTabItem
 			}			
 		});			
 		
-		treeViewerSavedMaps.setContentProvider(new ContentProvider());
+		treeViewerSavedMaps.setContentProvider(new InnerContentProvider());
 		treeViewerSavedMaps.setInput(savedMaps);
 		
 	
@@ -1945,7 +1954,7 @@ public class QuerySetTab extends CTabItem
 		});
 		
 		// only show WMSs
-		tableViewerWmsServices.setContentProvider(new InnerContentProvider(ServiceType.WMS));
+		tableViewerWmsServices.setContentProvider(new ServiceContentProvider(ServiceType.WMS));
 		tableViewerWmsServices.setUseHashlookup(true);
 		tableViewerWmsServices.setInput(ServiceRoot.getInstance());
 		
@@ -1963,6 +1972,7 @@ public class QuerySetTab extends CTabItem
 		tltmSaveSelected.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				// keep track of added map layers 
 				int count = 0;
 				for (TreeItem item : treeWmsLayers.getItems()) {
 					if (item.getChecked()) {
@@ -1972,9 +1982,23 @@ public class QuerySetTab extends CTabItem
 							WmsMapLayer mapLayer = (WmsMapLayer) data;
 							// convert the object to a sub-class 
 							WmsSavedMap map = WmsSavedMap.from(mapLayer);
-							// add the map to the list of saved maps
-							savedMaps.add(map);
-							count++;
+							// check that the map does not already exist
+							boolean add = true;
+							for (MapLayer existing : getSavedMaps()) {
+								WmsSavedMap savedMap = (WmsSavedMap) existing;
+								// skip map layers that already exist
+								if (savedMap.getServiceEndpoint().equals(map.getServiceEndpoint()) && 
+										savedMap.getWmsLayerTitle().equals(map.getWmsLayerTitle())) {
+									add = false;
+									break;
+								}
+							}
+							// add the map to the list of saved maps, if 
+							// appropriate 
+							if (add) {
+								getSavedMaps().add(map);								
+								count++;
+							}
 						}
 					}
 				}
@@ -1990,7 +2014,14 @@ public class QuerySetTab extends CTabItem
 					
 					// update the viewers whose input may have changed
 					treeViewerSavedMaps.refresh();
+					
+				} else {
+					
+					// show message 
+					UIUtil.showInfoMessage("No maps added to query set", 
+							"No maps were added, they might already exist in the query set!");					
 				}
+				
 			}
 		});
 		
@@ -2106,16 +2137,9 @@ public class QuerySetTab extends CTabItem
 			}			
 		});	
 		
-//		Collection<WmsLayer> fakeLayers = new ArrayList<WmsLayer>();
-//		fakeLayers.add(new WmsLayer("http://www.google.com/wms", "Layer name"));
-//		fakeLayers.add(new WmsLayer("http://www.google.com/wms2", "Another layer name"));
-//		fakeLayers.add(new WmsLayer("http://www.google.com/wms2", "Super super super super super super super super super super long layer name - ok"));
-
-		treeViewerWmsLayers.setContentProvider(new ContentProvider());
-//		treeViewerLayers.setLabelProvider(new WmsLayerLabelProvider());
+		treeViewerWmsLayers.setContentProvider(new InnerContentProvider());
 		// default - empty input 
 		treeViewerWmsLayers.setInput(new Object[0]);
-//		treeViewerLayers.setInput(fakeLayers);
 	}
 	
 	/**
@@ -2941,7 +2965,7 @@ public class QuerySetTab extends CTabItem
 		// add the sensor offering layer
 		maps.add(offeringLayer);
 		// add all other maps 
-		maps.addAll(savedMaps);
+		maps.addAll(getSavedMaps());
 		return maps;
 	}
 
@@ -3961,12 +3985,21 @@ public class QuerySetTab extends CTabItem
 	}
 	
 	/**
-	 * Content provider for viewers
+	 * Returns the saved maps
+	 * 
+	 * @return
+	 */
+	public Collection<MapLayer> getSavedMaps() {
+		return savedMaps;
+	}
+	
+	/**
+	 * Content provider for service viewers
 	 * 
 	 * @author Jakob Henriksson 
 	 *
 	 */
-	private static class InnerContentProvider implements IStructuredContentProvider {
+	private static class ServiceContentProvider implements IStructuredContentProvider {
 
 		Object[] EMPTY_ARRAY = new Object[0];
 		
@@ -3977,7 +4010,7 @@ public class QuerySetTab extends CTabItem
 		 * 
 		 * @param serviceType
 		 */
-		public InnerContentProvider(ServiceType serviceType) {
+		public ServiceContentProvider(ServiceType serviceType) {
 			this.serviceType = serviceType;
 		}
 
@@ -4001,4 +4034,49 @@ public class QuerySetTab extends CTabItem
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		}
 	}	
+	
+	/**
+	 * Content provider for service viewers
+	 * 
+	 * @author Jakob Henriksson 
+	 *
+	 */
+	private static class InnerContentProvider implements ITreeContentProvider {
+
+		Object[] EMPTY_ARRAY = new Object[0];
+
+		@Override
+		public Object[] getChildren(Object parent) {
+
+			// handles collections 
+			if (parent instanceof Collection<?>) {
+				return ((Collection<?>) parent).toArray();
+			} 
+
+			return EMPTY_ARRAY;
+		}
+
+		@Override
+		public Object[] getElements(Object inputElement) {
+			return getChildren(inputElement);
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			return getChildren(element).length > 0;
+		}
+
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+
+		@Override
+		public void dispose() {
+		}
+	}		
 }
