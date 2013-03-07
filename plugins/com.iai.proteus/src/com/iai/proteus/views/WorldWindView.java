@@ -95,7 +95,6 @@ import com.iai.proteus.queryset.QuerySetEventType;
 import com.iai.proteus.queryset.SosOfferingLayer;
 import com.iai.proteus.queryset.ui.SensorOfferingItem;
 import com.iai.proteus.util.ProteusUtil;
-import com.iai.proteus.views.layers.TimedPointPlacemarkLayer;
 
 /**
  * A World Wind View making use of the "Albireo" plug-in to embed World Wind
@@ -123,7 +122,6 @@ public class WorldWindView extends ViewPart
 	 */
 	private DataPlotProvenanceLayer layerDataPlotProvenance;
 
-	private RenderableLayer layerDataTraceMarkers;
 	private RenderableLayer layerDataTracePolyline;
 	
 	private SectorSelector selector;
@@ -188,14 +186,10 @@ public class WorldWindView extends ViewPart
 		// add layer
 		getWwd().getModel().getLayers().add(layerDataPlotProvenance);
 
-		layerDataTraceMarkers = new TimedPointPlacemarkLayer();
-		layerDataTraceMarkers.setEnabled(false);
-
 		layerDataTracePolyline = new RenderableLayer();
 		layerDataTracePolyline.setName("Data trace lines");
 		layerDataTracePolyline.setPickEnabled(false);
 
-		getWwd().getModel().getLayers().add(layerDataTraceMarkers);
 		getWwd().getModel().getLayers().add(layerDataTracePolyline);
 
 		this.toolTipController =
@@ -670,9 +664,9 @@ public class WorldWindView extends ViewPart
 			/*
 			 * Toggle layer
 			 */
-			if (obj instanceof List<?> && value instanceof IMapLayer) {
+			if (obj instanceof IMapLayer && value instanceof Collection<?>) {
 
-				setServices((IMapLayer) value, (ArrayList<?>) obj);
+				setServices((IMapLayer) obj, (ArrayList<?>) value);
 			}
 
 			break;
@@ -683,7 +677,7 @@ public class WorldWindView extends ViewPart
 			 */
 			if (value instanceof Collection<?>) {
 				
-				deleteLayers((Collection<IMapLayer>)value);
+				deleteLayers((Collection<IMapLayer>) value);
 			}
 
 			break;
@@ -876,7 +870,10 @@ public class WorldWindView extends ViewPart
 		List<Service> services = new ArrayList<Service>();
 		for (Object obj : serviceObjects) {
 			if (obj instanceof Service) {
-				services.add((Service) obj);
+				Service service = (Service) obj;
+				// only include active services 
+				if (service.isActive())
+					services.add(service);
 			}
 		}
 		// create the layer for the first time

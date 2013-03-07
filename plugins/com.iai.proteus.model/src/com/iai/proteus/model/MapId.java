@@ -16,7 +16,7 @@ import java.util.UUID;
  * @author Jakob Henriksson 
  *
  */
-public class MapId implements Serializable {
+public class MapId implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -97,6 +97,17 @@ public class MapId implements Serializable {
 		} else if (!mapId.equals(other.mapId))
 			return false;
 		return true;
+	}
+	
+	/**
+	 * Clones the object 
+	 * 
+	 */
+	@Override
+	public MapId clone() {
+		MapId c = new MapId();
+		c.setMapId(getMapId());
+		return c;
 	}
 	
 }

@@ -35,7 +35,10 @@ public class Service extends MapLayer
 	private String serviceUrl;
 	private ServiceType serviceType;
 	
+	// indicates a "favorite" service  
 	private boolean liked; 
+	// indicates that connection to service has been successful
+	private boolean success; 
 
 	private transient SosServicePropertySource property; 
 	
@@ -47,6 +50,7 @@ public class Service extends MapLayer
 		// defaults
 		property = null;
 		liked = false; 
+		success = false;
 	}
 	
 	/**
@@ -57,7 +61,7 @@ public class Service extends MapLayer
 	public Service(ServiceType type) {
 		this();
 		this.serviceType = type;
-		setName("untitled");
+		setName("Untitled");
 	}
 	
 	/**
@@ -114,6 +118,46 @@ public class Service extends MapLayer
 		this.serviceType = type;
 	}
 	
+	@Override
+	public void like() {
+		liked = true;
+	}
+
+	@Override
+	public void dislike() {
+		liked = false;
+		
+	}
+	
+	/**
+	 * @param liked the liked to set
+	 */
+	public void setLiked(boolean liked) {
+		this.liked = liked;
+	}
+
+	/**
+	 * @return the liked
+	 */
+	@Override
+	public boolean isLiked() {
+		return liked;
+	}
+	
+	/**
+	 * @return the success
+	 */
+	public boolean isSuccess() {
+		return success;
+	}
+
+	/**
+	 * @param success the success to set
+	 */
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
+
 	@Override
 	public String toString() {
 		return (name == null ? "<untitled>" : name) + " (" + serviceType + ")";
@@ -225,22 +269,6 @@ public class Service extends MapLayer
 	@Override
 	public boolean delete() {
 		return ServiceRoot.getInstance().removeService(this);
-	}
-
-	@Override
-	public void like() {
-		liked = true;
-	}
-
-	@Override
-	public void dislike() {
-		liked = false;
-		
-	}
-
-	@Override
-	public boolean isLiked() {
-		return liked;
 	}
 }
 

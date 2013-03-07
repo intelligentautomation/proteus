@@ -19,7 +19,7 @@ import com.iai.proteus.model.Model;
  * @author Jakob Henriksson
  *
  */
-public class ServiceRoot extends Model implements Iterable<Service> {
+public class ServiceRoot extends Model implements Iterable<Service>, ServiceManager {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,10 +39,31 @@ public class ServiceRoot extends Model implements Iterable<Service> {
 	/**
 	 * Returns all services
 	 *
+	 * Implements @{link ServiceManager}
+	 *
 	 * @return the services
 	 */
+	@Override
 	public synchronized ArrayList<Service> getServices() {
 		return services;
+	}
+	
+	/**
+	 * Return services of the given type 
+	 * 
+	 * Implements @{link ServiceManager}
+	 * 
+	 * @param type
+	 * @return
+	 */
+	@Override
+	public synchronized ArrayList<Service> getServices(ServiceType type) {
+		ArrayList<Service> result = new ArrayList<Service>();
+		for (Service service : getServices()) {
+			if (service.getServiceType().equals(type))
+				result.add(service);
+		}
+		return result;
 	}
 
 	/**
@@ -57,9 +78,12 @@ public class ServiceRoot extends Model implements Iterable<Service> {
 	/**
 	 * Adds a service
 	 *
+	 * Implements @{link ServiceManager} 
+	 *
 	 * @param service
-	 * @return
+	 * @return true if service was removed, false otherwise 
 	 */
+	@Override
 	public synchronized boolean addService(Service service) {
 		if (!services.contains(service)) {
 			// when a service is added, make is in-active by default
@@ -69,6 +93,15 @@ public class ServiceRoot extends Model implements Iterable<Service> {
 		return false;
 	}
 
+	/**
+	 * Removes a service
+	 * 
+	 * Implements @{link ServiceManager}
+	 * 
+	 * @param service
+	 * @returns true if service was removed, false otherwise
+	 */
+	@Override
 	public synchronized boolean removeService(Service service) {
 		return services.remove(service);
 	}

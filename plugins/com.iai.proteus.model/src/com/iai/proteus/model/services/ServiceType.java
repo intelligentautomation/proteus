@@ -15,12 +15,8 @@ import java.io.Serializable;
  */
 public enum ServiceType implements Serializable {
 
-	CSW("CSW"), 
 	SOS("SOS"),
-	SAS("SAS"), 
-	WMS("WMS"), 
-	WFS("WFS"), 
-	WCS("WCS");
+	WMS("WMS"); 
 	
 	private String name;
 	
@@ -52,5 +48,24 @@ public enum ServiceType implements Serializable {
 	@Override
 	public String toString() {
 		return name;
+	}
+	
+	/**
+	 * Returns a longer name for the service 
+	 * 
+	 * @return
+	 */
+	public String toStringLong() {
+		String str = "";
+		switch (this) {
+		case SOS: 
+			str = "Sensor Observation Service (" + toString() + ")";
+			break;
+		case WMS: 
+			str = "Web Map Service (" + toString() + ")";
+			break;
+		}
+		// default
+		return str;
 	}
 }

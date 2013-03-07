@@ -108,38 +108,9 @@ public class UIUtil {
 	}
 
 	/**
-	 * Constructs a human-readable List of strings from a list of sensor
-	 * types of the form:
-	 *
-	 * http://mmisw.org/ont/cf/parameter/sea_water_temperature,
-	 * http://mmisw.org/ont/cf/parameter/winds
-	 *
-	 * etc.
-	 *
-	 * ->
-	 *
-	 * [ "Sea water temperature", "Winds" ]
-	 *
-	 * @param types
-	 * @return
-	 */
-	public static List<String> cleanSensorTypesList(List<String> types) {
-		List<String> list = new ArrayList<String>();
-		for (String type : types) {
-			String t = type;
-			int idx = type.lastIndexOf('/');
-			if (idx != -1) {
-				t = type.substring(idx + 1);
-			}
-			t = t.replaceAll("_", " ");
-			t = t.substring(0, 1).toUpperCase() + t.substring(1);
-			list.add(t);
-		}
-		return list;
-	}
-
-	/**
 	 * Returns a confirmation dialog box with "YES" and "NO" buttons
+	 * 
+	 * The dialog returns MessageDialog.OK or MessageDialog.CANCEL
 	 *
 	 * @param shell
 	 * @param title
@@ -200,33 +171,6 @@ public class UIUtil {
 	 */
 	public static Shell getShell() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-	}
-
-	/**
-	 * Constructs a human-readable string from a list of sensor types of the
-	 * form:
-	 *
-	 * http://mmisw.org/ont/cf/parameter/sea_water_temperature,
-	 * http://mmisw.org/ont/cf/parameter/winds
-	 *
-	 * etc.
-	 *
-	 * @param types
-	 * @return
-	 */
-	public static String constructSensorTypes(List<String> types) {
-		/* clean up each list element */
-		List<String> list = cleanSensorTypesList(types);
-		/* produce the desired string */
-		StringBuffer sb = new StringBuffer();
-		for (String type : list) {
-			sb.append(type + ",\n");
-		}
-		String s = sb.toString();
-		/* remove last two characters if they exist */
-		if (s.endsWith(",\n"))
-			s = s.substring(0, s.length() - 2);
-		return s;
 	}
 
 	/**

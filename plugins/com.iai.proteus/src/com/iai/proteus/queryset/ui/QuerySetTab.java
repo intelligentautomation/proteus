@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,12 +37,14 @@ import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -103,8 +104,8 @@ import com.iai.proteus.common.sos.util.SosDataRequest;
 import com.iai.proteus.dialogs.DownloadModel;
 import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
-import com.iai.proteus.dialogs.ManageServicesDialog;
-import com.iai.proteus.dialogs.ServiceContentProvider;
+import com.iai.proteus.dialogs.ManageAllServicesDialog;
+import com.iai.proteus.dialogs.ManageQuerySetServicesDialog;
 import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.map.wms.WmsLayerInfo;
@@ -117,11 +118,11 @@ import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
+import com.iai.proteus.model.services.ServiceManager;
 import com.iai.proteus.model.services.ServiceRoot;
 import com.iai.proteus.model.services.ServiceType;
 import com.iai.proteus.plot.Variables;
 import com.iai.proteus.plot.VariablesHolder;
-import com.iai.proteus.queryset.DataExporter;
 import com.iai.proteus.queryset.DataFetcher;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
@@ -132,6 +133,7 @@ import com.iai.proteus.queryset.QuerySetEventListener;
 import com.iai.proteus.queryset.QuerySetEventNotifier;
 import com.iai.proteus.queryset.QuerySetEventType;
 import com.iai.proteus.queryset.TimeFacet;
+import com.iai.proteus.ui.SwtUtil;
 import com.iai.proteus.ui.UIUtil;
 import com.iai.proteus.views.DataPreviewEvent;
 import com.iai.proteus.views.DataPreviewView;
@@ -146,54 +148,37 @@ import com.iai.proteus.views.TimeSeriesUtil;
  *
  */
 public class QuerySetTab extends CTabItem
-	implements MapIdentifier, QuerySetEventListener
+	implements MapIdentifier, QuerySetEventListener, ServiceManager
 {
 
 	private static final Logger log = Logger.getLogger(QuerySetTab.class);
 
-	/*
-	 * True if changes have not been saved, false otherwise
-	 */
+	// True if changes have not been saved, false otherwise
 	private boolean dirty;
 
-	/*
-	 * Prefix added to dirty/modified query sets
-	 */
+	// Prefix added to dirty/modified query sets
 	public static String dirtyPrefix = "*";
 
-	/*
-	 * This array holds the map IDs that are used to
-	 * synchronize between workspace views and the map views
-	 */
-//	private ArrayList<MapId> mapIds;
-	
-	/*
-	 * The basic sensor offering layer part of this context (query set) 
-	 */
+	// The basic sensor offering layer part of this context (query set) 
 	private SensorOfferingLayer offeringLayer;
 	
-	/*
-	 * Holds all the sensor offerings
-	 */
+	// Holds all the sensor offerings
 	private SensorOfferingsHolder sensorOfferingsHolder;
 
-	/*
-	 * Holds all the observed properties
-	 */
+	// Holds all the observed properties
 	private ObservedPropertiesHolder observedPropertiesHolder;
 
-	/*
-	 * Holds all the available sensor data formats
-	 */
+	// Holds all the available sensor data formats
 	private AvailableFormatsHolder availableFormatsHolder;
-
 
 	// active facets that constrain what is being displayed
 	private Set<FacetChangeToggle> activeFacets;
 
+	// Holds query set services
+	private Collection<Service> services; 
 
 	/*
-	 * Stacks
+	 * Stacks and UI components 
 	 */
 	private Composite stack;
 	private StackLayout stackLayout;
@@ -224,7 +209,6 @@ public class QuerySetTab extends CTabItem
 	private StackLayout compositeOuterLayout; 
 	
 	private boolean showingSensorStack;
-	private boolean showingMapStack;
 	
 	// outer composite for the sensor workflow 
 	private SashForm sashSensors;
@@ -258,7 +242,7 @@ public class QuerySetTab extends CTabItem
 
 
 	// JFace viewers
-	private CheckboxTableViewer tableViewerServices;
+	private CheckboxTableViewer tableViewerSosServices;
 	private Table tableServices;
 
 	private CheckboxTreeViewer treeViewerObservedProperties;
@@ -298,16 +282,17 @@ public class QuerySetTab extends CTabItem
 	 * UI for maps
 	 */
 	
-	private Composite compositeStackMaps;
 	private StackLayout compositeStackMapsLayout;
 	
 	// stack composites
 	private Composite compositeSavedMaps;
 	private Composite compositeAvailableMaps;
 
+	// checkbox viewers
 	private TreeViewer treeViewerSavedMaps; 
-	private TreeViewer treeViewerServices;
 	private TreeViewer treeViewerWmsLayers;
+	// list of WMS services 
+	private TableViewer tableViewerWmsServices;
 	
 	private FilteredTree treeFiltered;
 	private Tree treeWmsLayers;
@@ -341,6 +326,8 @@ public class QuerySetTab extends CTabItem
 	private Image imgDotGreen;
 	private Image imgAddMap;
 	private Image imgBackControl;
+	private Image imgQuestion;
+	private Image imgAdd;
 
 	/*
 	 * UI labels and values
@@ -378,6 +365,7 @@ public class QuerySetTab extends CTabItem
 
 		activeFacets = new HashSet<FacetChangeToggle>();
 		
+		services = new ArrayList<Service>();
 		savedMaps = new HashSet<MapLayer>();
 		
 		/*
@@ -406,13 +394,15 @@ public class QuerySetTab extends CTabItem
 		imgSensors = UIUtil.getImage("icons/fugue/chart.png");
 		imgMap = UIUtil.getImage("icons/fugue/map.png");
 		imgDatabase = UIUtil.getImage("icons/fugue/database.png");
-		imgDelete = UIUtil.getImage("icons/fugue/cross.png");
+		imgDelete = UIUtil.getImage("icons/fugue/minus-button.png");
 		imgSave = UIUtil.getImage("icons/fugue/disk-black.png");
 		imgRefresh = UIUtil.getImage("icons/fugue/arrow-circle-double-135.png");
 		imgDotRed = UIUtil.getImage("icons/dot-red.png");
 		imgDotGreen = UIUtil.getImage("icons/dot-green.png");
 		imgAddMap = UIUtil.getImage("icons/fugue/map--plus.png");
-		imgBackControl = UIUtil.getImage("icons/fugue/control-180.png");
+		imgBackControl = UIUtil.getImage("icons/fugue/navigation-180-button.png");
+		imgQuestion = UIUtil.getImage("icons/fugue/question-button.png");
+		imgAdd = UIUtil.getImage("icons/fugue/plus-button.png");
 
 		cursor = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
 
@@ -429,15 +419,8 @@ public class QuerySetTab extends CTabItem
 		// unsaved
 		dirty = false;
 
-//		mapIds = new ArrayList<MapId>();
 		offeringLayer = new SensorOfferingLayer();
 		
-		/*
-		 * Generate and add the default map Id for this map layer
-		 */
-//		MapId defaultMapId = MapId.generateNewMapId();
-//		mapIds.add(defaultMapId);
-
 		// Create tab interface
 		createTab(parent);
 
@@ -665,62 +648,144 @@ public class QuerySetTab extends CTabItem
 		lblServices.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.BOLD));
 		lblServices.setText("Services");
 
-		final ToolBar toolBarServices = new ToolBar(stackServices, SWT.FLAT | SWT.RIGHT);
+		// composite to hold two different tool bars 
+		Composite compositeToolbar = new Composite(stackServices, SWT.NONE);
+		compositeToolbar.setLayout(new GridLayout(2, false));
+		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
+		final ToolBar toolBarServices = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBarServices.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 
 		ToolItem itemServicesManage = new ToolItem(toolBarServices, SWT.NONE);
-		itemServicesManage.setText("Manage services");
-		itemServicesManage.setImage(imgDatabase);
+		itemServicesManage.setText("Add...");
+		itemServicesManage.setImage(imgAdd);
 		// manage services listener
 		itemServicesManage.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ManageServicesDialog dialog =
-						new ManageServicesDialog(site.getShell());
+				// create and open dialog to manage services 
+				ManageQuerySetServicesDialog dialog = 
+						new ManageQuerySetServicesDialog(site.getShell(), 
+								QuerySetTab.this, ServiceType.SOS);
 				int res = dialog.open();
 				if (res == IDialogConstants.OK_ID) {
-					tableViewerServices.refresh();
+					// refresh viewer as input might have changed 
+					tableViewerSosServices.refresh();
+					
+					// TODO: need to update layers as layers might have been 
+					//       deleted
 				}
 			}
 		});
-
-//		ToolItem itemServicesAll = new ToolItem(toolBarServices, SWT.NONE);
-//		itemServicesAll.setText("All");
-//		itemServicesAll.setImage(UIUtil.getImage("icons/fugue/ui-check-box.png"));
-//		// check all listener
-//		itemServicesAll.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				// check all
-//				tableViewerServices.setAllChecked(true);
-//				// TODO: notify listeners of change
-//			}
-//		});
-//
-//		ToolItem itemServicesNone = new ToolItem(toolBarServices, SWT.NONE);
-//		itemServicesNone.setText("None");
-//		itemServicesNone.setImage(UIUtil.getImage("icons/fugue/ui-check-box-uncheck.png"));
-//		// check none listener
-//		itemServicesNone.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				// check none
-//				tableViewerServices.setAllChecked(false);
-//				// TODO: notify listeners of change
-//			}
-//		});
 		
+		final ToolItem itemServiceRemove = new ToolItem(toolBarServices, SWT.NONE);
+		itemServiceRemove.setText("Remove");
+		itemServiceRemove.setImage(imgDelete);
+		// default
+		itemServiceRemove.setEnabled(false);
+		// manage services listener
+		itemServiceRemove.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Collection<Service> servicesToRemove = new ArrayList<Service>();
+				// get services to be deleted
+				Collection<?> selected = SwtUtil.getSelection(tableViewerSosServices);
+				for (Object o : selected) {
+					// just make sure we are dealing with the right type
+					if (o instanceof Service) {
+						Service service = (Service) o;
+						// important: update the model status, deactivate
+						// the service to force its removal from the 
+						// sensor offering layer 
+						service.deactivate();
+						// add the service to be removed 
+						servicesToRemove.add(service); 
+					}
+				}
+				
+				// deactivate the services 
+				QuerySetEventNotifier.getInstance().fireEvent(offeringLayer,
+						QuerySetEventType.QUERYSET_SERVICE_TOGGLE, 
+							getServices());
+				
+				// remove the services from the model
+				getServices().removeAll(servicesToRemove);
+				// count active services 
+				int countActiveServices = 0;
+				for (Service service : getServices()) 
+					countActiveServices += service.isActive() ? 1 : 0;
+				// update live services tile
+				updateLiveTileServices(countActiveServices);				
+				
+				// refresh viewer as input might have changed 
+				tableViewerSosServices.refresh();
+			}
+		});		
+		
+		final ToolBar toolBarHelp = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBarHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
+		// tool bar item that shows some help information 
+		ToolItem tltmHelp = new ToolItem(toolBarHelp, SWT.NONE);
+		tltmHelp.setText("");
+		tltmHelp.setImage(imgQuestion);
+		tltmHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// create composite to hold help 
+				final Composite compositeInternal = new Composite(stackServices, SWT.NONE);
+				compositeInternal.setLayout(new GridLayout(1, false));
+				compositeInternal.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+				// text 
+				StyledText text = new StyledText(compositeInternal, SWT.WRAP);
+				text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+				text.setText("These services are specific to this query set. Services can be added or removed as appropriate.");
+				text.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+				// add button and listener to hide help 
+				Button btnClose = new Button(compositeInternal, SWT.NONE);
+				btnClose.setText("Close");
+				btnClose.setLayoutData(new GridData(SWT.RIGHT, SWT.NONE, false, false));
+				btnClose.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent event) {
+						// dispose control
+						compositeInternal.dispose();
+						// update layout 
+						stackServices.layout();
+						// re-enable tool item
+						toolBarHelp.setEnabled(true);
+					}
+				});
+				// move composite to the right place 
+				compositeInternal.moveAbove(tableServices);
+				// disable tool item
+				toolBarHelp.setEnabled(false);
+				// update the layout 
+				stackServices.layout();	
+			}
+		});
+
 		// services 
 
-		tableViewerServices = createServiceTableViewer(stackServices);
+		tableViewerSosServices = createServiceTableViewer(stackServices);
 		
-		tableServices = tableViewerServices.getTable();
+		tableServices = tableViewerSosServices.getTable();
 		tableServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tableServices.setHeaderVisible(true);
 		tableServices.setLinesVisible(false);
+		
+		// listener to update tool bar items 
+		tableViewerSosServices.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				itemServiceRemove.setEnabled(!event.getSelection().isEmpty());
+			}
+		});
 
-		tableViewerServices.setContentProvider(new ServiceContentProvider());
-		tableViewerServices.setUseHashlookup(true);
-		tableViewerServices.setInput(ServiceRoot.getInstance());
+		// input has to be set after the @{link TableViewerColumns} are defined		
+		tableViewerSosServices.setContentProvider(new InnerContentProvider(ServiceType.SOS));
+		tableViewerSosServices.setUseHashlookup(true);
+		tableViewerSosServices.setInput(services);
 		
 		/*
 		 * STACK: geographic
@@ -1392,7 +1457,6 @@ public class QuerySetTab extends CTabItem
 		compositeOuterLayout.topControl = sashSensors;
 		compositeOuterStack.layout();
 		showingSensorStack = true;
-		showingMapStack = false;
 		
 		/*
 		 * Maps
@@ -1451,6 +1515,9 @@ public class QuerySetTab extends CTabItem
 				// put the right stack on top 
 				compositeStackMapsLayout.topControl = compositeAvailableMaps;
 				parent.layout();
+				
+				// refresh the services in case there was a change 
+				tableViewerWmsServices.refresh();
 			}
 		});		
 		
@@ -1467,60 +1534,47 @@ public class QuerySetTab extends CTabItem
 		tltmDeleteSavedMap.setImage(imgDelete);
 		// disabled by default
 		tltmDeleteSavedMap.setEnabled(false);
-		
 		// listener to remove maps saved in the Query Set 
 		tltmDeleteSavedMap.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				
-				Collection<MapId> mapIdsToDelete = new ArrayList<MapId>();
-				ISelection selection = treeViewerSavedMaps.getSelection();
-				if (selection instanceof StructuredSelection) {
-					StructuredSelection structuredSelection = 
-							(StructuredSelection) selection;
-
-					int size = structuredSelection.size();
-					MessageDialog dialog = 
-							UIUtil.getConfirmDialog(site.getShell(), 
-									"Delete saved maps", 
-									"Are you sure you want to delete the " +
-											(size > 1 ? size + " ": "") + "selected " + 
-											(size > 1 ? "maps" : "map") + " from this query set?");
-					
-					int result = dialog.open();
-					// return and do nothing if the user cancels the action
-					if (result != MessageDialog.OK) {
-						return;
-					}
-					
-					Iterator<?> iter = structuredSelection.iterator();
-					while (iter.hasNext()) {
-						Object model = iter.next();
-						if (model instanceof WmsSavedMap) {
-							WmsSavedMap map = (WmsSavedMap) model;
-							// remove the selected map from the viewer input collection 
-							savedMaps.remove(map);
-							// remove the maps IDs
-//							mapIds.remove(map.getMapId());
-							// remember the map IDs to be deleted from the map viewer
-							mapIdsToDelete.add(map.getMapId());
-						}
-					}
+				Collection<?> selection = SwtUtil.getSelection(treeViewerSavedMaps);
+				int count = selection.size();
+				
+				MessageDialog dialog = 
+						UIUtil.getConfirmDialog(site.getShell(), 
+								"Delete saved maps", 
+								"Are you sure you want to delete the " +
+								count + " selected map" + (count > 1 ? "s" : "") + 
+								" from this query set?");
+				int result = dialog.open();
+				// return and do nothing if the user cancels the action
+				if (result != MessageDialog.OK) {
+					return;
 				}
 				
-				// update the UI
-				UIUtil.update(new Runnable() {
-					@Override
-					public void run() {
-						treeViewerSavedMaps.refresh();
+				Collection<IMapLayer> mapsToDelete = new ArrayList<IMapLayer>();
+				
+				for (Object obj : selection) {
+					// make sure we are dealing with the right model object type
+					if (obj instanceof WmsSavedMap) {
+						WmsSavedMap map = (WmsSavedMap) obj;
+						// remember the map IDs to be deleted from the map viewer
+						mapsToDelete.add(map);
+						// remove the selected map from the viewer input collection 
+						savedMaps.remove(map);
 					}
-				});	
+				}
+
+				// update the viewers whose input may have changed
+				treeViewerSavedMaps.refresh();
 				
 				// notify listeners that the maps with the given IDs should
 				// be deleted 
 				QuerySetEventNotifier.getInstance().fireEvent(this,
 						QuerySetEventType.QUERYSET_LAYERS_DELETE, 
-						mapIdsToDelete);
+						mapsToDelete);
 			}
 		});
 		
@@ -1692,6 +1746,23 @@ public class QuerySetTab extends CTabItem
 		ToolBar toolBarServices = new ToolBar(compositeServices, SWT.FLAT | SWT.RIGHT);
 		toolBarServices.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
+		ToolItem tltmManageServices = new ToolItem(toolBarServices, SWT.NONE);
+		tltmManageServices.setText("Manage services...");
+		tltmManageServices.setImage(imgDatabase);
+		// listener
+		tltmManageServices.addSelectionListener(new SelectionAdapter() {
+			@Override 
+			public void widgetSelected(SelectionEvent event) {
+				// create and open the dialog to manage services 
+				ManageAllServicesDialog dialog =
+						new ManageAllServicesDialog(UIUtil.getShell(), 
+								ServiceRoot.getInstance());
+				dialog.open();
+				// update the viewers whose input may have changed				
+				tableViewerWmsServices.refresh();
+			}
+		});		
+		
 		ToolItem tltmRefreshServices = new ToolItem(toolBarServices, SWT.NONE);
 		tltmRefreshServices.setText("Refresh");
 		tltmRefreshServices.setImage(imgRefresh);
@@ -1699,50 +1770,45 @@ public class QuerySetTab extends CTabItem
 		tltmRefreshServices.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				// TODO: implement 
+				// update the viewers whose input may have changed				
+				tableViewerWmsServices.refresh();
 			}
 		});	
-		tltmRefreshServices.setEnabled(false);
 		
-		new ToolItem(toolBarServices, SWT.SEPARATOR);			
+		// tree viewer showing services 
+		tableViewerWmsServices = new TableViewer(compositeServices, SWT.BORDER | SWT.MULTI);
+		Table tableServices = tableViewerWmsServices.getTable();
+		tableServices.setHeaderVisible(true);
+		tableServices.setLinesVisible(true);
+		tableServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		ToolItem tltmManageServices = new ToolItem(toolBarServices, SWT.NONE);
-		tltmManageServices.setText("Manage services");
-		tltmManageServices.setImage(imgDatabase);
-		tltmManageServices.setEnabled(false);
-		
-		treeViewerServices = new TreeViewer(compositeServices, SWT.BORDER | SWT.FULL_SELECTION);
-		Tree treeServices = treeViewerServices.getTree();
-		treeServices.setHeaderVisible(true);
-		treeServices.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		TreeViewerColumn treeViewerColumnServiceName = new TreeViewerColumn(treeViewerServices, SWT.NONE);
-		TreeColumn trclmnServiceName = treeViewerColumnServiceName.getColumn();
-		trclmnServiceName.setWidth(200);
-		trclmnServiceName.setText("Service name");
-		treeViewerColumnServiceName.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tblViewerColumnServiceName = new TableViewerColumn(tableViewerWmsServices, SWT.NONE);
+		TableColumn tbclmnServiceName = tblViewerColumnServiceName.getColumn();
+		tbclmnServiceName.setWidth(200);
+		tbclmnServiceName.setText("Service name");
+		tblViewerColumnServiceName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service model = (Service) element;
 					return model.getName();
 				}
-				return "-";		
+				return "";		
 			}
 		});
 		
-		TreeViewerColumn treeViewerColumnServiceUrl = new TreeViewerColumn(treeViewerServices, SWT.NONE);
-		TreeColumn trclmnServiceUrl = treeViewerColumnServiceUrl.getColumn();
-		trclmnServiceUrl.setWidth(200);
-		trclmnServiceUrl.setText("Service URL");
-		treeViewerColumnServiceUrl.setLabelProvider(new ColumnLabelProvider() {
+		TableViewerColumn tblViewerColumnServiceUrl = new TableViewerColumn(tableViewerWmsServices, SWT.NONE);
+		TableColumn tbclmnServiceUrl = tblViewerColumnServiceUrl.getColumn();
+		tbclmnServiceUrl.setWidth(200);
+		tbclmnServiceUrl.setText("Service URL");
+		tblViewerColumnServiceUrl.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service model = (Service) element;
 					return model.getServiceUrl();
 				}
-				return "-";
+				return "";
 			}
 		});	
 		
@@ -1754,7 +1820,7 @@ public class QuerySetTab extends CTabItem
 		 * from preview.  
 		 * 
 		 */
-		treeViewerServices.addSelectionChangedListener(new ISelectionChangedListener() {
+		tableViewerWmsServices.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				
@@ -1878,19 +1944,10 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 		
-		Service service = new Service(ServiceType.WMS);
-		service.setName("NASA JPL Web Mapping Server");
-		service.setServiceUrl("http://wms.jpl.nasa.gov/wms.cgi");
-		ServiceRoot.getInstance().addService(service);
-
-		Service service2 = new Service(ServiceType.WMS);
-		service2.setName("U.S. Atlantic East Coast");
-		service2.setServiceUrl("http://coastalmap.marine.usgs.gov/wmsconnector/com.esri.wms.Esrimap/atlanticcoast");
-		ServiceRoot.getInstance().addService(service2);
-		
-		treeViewerServices.setContentProvider(new ContentProvider());
-		// TODO: only include WMS services 
-		treeViewerServices.setInput(ServiceRoot.getInstance().getServices());
+		// only show WMSs
+		tableViewerWmsServices.setContentProvider(new InnerContentProvider(ServiceType.WMS));
+		tableViewerWmsServices.setUseHashlookup(true);
+		tableViewerWmsServices.setInput(ServiceRoot.getInstance());
 		
 		Composite compositeAvailableMapLayers = new Composite(sashFormMaps, SWT.NONE);
 		compositeAvailableMapLayers.setLayout(new GridLayout(1, false));
@@ -1902,8 +1959,7 @@ public class QuerySetTab extends CTabItem
 		tltmSaveSelected.setText("Save checked maps");
 		tltmSaveSelected.setImage(imgSave);
 		tltmSaveSelected.setEnabled(false);
-		
-		// handles saving maps to the Query Set 
+		// listener, handles saving maps to the Query Set 
 		tltmSaveSelected.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1918,8 +1974,6 @@ public class QuerySetTab extends CTabItem
 							WmsSavedMap map = WmsSavedMap.from(mapLayer);
 							// add the map to the list of saved maps
 							savedMaps.add(map);
-							// add the maps IDs
-//							mapIds.add(map.getMapId());
 							count++;
 						}
 					}
@@ -1934,13 +1988,8 @@ public class QuerySetTab extends CTabItem
 							" saved to your query set!";
 					UIUtil.showInfoMessage("Maps added to query set", msg);
 					
-					// update the UI
-					UIUtil.update(new Runnable() {
-						@Override
-						public void run() {
-							treeViewerSavedMaps.refresh();
-						}
-					});
+					// update the viewers whose input may have changed
+					treeViewerSavedMaps.refresh();
 				}
 			}
 		});
@@ -2076,7 +2125,6 @@ public class QuerySetTab extends CTabItem
 		compositeOuterLayout.topControl = sashSensors;
 		compositeOuterStack.layout();
 		showingSensorStack = true;
-		showingMapStack = false;
 	}
 	
 	/**
@@ -2086,7 +2134,6 @@ public class QuerySetTab extends CTabItem
 		compositeOuterLayout.topControl = compositeMaps;
 		compositeOuterStack.layout();				
 		showingSensorStack = false;
-		showingMapStack = true;
 	}
 	
 	/**
@@ -2107,116 +2154,72 @@ public class QuerySetTab extends CTabItem
 	private CheckboxTableViewer createServiceTableViewer(Composite composite) {
 		
 		CheckboxTableViewer tableViewer = 
-				CheckboxTableViewer.newCheckList(composite, SWT.BORDER);
+				CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.MULTI);
 
-//		TableViewerColumn colName = new TableViewerColumn(tableViewer, SWT.NONE);
-//		colName.getColumn().setText("Name");
-//		colName.getColumn().setWidth(100);
-//		colName.setLabelProvider(new ColumnLabelProvider() {
-//			@Override
-//			public String getText(Object element) {
-//				Service service = (Service) element;
-//				return service.getName();
-//			}
-//		});
+		TableViewerColumn colName = new TableViewerColumn(tableViewer, SWT.NONE);
+		colName.getColumn().setText("Name");
+		colName.getColumn().setWidth(200);
+		colName.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Service) {
+					Service service = (Service) element;
+					return service.getName();
+				}
+				return "";
+			}
+		});
 		
-//		final TableViewerColumn colFav = new TableViewerColumn(tableViewer, SWT.NONE);
-//		colFav.getColumn().setText("");
-//		colFav.getColumn().setWidth(20);
-//		colFav.setLabelProvider(new ColumnLabelProvider() {
-//			@Override
-//			public String getText(Object element) {
-//				return "";
-//			}
-//			
-//			@Override
-//			public Image getImage(Object element) {
-//				Service service = (Service) element;
-//				if (service.isLiked())
-//					return imgLike;
-//				return imgDislike;
-//			}
-//		});	
-		
-//		final Table table = tableViewer.getTable();
-		
-//		TableLayout tableLayout = new TableLayout();
-//		tableLayout.addColumnData(new ColumnWeightData(1, true));
-////		tableLayout.addColumnData(new ColumnWeightData(1, true));
-//		table.setLayout(tableLayout);
-		
+		final TableViewerColumn colUrl = new TableViewerColumn(tableViewer, SWT.NONE);
+		colUrl.getColumn().setText("Url");
+		colUrl.getColumn().setWidth(200);
+		colUrl.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Service) {
+					Service service = (Service) element;
+					return service.getName();
+				}
+				return "";
+			}
+		});		
+
 		// services state listener
 		tableViewer.addCheckStateListener(new ICheckStateListener() {
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
-				java.util.List<Service> services = new ArrayList<Service>();
 				
+				// update model status (active or inactive)
 				Object elmt = event.getElement();
 				if (elmt instanceof Service) {
 					Service service = (Service) elmt;
+					// important: update model status 
 					service.setActive(event.getChecked());
-//					service.setActive(true);
-					// collect the checked services 
-					if (event.getChecked())
-						services.add(service);
 				}
-
-				/*
-				 * Notify that this service has been toggled for
-				 * this query set
-				 */
-				QuerySetEventNotifier.getInstance().fireEvent(services,
-						QuerySetEventType.QUERYSET_SERVICE_TOGGLE,
-						offeringLayer);
 				
-				/*
-				 * Update live services tile
-				 */
-				updateLiveTileServices(services.size());
+				// count the active services
+				int countActiveServices = 0;
+				for (Service service : getServices()) 
+					countActiveServices += service.isActive() ? 1 : 0;
+
+				// notify that the list of active services might have changed
+				QuerySetEventNotifier.getInstance().fireEvent(offeringLayer,
+						QuerySetEventType.QUERYSET_SERVICE_TOGGLE, 
+							getServices());
+				
+				// update live services tile
+				updateLiveTileServices(countActiveServices);
 			}
 		});
 		
 		return tableViewer;
-	}
-
-	
-	/**
-	 * Add a listener to table viewer 
-	 * 
-	 * @param tableViewer
-	 * @param viewersToUpdate
-	 */
-	private void addDoubleClickListener(TableViewer tableViewer, final Collection<TableViewer> viewersToUpdate) {
-		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				ISelection s = event.getSelection();
-				if (s instanceof StructuredSelection) {
-					StructuredSelection selection = (StructuredSelection) s;
-					if (selection.size() == 1) {
-						Object data = selection.getFirstElement();
-						if (data instanceof Service) {
-							Service service = (Service) data;
-							if (service.isLiked())
-								service.dislike();
-							else
-								service.like();
-							for (TableViewer viewer : viewersToUpdate) {
-								viewer.refresh();
-							}
-						}						
-					}
-				}
-				
-			}
-		});		
 	}
 	
 	/**
 	 * Refresh viewers 
 	 */
 	public void refreshViewers() {
-		tableViewerServices.refresh();
+		tableViewerSosServices.refresh();
 	}
 
 	/**
@@ -2407,7 +2410,7 @@ public class QuerySetTab extends CTabItem
 			/*
 			 * Make the services table viewer the selection provider
 			 */
-			setActiveSelectionProvider(tableViewerServices);
+			setActiveSelectionProvider(tableViewerSosServices);
 			intermediator.setSelectionProviderDelegate(getActiveSelectionProvider());
 
 			break;
@@ -2963,6 +2966,61 @@ public class QuerySetTab extends CTabItem
 	}
 	
 	/**
+	 * Adds a service to this query set 
+	 * 
+	 * Implements @{link ServiceManager}
+	 * 
+	 * @param service
+	 */
+	@Override
+	public boolean addService(Service service) {
+		if (!services.contains(service))
+			return services.add(service);
+		return false;
+	}
+	
+	/**
+	 * Removes a service from this query set 
+	 * 
+	 * Implements @{link ServiceManager}
+	 * 
+	 * @param service 
+	 */
+	@Override
+	public boolean removeService(Service service) {
+		return services.remove(service);
+	}
+	
+	/**
+	 * Returns the services for this query set 
+	 * 
+	 * Implements @{link ServiceManager}
+	 * 
+	 * @return
+	 */
+	@Override
+	public Collection<Service> getServices() {
+		return services;
+	}
+	
+	/**
+	 * Returns the services matching the given type 
+	 * 
+	 * Implements @{link ServiceManager} 
+	 * 
+	 * @param type
+	 */
+	@Override
+	public Collection<Service> getServices(ServiceType type) {
+		Collection<Service> res = new ArrayList<Service>();
+		for (Service service : services) {
+			if (service.getServiceType().equals(type))
+				res.add(service);
+		}
+		return res;
+	}
+	
+	/**
 	 * Selects an offering, invoked by the map view
 	 *
 	 * @param offeringItem
@@ -3139,7 +3197,6 @@ public class QuerySetTab extends CTabItem
 			text += "One matching sensor offering";
 		else
 			text += noMatches + " matching sensor offerings";
-
 
 		// set text
 		liveProperties.setText(text);
@@ -3360,34 +3417,6 @@ public class QuerySetTab extends CTabItem
 	 */
 	private void updateTileStatus(Composite composite, Status status) {
 
-//		Color color = null;
-//
-		// decide colors
-//		switch (status) {
-//		case ACTIVE_OK:
-//			color = colorActiveOk;
-//			break;
-//		case ACTIVE_WARNING:
-//			color = colorActiveWarning;
-//			break;
-//		case INACTIVE_OK:
-//			color = colorInactiveOk;
-//			break;
-//		case INACTIVE_WARNING:
-//			color = colorInactiveWarning;
-//			break;
-//		case NONE:
-//			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
-//		default:
-//			color = SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND);
-//			break;
-//		}
-//
-//		// update color
-//		if (color != null) {
-////			composite.setBackground(color);
-//		}
-
 		Control[] controls = composite.getChildren();
 		if (controls.length == 2) {
 			Control top = controls[0];
@@ -3414,11 +3443,8 @@ public class QuerySetTab extends CTabItem
 						case ACTIVE_OK:
 						case ACTIVE_WARNING:
 							styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-//							SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN);
-//							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-//							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
-							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_GREEN));
+							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
+							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
 							break;
 						case INACTIVE_OK:
 						case INACTIVE_WARNING:
@@ -3431,12 +3457,6 @@ public class QuerySetTab extends CTabItem
 					}
 				}
 			}
-			
-//			Control live = controls[1];
-//			if (live instanceof Composite && color != null) {
-////				live.setBackground(color);
-////				live.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-//			}
 		}
 	}
 
@@ -3638,13 +3658,13 @@ public class QuerySetTab extends CTabItem
      * @param mapId
      * @param facet
      */
-    private void updateFacetSelection(MapId mapId, FacetChangeToggle facet)
-    {
-    	Collection<FacetChangeToggle> changes = new ArrayList<FacetChangeToggle>();
-    	changes.add(facet);
-
-    	updateFacetState(mapId, changes);
-    }
+//    private void updateFacetSelection(MapId mapId, FacetChangeToggle facet)
+//    {
+//    	Collection<FacetChangeToggle> changes = new ArrayList<FacetChangeToggle>();
+//    	changes.add(facet);
+//
+//    	updateFacetState(mapId, changes);
+//    }
 
 
     /**
@@ -3732,39 +3752,7 @@ public class QuerySetTab extends CTabItem
         }
     }
     
-    /**
-     * Exports data 
-     * 
-     */
-    private void exportData2() {
-    	
-    	Collection<SensorOfferingItem> offeringItems = 
-    			sensorOfferingsHolder.getSensorOfferings();
-    	
-    	Collection<String> observedProperties = getSelectedObservedProperties();
-
-    	// TODO: do not hard code the time period
-    	Collection<DownloadModel> models =
-    			DownloadModelHelper.createDownloadModels(offeringItems, 
-    					observedProperties, new Period(24, 0, 0, 0));
-    	
-    	File folder = new File("/Users/b0kaj/Downloads/data");
-
-    	try {
-    		
-			new ProgressMonitorDialog(site.getShell()).run(true,
-					true, new DataExporter(models, folder));
-			
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  
-    	    	
-    }    
-    
+ 
     /**
      * Collects the active observed properties facets 
      * 
@@ -3865,7 +3853,7 @@ public class QuerySetTab extends CTabItem
 	 */
 	public void mapDiscoveryClearSelection() {
 		// clear selection of services 
-		treeViewerServices.setSelection(new StructuredSelection());	
+		tableViewerWmsServices.setSelection(new StructuredSelection());	
 
 		// clear selection of layers from previously selected service
 		treeViewerWmsLayers.setInput(new Object[0]);
@@ -3944,6 +3932,12 @@ public class QuerySetTab extends CTabItem
 		if (imgBackControl != null) 
 			imgBackControl.dispose();
 		imgBackControl = null;
+		if (imgQuestion != null)
+			imgQuestion.dispose();
+		imgQuestion = null;
+		if (imgAdd != null)
+			imgAdd.dispose();
+		imgAdd = null;
 	}
 
 	/**
@@ -3965,4 +3959,46 @@ public class QuerySetTab extends CTabItem
 			setText(dirtyPrefix + name);
 		}
 	}
+	
+	/**
+	 * Content provider for viewers
+	 * 
+	 * @author Jakob Henriksson 
+	 *
+	 */
+	private static class InnerContentProvider implements IStructuredContentProvider {
+
+		Object[] EMPTY_ARRAY = new Object[0];
+		
+		private ServiceType serviceType;
+
+		/**
+		 * Constructor 
+		 * 
+		 * @param serviceType
+		 */
+		public InnerContentProvider(ServiceType serviceType) {
+			this.serviceType = serviceType;
+		}
+
+		@Override
+		public Object[] getElements(Object element) {
+			if (element instanceof ServiceManager) {
+				return ((ServiceManager) element).getServices(serviceType).toArray();
+			}
+			// most generic, an array 
+			else if (element instanceof ArrayList) {
+				return ((ArrayList<?>) element).toArray();
+			} 
+			return EMPTY_ARRAY;
+		}
+		
+		@Override
+		public void dispose() {
+		}
+
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		}
+	}	
 }

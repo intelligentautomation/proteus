@@ -11,6 +11,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 
 import com.iai.proteus.dialogs.ManageAllServicesDialog;
+import com.iai.proteus.model.services.ServiceRoot;
 import com.iai.proteus.ui.UIUtil;
 
 /**
@@ -36,7 +37,8 @@ public class ManageServicesHandler implements IHandler {
 
 		// create and open the dialog to manage services 
 		ManageAllServicesDialog dialog =
-				new ManageAllServicesDialog(UIUtil.getShell());
+				new ManageAllServicesDialog(UIUtil.getShell(), 
+						ServiceRoot.getInstance());
 		dialog.open();
 		
 		return null;

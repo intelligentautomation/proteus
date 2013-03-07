@@ -22,7 +22,10 @@ and has the following dependencies:
 
 * [Java XT - RSS & GIS](http://www.javaxt.com/), Version 1.1, [MIT License](http://www.javaxt.com/downloads/javaxt-core/LICENSE.TXT "MIT License")
 
+* [Apache Commons Validator](http://commons.apache.org/proper/commons-validator/ "Apache Commons Validator"), Version 1.4.0, Apache License, Version 2.0
+
 * [Apache Log4j](http://logging.apache.org/log4j/1.2/ "Apache Log4j"), Version 1.2.17, Apache License, Version 2.0
+
 
 # License 
 

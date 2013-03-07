@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/commons-validator-1.4.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javaxt-gis.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/javaxt-rss.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/gson-2.2.2.jar"/>

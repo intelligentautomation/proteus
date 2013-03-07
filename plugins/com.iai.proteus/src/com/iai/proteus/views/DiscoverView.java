@@ -129,6 +129,7 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		final ToolItem toolItemSensors = new ToolItem(toolBar, SWT.RADIO);
 		toolItemSensors.setText("Sensors");
 		toolItemSensors.setImage(UIUtil.getImage("icons/fugue/chart.png"));
+		toolItemSensors.setToolTipText("Discover and view sensor data");
 		// find minimum width
 		if (toolItemSensors.getWidth() > minWidth)
 			minWidth = toolItemSensors.getWidth();
@@ -138,9 +139,9 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		final ToolItem toolItemMaps = new ToolItem(toolBar, SWT.RADIO);
 		toolItemMaps.setText("Maps");
 		toolItemMaps.setImage(UIUtil.getImage("icons/fugue/map.png"));
-		// TODO: not yet implemented 
+		toolItemMaps.setToolTipText("Find and view maps");
+		// default 
 		toolItemMaps.setEnabled(true);
-		toolItemMaps.setToolTipText("Not yet implemented");
 		// find minimum width		
 		if (toolItemMaps.getWidth() > minWidth)
 			minWidth = toolItemMaps.getWidth();
@@ -235,22 +236,21 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 						UIUtil.showInfoMessage("To implement: check dirty flag");
 					}
 
+					// notify that all map layers from the query set should
+					// be deleted
 					QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
 							QuerySetEventType.QUERYSET_LAYERS_DELETE,
 							querySetTab.getMapLayers());
 
-					/*
-					 * Disable actions if this was the last item
-					 */
-					if (tabFolder.getItemCount() <= 1) {
-						// tabs cannot be renamed 
-						toolItemRename.setEnabled(false);
-						// we cannot switch between sensors and map stacks
-						toolItemSensors.setSelection(false);
-						toolItemSensors.setEnabled(false);
-						toolItemMaps.setSelection(false);
-						toolItemMaps.setEnabled(false);
-					}
+					// disable actions if this was the last item
+					boolean status = !(tabFolder.getItemCount() <= 1);
+					// tabs cannot be renamed 
+					toolItemRename.setEnabled(status);
+					// we cannot switch between sensors and map stacks
+					toolItemSensors.setSelection(status);
+					toolItemSensors.setEnabled(status);
+					toolItemMaps.setSelection(status);
+					toolItemMaps.setEnabled(status);
 				}
 			}
 		});
@@ -336,7 +336,6 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 				toolItemRename.setEnabled(true);
 				// we can switch between sensors and maps stacks
 				toolItemSensors.setEnabled(true);
-				// TOOD: should be true
 				toolItemMaps.setEnabled(true);
 				// the sensors stack is shown by default  
 				toolItemSensors.setSelection(true);
