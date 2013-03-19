@@ -12,7 +12,7 @@ import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 
 import java.awt.Color;
 
-import com.iai.proteus.communityhub.FeedItem;
+import com.iai.proteus.communityhub.apiv1.FeedItem;
 
 /**
  * A specialized WorldWind marker 

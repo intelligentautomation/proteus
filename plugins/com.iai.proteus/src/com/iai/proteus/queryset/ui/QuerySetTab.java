@@ -401,7 +401,7 @@ public class QuerySetTab extends CTabItem
 		imgDotGreen = UIUtil.getImage("icons/dot-green.png");
 		imgAddMap = UIUtil.getImage("icons/fugue/map--plus.png");
 		imgBackControl = UIUtil.getImage("icons/fugue/navigation-180-button.png");
-		imgQuestion = UIUtil.getImage("icons/fugue/question-button.png");
+		imgQuestion = UIUtil.getImage("icons/fugue/question-white.png");
 		imgAdd = UIUtil.getImage("icons/fugue/plus-button.png");
 
 		cursor = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
@@ -649,7 +649,7 @@ public class QuerySetTab extends CTabItem
 		lblServices.setText("Services");
 
 		// composite to hold two different tool bars 
-		Composite compositeToolbar = new Composite(stackServices, SWT.NONE);
+		final Composite compositeToolbar = new Composite(stackServices, SWT.NONE);
 		compositeToolbar.setLayout(new GridLayout(2, false));
 		compositeToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
@@ -734,46 +734,21 @@ public class QuerySetTab extends CTabItem
 			}
 		});		
 		
-		final ToolBar toolBarHelp = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
+		ToolBar toolBarHelp = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
 		toolBarHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
 		
 		// tool bar item that shows some help information 
-		ToolItem tltmHelp = new ToolItem(toolBarHelp, SWT.NONE);
+		final ToolItem tltmHelp = new ToolItem(toolBarHelp, SWT.NONE);
 		tltmHelp.setText("");
 		tltmHelp.setImage(imgQuestion);
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				// create composite to hold help 
-				final Composite compositeInternal = new Composite(stackServices, SWT.NONE);
-				compositeInternal.setLayout(new GridLayout(1, false));
-				compositeInternal.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-				// text 
-				StyledText text = new StyledText(compositeInternal, SWT.WRAP);
-				text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-				text.setText("These services are specific to this query set. Services can be added or removed as appropriate.");
-				text.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-				// add button and listener to hide help 
-				Button btnClose = new Button(compositeInternal, SWT.NONE);
-				btnClose.setText("Close");
-				btnClose.setLayoutData(new GridData(SWT.RIGHT, SWT.NONE, false, false));
-				btnClose.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent event) {
-						// dispose control
-						compositeInternal.dispose();
-						// update layout 
-						stackServices.layout();
-						// re-enable tool item
-						toolBarHelp.setEnabled(true);
-					}
-				});
-				// move composite to the right place 
-				compositeInternal.moveAbove(tableServices);
-				// disable tool item
-				toolBarHelp.setEnabled(false);
-				// update the layout 
-				stackServices.layout();	
+				// create the help controller 
+				SwtUtil.createHelpController(stackServices, 
+						tltmHelp, compositeToolbar, 
+						"These services are specific to this query set. " + 
+						"Services can be added or removed as appropriate.");
 			}
 		});
 
@@ -1215,7 +1190,7 @@ public class QuerySetTab extends CTabItem
 								WorldWindUtils.getCentralPosition(offering);
 
 						QuerySetEventNotifier.getInstance().fireEvent(this,
-								QuerySetEventType.QUERYSET_FLY_TO_OFFERING,
+								QuerySetEventType.QUERYSET_FLY_TO_LATLON,
 								new LatLon(pos.getLatitude().degrees,
 										pos.getLongitude().degrees));
 					}
@@ -1509,6 +1484,7 @@ public class QuerySetTab extends CTabItem
 		// this is the default stack on top 
 		compositeStackMapsLayout.topControl = compositeSavedMaps;
 
+
 		// button for switching the stack to find more maps 
 		Button btnSwitchStackMoreMaps = new Button(compositeSavedMaps, SWT.NONE);
 		btnSwitchStackMoreMaps.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
@@ -1528,7 +1504,7 @@ public class QuerySetTab extends CTabItem
 				// refresh the services in case there was a change 
 				tableViewerWmsServices.refresh();
 			}
-		});		
+		});	
 		
 		Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
 		groupMaps.setLayout(new GridLayout(1, false));
@@ -1795,6 +1771,7 @@ public class QuerySetTab extends CTabItem
 		TableColumn tbclmnServiceName = tblViewerColumnServiceName.getColumn();
 		tbclmnServiceName.setWidth(200);
 		tbclmnServiceName.setText("Service name");
+		// label provider 
 		tblViewerColumnServiceName.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -1810,6 +1787,7 @@ public class QuerySetTab extends CTabItem
 		TableColumn tbclmnServiceUrl = tblViewerColumnServiceUrl.getColumn();
 		tbclmnServiceUrl.setWidth(200);
 		tbclmnServiceUrl.setText("Service URL");
+		// label provider
 		tblViewerColumnServiceUrl.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {

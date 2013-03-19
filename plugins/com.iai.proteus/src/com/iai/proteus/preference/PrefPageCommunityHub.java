@@ -14,18 +14,26 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.iai.proteus.Activator;
 import com.iai.proteus.PreferenceConstants;
 
-
+/**
+ * Preference page for the Community Hub 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class PrefPageCommunityHub extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage
 {
+	// page ID 
+	public static final String ID = "com.iai.proteus.preferences.community_hub.page";
 
 	private StringFieldEditor stringFieldEditor;
 
 	/**
-	 *
+	 * Constructor
+	 * 
 	 */
 	public PrefPageCommunityHub() {
-//		super(GRID);
+
 	}
 
 	@Override

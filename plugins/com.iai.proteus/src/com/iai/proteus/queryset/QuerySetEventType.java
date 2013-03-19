@@ -36,7 +36,7 @@ public enum QuerySetEventType {
 
 
 	// used to request moving to sensor offering
-	QUERYSET_FLY_TO_OFFERING,
+	QUERYSET_FLY_TO_LATLON,
 
 	// used to plot data
 	QUERYSET_PREVIEW_PLOT,

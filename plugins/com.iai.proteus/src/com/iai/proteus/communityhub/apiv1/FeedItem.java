@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.communityhub;
+package com.iai.proteus.communityhub.apiv1;
 
 import javaxt.rss.Item;
 

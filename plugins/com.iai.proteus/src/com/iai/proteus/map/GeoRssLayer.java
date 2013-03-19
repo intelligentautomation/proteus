@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.iai.proteus.communityhub.FeedItem;
+import com.iai.proteus.communityhub.apiv1.FeedItem;
 
 public class GeoRssLayer extends RenderableLayer {
 	

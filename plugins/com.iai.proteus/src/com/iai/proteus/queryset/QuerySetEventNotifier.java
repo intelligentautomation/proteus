@@ -18,12 +18,18 @@ import java.util.Collection;
  */
 public class QuerySetEventNotifier {
 
-	/*
-	 * Collection of listeners on this model object
-	 */
+	// Collection of listeners on this model object
 	protected Collection<QuerySetEventListener> listeners =
 		new ArrayList<QuerySetEventListener>();
 
+	/**
+	 * Private constructor
+	 * 
+	 */
+	private QuerySetEventNotifier() {
+		
+	}
+	
 	/**
 	 * Adding a listener
 	 *

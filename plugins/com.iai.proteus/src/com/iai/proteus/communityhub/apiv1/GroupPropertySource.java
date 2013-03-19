@@ -3,20 +3,21 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.communityhub;
+package com.iai.proteus.communityhub.apiv1;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
+
 /**
- * Property provider for Source objects 
+ * Property provider for @{link Group} objects 
  * 
  * @author Jakob Henriksson
  *
  */
-public class CommunityHubGroupPropertySource implements IPropertySource {
+public class GroupPropertySource implements IPropertySource {
 	
 	private final String CAT_GROUP = "Community group";
 	
@@ -30,7 +31,7 @@ public class CommunityHubGroupPropertySource implements IPropertySource {
 	 * Default constructor 
 	 * 
 	 */
-	public CommunityHubGroupPropertySource() {
+	public GroupPropertySource() {
 		
 	}
 
@@ -39,7 +40,7 @@ public class CommunityHubGroupPropertySource implements IPropertySource {
 	 * 
 	 * @param group
 	 */
-	public CommunityHubGroupPropertySource(Group group) {
+	public GroupPropertySource(Group group) {
 		this.group = group;
 	}
 
@@ -79,7 +80,7 @@ public class CommunityHubGroupPropertySource implements IPropertySource {
 			} else if (id.equals(PROP_GROUP_DESC)) {
 				return group.getDescription();
 			} else if (id.equals(PROP_GROUP_CREATED)) {
-				return group.getCreated();
+				return group.getDateCreated();
 			}
 		}
 		

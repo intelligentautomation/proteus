@@ -226,6 +226,29 @@ public class WorldWindUtils {
 	}
 	
 	/**
+	 * Returns the central position of the given bounding box coordinates 
+	 * 
+	 * @param latU
+	 * @param lonU
+	 * @param latL
+	 * @param lonL
+	 * @return
+	 */
+	public static com.iai.proteus.common.LatLon 
+		getCentralPosition(double latU, double lonU, double latL, double lonL) {
+		
+		Sector sector = 
+				new Sector(Angle.fromDegrees(latL), 
+						Angle.fromDegrees(latU),
+						Angle.fromDegrees(lonL),
+						Angle.fromDegrees(lonU));
+
+		Position position = new Position(sector.getCentroid(), 0);
+		
+		return getLatLon(position);
+	}
+	
+	/**
 	 * Returns a point of interest object given LAT and LONG values 
 	 * 
 	 * @param lat
@@ -288,7 +311,26 @@ public class WorldWindUtils {
 			return new Position(latlon, 0.0);
 		}
 		return null;
-	}		
+	}
+	
+	/**
+	 * Create a @{link com.iai.proteus.common.LatLon} object from a Position
+	 * 
+	 * @param position
+	 * @return
+	 */
+	public static com.iai.proteus.common.LatLon getLatLon(Position position) {
+		if (position != null) {
+			double lat = position.getLatitude().getDegrees();
+			double lon = position.getLongitude().getDegrees();
+			com.iai.proteus.common.LatLon latLon = 
+					new com.iai.proteus.common.LatLon(lat, lon);
+			return latLon;
+		}
+		
+		// default
+		return null;
+	}
 	
 	/**
 	 * Sets the appropriate attributes for this marker 

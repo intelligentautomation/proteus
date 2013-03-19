@@ -78,14 +78,14 @@
             restorable="true">
       </view>
       <view
-            class="com.iai.proteus.views.CommunityGroupView"
-            id="com.iai.proteus.views.CommunityGroupView"
+            class="com.iai.proteus.views.CommunityHubGroupsView"
+            id="com.iai.proteus.views.communityhub.GroupsView"
             name="Community Groups">
       </view>
       <view
-            class="com.iai.proteus.views.AlertFeedView"
+            class="com.iai.proteus.views.CommunityHubAlertsView"
             icon="icons/fugue/megaphone.png"
-            id="com.iai.proteus.views.AlertFeedView"
+            id="com.iai.proteus.views.communityhub.AlertsView"
             name="Alerts">
       </view>
    </extension>
@@ -403,7 +403,7 @@
          </property>
          <property
                name="windowImages"
-               value="icons/sinea32.png,icons/sinea48.png">
+               value="icons/proteus64.png">
          </property>
          <property
                name="appName"

@@ -65,7 +65,7 @@ import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosUtil;
-import com.iai.proteus.communityhub.Group;
+import com.iai.proteus.communityhub.apiv1.Group;
 import com.iai.proteus.map.DataPlotProvenanceLayer;
 import com.iai.proteus.map.GeoRssLayer;
 import com.iai.proteus.map.MarkerSelection;
@@ -248,7 +248,7 @@ public class WorldWindView extends ViewPart
 		getSite().getPage().addSelectionListener(DiscoverView.ID, this);
 		
 		// add a listener to selections in @{link CommunityGroupView} 
-		getSite().getPage().addSelectionListener(CommunityGroupView.ID, this);
+		getSite().getPage().addSelectionListener(CommunityHubGroupsView.ID, this);
 	}
 
 
@@ -743,7 +743,7 @@ public class WorldWindView extends ViewPart
 
 			break;
 
-		case QUERYSET_FLY_TO_OFFERING:
+		case QUERYSET_FLY_TO_LATLON:
 
 			if (value instanceof LatLon) {
 				LatLon ll = (LatLon)value;
@@ -1053,7 +1053,7 @@ public class WorldWindView extends ViewPart
 		/*
 		 * For @{link CommunityGroupView}
 		 */
-		else if (partId.equals(CommunityGroupView.ID)) {
+		else if (partId.equals(CommunityHubGroupsView.ID)) {
 			
 			if (!selection.isEmpty()) {
 				if (selection instanceof StructuredSelection) {

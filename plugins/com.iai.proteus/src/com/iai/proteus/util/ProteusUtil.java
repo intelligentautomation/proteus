@@ -19,8 +19,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.iai.proteus.PreferenceConstants;
 import com.iai.proteus.common.Util;
-import com.iai.proteus.communityhub.CommunityGroupResponse;
-import com.iai.proteus.communityhub.Group;
+import com.iai.proteus.communityhub.apiv1.Alert;
+import com.iai.proteus.communityhub.apiv1.AlertsResponse;
+import com.iai.proteus.communityhub.apiv1.Group;
+import com.iai.proteus.communityhub.apiv1.GroupsResponse;
 
 public class ProteusUtil {
 	
@@ -52,6 +54,7 @@ public class ProteusUtil {
 	/**
 	 * Returns the groups from the Community Hub 
 	 * 
+	 * @param store
 	 */
 	public static Collection<Group> getCommunityGroups(IPreferenceStore store) 
 		throws MalformedURLException, SocketTimeoutException, 
@@ -66,21 +69,60 @@ public class ProteusUtil {
 				store.getInt(PreferenceConstants.prefConnectionTimeout);
 
 		// TODO: make this generic, don't hard code here 
-		serviceAddress += "/apiv1/groups";
+		serviceAddress += "/apiv1/groups/";
 
-		// issue GET request
+		// issue GET request to API
 		String json = Util.get(serviceAddress, 
 				timeoutConnection, timeoutRead);
 
-		CommunityGroupResponse gson = 
-				new Gson().fromJson(json, CommunityGroupResponse.class);
+		// get and convert response 
+		GroupsResponse gson = 
+				new Gson().fromJson(json, GroupsResponse.class);
 
+		// verify result and then return the groups 
 		if (gson.getStatus().equals("OK"))
-			return gson.getResponse(); 
+			return gson.getGroups(); 
 
 		// default 
 		return new ArrayList<Group>();
 	}
+	
+	/**
+	 * Returns the groups from the Community Hub 
+	 * 
+	 * @param store
+	 * @param groupId
+	 */
+	public static Collection<Alert> getAlerts(IPreferenceStore store, int groupId) 
+		throws MalformedURLException, SocketTimeoutException, 
+		JsonSyntaxException, IOException 
+	{
+
+		String serviceAddress = getCommunityHubEndpoint(store);
+
+		int timeoutConnection =
+				store.getInt(PreferenceConstants.prefConnectionTimeout);
+		int timeoutRead =
+				store.getInt(PreferenceConstants.prefConnectionTimeout);
+
+		// TODO: make this generic, don't hard code here 
+		serviceAddress += "/apiv1/alerts/" + groupId + "/";
+
+		// issue GET request to API
+		String json = Util.get(serviceAddress, 
+				timeoutConnection, timeoutRead);
+
+		// get and convert response 
+		AlertsResponse gson = 
+				new Gson().fromJson(json, AlertsResponse.class);
+
+		// verify result and then return the groups 
+		if (gson.getStatus().equals("OK"))
+			return gson.getAlerts(); 
+
+		// default 
+		return new ArrayList<Alert>();
+	}	
 	
 	/**
 	 * Fetches an alert feed for a given group with default cache threshold period
@@ -110,7 +152,7 @@ public class ProteusUtil {
 	
 	public static void main(String[] args) {
 		
-		String serviceAddress = "http://localhost:8080/communityhub/apiv1/groups";
+		String serviceAddress = "http://localhost:8080/communityhub/apiv1/alerts/1/";
 		
 		try {
 			
@@ -121,13 +163,12 @@ public class ProteusUtil {
 			String json = Util.get(serviceAddress, 
 					timeoutConnection, timeoutRead);
 			
-			
-			CommunityGroupResponse gson = 
-					new Gson().fromJson(json, CommunityGroupResponse.class);
+			AlertsResponse gson = 
+					new Gson().fromJson(json, AlertsResponse.class);
 			
 			System.out.println("V: " + gson.getVersion());
-			for (Group g : gson.getResponse()) {
-				System.out.println("G: " + g.getName());
+			for (Alert g : gson.getAlerts()) {
+				System.out.println("G: " + g.getId() + "; " + g.getType());
 			}
 
 //			HubAddServiceResponse data =

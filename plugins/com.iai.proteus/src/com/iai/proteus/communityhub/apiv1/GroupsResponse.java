@@ -3,23 +3,30 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.communityhub;
+package com.iai.proteus.communityhub.apiv1;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class CommunityGroupResponse {
+/**
+ * Object structure for the response to the Community Hub API call
+ * to endpoint /apiv1/groups/
+ * 
+ * @author Jakob Henriksson
+ *
+ */
+public class GroupsResponse {
 	
 	private String status;
 	private String version;
-	private Collection<Group> response;
+	private Collection<Group> groups;
 	
 	/**
 	 * Constructor
 	 * 
 	 */
-	public CommunityGroupResponse() {
-		response = new ArrayList<Group>();
+	public GroupsResponse() {
+		groups = new ArrayList<Group>();
 	}
 
 	/**
@@ -51,17 +58,17 @@ public class CommunityGroupResponse {
 	}
 
 	/**
-	 * @return the response
+	 * @return the groups
 	 */
-	public Collection<Group> getResponse() {
-		return response;
+	public Collection<Group> getGroups() {
+		return groups;
 	}
 
 	/**
-	 * @param response the response to set
+	 * @param groups the groups to set
 	 */
-	public void setResponse(Collection<Group> response) {
-		this.response = response;
+	public void setGroups(Collection<Group> groups) {
+		this.groups = groups;
 	}
 
 }

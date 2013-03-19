@@ -9,8 +9,8 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
-import com.iai.proteus.views.AlertFeedView;
-import com.iai.proteus.views.CommunityGroupView;
+import com.iai.proteus.views.CommunityHubAlertsView;
+import com.iai.proteus.views.CommunityHubGroupsView;
 import com.iai.proteus.views.WorldWindView;
 
 public class AlertPerspective implements IPerspectiveFactory {
@@ -32,14 +32,14 @@ public class AlertPerspective implements IPerspectiveFactory {
         /*
          * Groups
          */
-		layout.addStandaloneView(CommunityGroupView.ID, false,
+		layout.addStandaloneView(CommunityHubGroupsView.ID, false,
 				IPageLayout.LEFT, 0.3f, editorArea);
 		
 		/*
 		 * Feed (alerts)
 		 */
-		layout.addStandaloneView(AlertFeedView.ID, false, 
-				IPageLayout.BOTTOM, 0.3f, CommunityGroupView.ID);
+		layout.addStandaloneView(CommunityHubAlertsView.ID, false, 
+				IPageLayout.BOTTOM, 0.4f, CommunityHubGroupsView.ID);
 
         /*
          * Map
