@@ -70,7 +70,7 @@ To avoid having to change the version-controllde PDE/Build _build.properties_ fi
 
 There is really just one property that needs to be modified, and that is the property specifying the location of the target Eclipse RCP installtion that we will be building against. 
 
-* **eclipse-target** The value should point to the target Eclipse RCP  installation that should be used during the build. *If you are building on Windows, you should use slashes, and not backward slashes, in your paths.* 
+* **eclipse-target** This property should be uncommented and the value should point to the target Eclipse RCP installation that should be used during the build. *If you are building on Windows, you should use slashes, and not backward slashes, in your paths.* 
 
 *Note: The target Eclipse installation needs to have the [Delta pack](#delta-pack) installed in order to successfully build for multiple platforms (this is the default). If you do not want to build for multiple platforms the utilities/pde-builder/build.properties file needs to be modified. Which platforms to build for is controlled by the 'configs' parameter*
 
