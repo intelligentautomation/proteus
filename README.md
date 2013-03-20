@@ -32,13 +32,15 @@ Proteus is built on the [Eclipse Rich Client Platform (RCP)](http://wiki.eclipse
 
 ### Requirements 
 
-Proteus has been tested with JDK6, JDK7 and Eclipse 3.7.x. (_Indigo_). To [build](#building) Proteus for multiple platforms (e.g. Mac OS X, Linux and Windows), the Eclipse installation needs to have the [Delta pack](#delta-pack) installed. The Delta pack contains platform-specific bundles and executables for multiple platforms. By default an Eclipse RCP installation only contains bundles for the specific platform it will run on. 
+Proteus has been tested with JDK6, JDK7 and Eclipse RCP 3.7.x. (_Indigo_). The build also requires [Ant](http://ant.apache.org/ "Ant") to be installed on you computer and to be available on your path. 
+
+To [build](#building) Proteus for multiple platforms (e.g. Mac OS X, Linux and Windows), the Eclipse target installation needs to have the [Delta pack](#delta-pack) installed. The Delta pack contains platform-specific bundles and executables for multiple platforms. By default an Eclipse RCP installation only contains bundles for the specific platform it will run on. 
 
 #### Delta pack
 
 The Delta pack is specific to each Eclipse version. The Delta pack for Eclipse 3.7.2, for example, can be found [here](http://download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/). 
 
-Unpack the downloaded Delta pack into the Eclipse installation with the same version. This will make platform-specific bundles available so that builds for multiple platforms can be produced on a single platform.
+Unpack the downloaded Delta pack into the target Eclipse installation with the same version. This will make platform-specific bundles available so that builds for multiple platforms can be produced on a single platform.
 
 ### Building 
 
@@ -51,31 +53,36 @@ We will detail these two steps below.
 
 ### Configure the build
 
-The build is controlled by a _build.properties_ file. The _build.properties_ file can be found in the _utilities/builder_ folder and provides information needed by the PDE/Build scripts, as well as specifies exactly what should be built. It is a Java properties file, so it consists of key-value (_key=value_) pairs. Most default values can be left untouched, or be overridden.
+The PDE/Build process we use is ultimately controlled by a _build.properties_ file. The default _build.properties_ file we provide can be found in the _utilities/pde-builder_ folder. This file provides information needed by the PDE/Build scripts, and specifies exactly what should be built. It is a Java properties file, so it consists of key-value (_key=value_) pairs. Most default values can be left untouched, or will be overridden by our custom scripts.
 
-For sake of simplicity we have provided a batch file where the values that need to be overridden can easily be changed. On Mac OS X/Linux the batch file template is _utilities/build\_template.sh_ and on Windows it is _utilities/build\_template.bat_. 
+To keep things organized, there are a few pre-build steps that are recommended. For sake of simplicity we have provided an ANT build file (_utilities/build.xml_) that can execute these simple pre-build steps for you, as well as initiate the PDE/Build itself. Just follow the instructions below. 
 
-**Step 1: Copy the build batch file (Mac OS X/Linux)**
+**Step 1: Copy the build configuration file**
+
+To avoid having to change the version-controllde PDE/Build _build.properties_ file discussed above, we have provided a separate Java properties file where the necessary properties can be overridden. This file is called _config.example.properties_ and is located in the _utilities_ folder. Copy the contents of this file to a file called _config.properties_ in the same folder:  
 
     cd utilities
-    cp build_template.sh build.sh
+    cp config.example.properties config.properties
 
-*Note: This step is not strictly needed, but helps to avoid making changes to versioned controlled files during specific system build configurations.*
+*Note: Modifying a copied file avoids making changes to versioned controlled files during specific system build configurations.*
 
-**Step 2: Edit the build batch file**
+**Step 2: Edit the build configuration file**
 
-There are two values that need to be modified:
+There is really just one property that needs to be modified, and that is the property specifying the location of the target Eclipse RCP installtion that we will be building against. 
 
-1. **PROTEUS\_SRC\_ROOT** The value should point to the location of the clonsed Proteus repository that should be built.
-* **ECLIPSE\_TARGET\_ROOT** The value should point to the target Eclipse installation that should be used during the build. 
+* **eclipse-target** The value should point to the target Eclipse RCP  installation that should be used during the build. *If you are building on Windows, you should use slashes, and not backward slashes, in your paths.* 
 
-*Note: The target Eclipse installation needs to have the [Delta pack](#delta-pack) installed in order to successfully build for multiple platforms (this is the default). If you do not want to build for multiple platforms the utilities/builder/build.properties file needs to be modified. Which platforms to build for is controlled by the configs parameter*
+*Note: The target Eclipse installation needs to have the [Delta pack](#delta-pack) installed in order to successfully build for multiple platforms (this is the default). If you do not want to build for multiple platforms the utilities/pde-builder/build.properties file needs to be modified. Which platforms to build for is controlled by the 'configs' parameter*
 
 ### Execute the build 
 
-When the build has been [configured](#configure-the-build), simple execute the modified build script (_build.sh_ for Mac OS X/Linux and _build.bat_ for Windows).
+When the build has been [configured](#configure-the-build), simple execute the _build.xml_ ANT script by runnnig ANT in the _utilities_ folder: 
 
-The build artifacts will end up in the _utilities/target/S.proteus_ folder. The build for each platform and architecture will be packaged in a separate ZIP file. Unpack the appropriate ZIP file and execute the appropriate Protues.* file (e.g. Proteus.exe on Windows, Proteus.app on Mac OS X). 
+    ant
+
+The build will by default take place in the _utilities/target_ folder. The final output of the build can be found in the _utilities/target/dist_ folder. It should contain a ZIP archive of Proteus for each platform built for. To test the build, unpack the desired ZIP file and execute the appropriate Protues.* file (e.g. Proteus.exe on Windows, Proteus.app on Mac OS X). 
+
+If you want to you can read more about ther [PDE/Build process](http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Ftasks%2Fpde_product_build.htm).
 
 ### Known Build Issues 
 

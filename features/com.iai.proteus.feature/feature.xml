@@ -59,6 +59,20 @@
          unpack="false"/>
 
    <plugin
+         id="com.iai.proteus.common"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.iai.proteus.model"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         unpack="false"/>
+
+   <plugin
          id="com.iai.proteus"
          download-size="0"
          install-size="0"
@@ -133,13 +147,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.iai.proteus.model"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"
          unpack="false"/>
 
    <plugin
@@ -303,13 +310,6 @@
          unpack="false"/>
 
    <plugin
-         id="com.iai.proteus.common"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.help.base"
          download-size="0"
          install-size="0"
@@ -335,13 +335,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="xml-apis"
-         download-size="0"
-         install-size="0"
-         version="1.4.1"
          unpack="false"/>
 
    <plugin

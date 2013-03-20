@@ -1,0 +1,97 @@
+<project name="builder" default="build" basedir=".">
+
+  <description>
+    Builds the Product product 
+  </description>
+
+  <!-- load properties -->
+  <property file="config.properties" />
+
+  <!-- default values --> 
+  <property name="proteus-root" value="${basedir}/.." />
+
+  <!-- ${proteus-root} is defined in config.properties -->
+  <property name="pde-builder-dir" value="${proteus-root}/utilities/pde-builder" />
+  
+  <!-- ${proteus-root} is defined in config.properties -->
+  <property name="target" value="${proteus-root}/utilities/target" />
+
+  <!-- main target -->
+  <target name="build" depends="verify, prepare, copy-bundles, pde-build">
+  </target>
+
+  <!-- PDE/Build --> 
+  <target name="pde-build">
+    <!-- get equinox launcher jar --> 
+    <path id="eclipse-launcher-jar-id"> 
+      <fileset dir="${eclipse-target}/plugins/"> 
+        <include name="org.eclipse.equinox.launcher_*.jar" /> 
+      </fileset>
+    </path>
+    <property name="eclipse-launcher-jar" refid="eclipse-launcher-jar-id" />
+
+    <!-- get PDE/Build plugin folder --> 
+    <path id="build-plugin-folder-id"> 
+      <dirset dir="${eclipse-target}/plugins/"> 
+        <include name="org.eclipse.pde.build_*" /> 
+      </dirset>
+    </path>
+    <property name="build-plugin-folder" refid="build-plugin-folder-id" />
+    <!-- define the produt-build script --> 
+    <property name="product-build-script" 
+	      value="${build-plugin-folder}/scripts/productBuild/productBuild.xml" />
+
+    <echo message="ARGS: -jar ${eclipse-launcher-jar} -application org.eclipse.ant.core.antRunner -buildfile ${product-build-script} -Dbuilder=${pde-builder-dir} -DbaseLocation=${eclipse-target} -DbuildDirectory=${target}" />
+
+    <!-- see http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Ftasks%2Fpde_product_build.htm --> 
+    <exec executable="java">
+      <arg line="-jar ${eclipse-launcher-jar} -application org.eclipse.ant.core.antRunner -buildfile ${product-build-script} -Dbuilder=${pde-builder-dir} -DbaseLocation=${eclipse-target} -DbuildDirectory=${target}" />
+    </exec>
+
+  </target>
+
+  <!-- verify that all necessary properties are set --> 
+  <target name="verify">
+
+    <fail message="The file config.properties does not exist - copy config.example.properties to config.properites and modify that file.">
+      <condition>
+        <not>
+	  <available file="config.properties" />
+        </not>
+      </condition>
+    </fail>
+
+    <fail message="Property &quot;eclipse-target&quot; needs to be set to a value, see config.properties">
+      <condition>
+        <not>
+          <isset property="eclipse-target" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <!-- prepare target directory -->
+  <target name="prepare" depends="clean">
+    <!-- re-create the target directory -->
+    <mkdir dir="${target}" />
+  </target>
+
+  <!-- copy all bundles to the target directory --> 
+  <target name="copy-bundles">
+    <!-- copy the feature bundles -->
+    <copy todir="${target}/features">
+      <fileset dir="${proteus-root}/features" />
+    </copy>
+    <!-- copy the plugin bundles -->
+    <copy todir="${target}/plugins">
+      <fileset dir="${proteus-root}/plugins" />
+    </copy>
+  </target>
+
+  <!-- clean -->
+  <target name="clean">
+    <!-- delete the target directory -->
+    <delete dir="${target}" />
+  </target>
+
+</project>

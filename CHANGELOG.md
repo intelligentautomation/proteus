@@ -1,4 +1,4 @@
-# 1.2.0 (Month Day, 2013)
+# 1.2.0 (March, 2013)
 
 Incremental release with improvements and bug fixes. 
 
@@ -6,4 +6,4 @@ Incremental release with improvements and bug fixes.
 - Added support for WMS maps in query sets
 - Improved service management 
 - Improved support for alerts from Community Hub 
-
+- Documented build process 
