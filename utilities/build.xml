@@ -41,8 +41,6 @@
     <property name="product-build-script" 
 	      value="${build-plugin-folder}/scripts/productBuild/productBuild.xml" />
 
-    <echo message="ARGS: -jar ${eclipse-launcher-jar} -application org.eclipse.ant.core.antRunner -buildfile ${product-build-script} -Dbuilder=${pde-builder-dir} -DbaseLocation=${eclipse-target} -DbuildDirectory=${target}" />
-
     <!-- see http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Ftasks%2Fpde_product_build.htm --> 
     <exec executable="java">
       <arg line="-jar ${eclipse-launcher-jar} -application org.eclipse.ant.core.antRunner -buildfile ${product-build-script} -Dbuilder=${pde-builder-dir} -DbaseLocation=${eclipse-target} -DbuildDirectory=${target}" />
