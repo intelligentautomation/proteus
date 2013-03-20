@@ -9,7 +9,7 @@ package com.iai.proteus.model.map;
 /**
  * Interface for map layers
  * 
- * @author jhenriksson
+ * @author Jakob Henriksson
  *
  */
 public interface IMapLayer extends MapIdentifier {

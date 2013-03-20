@@ -8,8 +8,9 @@ package com.iai.proteus.model;
 import com.iai.proteus.model.map.IMapLayer;
 
 /**
+ * A sensor offering layer 
  * 
- * @author jhenriksson
+ * @author Jakob Henriksson
  *
  */
 public class SensorOfferingLayer implements IMapLayer {

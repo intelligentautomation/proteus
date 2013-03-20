@@ -14,7 +14,7 @@ import com.iai.proteus.PreferenceConstants;
 /**
  * Initializes the preference store
  *
- * @author jhenriksson
+ * @author Jakob Henriksson
  *
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
@@ -36,7 +36,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		// defaults
 		store.setDefault(PreferenceConstants.prefCommunityHub,
-				"http://api.i-a-i.com/proteus/");
+				"http://api.i-a-i.com/communityhub/");
 		store.setDefault(PreferenceConstants.prefConnectionTimeout, 10);
 		store.setDefault(PreferenceConstants.prefConnectionReadTimeout, 60);
 	}

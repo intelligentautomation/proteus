@@ -45,11 +45,4 @@ public class InternalPreferences {
 		e.close();
 	}
 
-	public static void main(String[] args) {
-		try {
-			new InternalPreferences().encode(new File("c:/Users/jhenriksson/test.xml"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
 }

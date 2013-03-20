@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Cache for WMSs (Capabilities and layers) 
  * 
- * @author jhenriksson 
+ * @author Jakob Henriksson 
  *
  */
 public class WmsCache {

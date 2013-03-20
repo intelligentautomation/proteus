@@ -10,7 +10,7 @@ import com.iai.proteus.model.MapId;
 /**
  * Interface for map layers that are identified by an ID
  * 
- * @author jhenriksson
+ * @author Jakob Henriksson
  *
  */
 public interface MapIdentifier {
