@@ -63,7 +63,9 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -73,6 +75,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -328,6 +331,13 @@ public class QuerySetTab extends CTabItem
 	private Image imgBackControl;
 	private Image imgQuestion;
 	private Image imgAdd;
+	
+	private Font fontActive;
+	private Font fontInactive; 
+	
+	private Color colorBg;
+	private Color colorWidgetShadow;
+
 
 	/*
 	 * UI labels and values
@@ -403,7 +413,13 @@ public class QuerySetTab extends CTabItem
 		imgBackControl = UIUtil.getImage("icons/fugue/navigation-180-button.png");
 		imgQuestion = UIUtil.getImage("icons/fugue/question-white.png");
 		imgAdd = UIUtil.getImage("icons/fugue/plus-button.png");
-
+		
+		fontActive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.BOLD | SWT.ITALIC);
+		fontInactive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.NORMAL);
+		
+		colorBg = new Color(Display.getCurrent(), 64, 133, 176);
+		colorWidgetShadow = SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW);
+		
 		cursor = getDisplay().getSystemCursor(SWT.CURSOR_HAND);
 
 		/*
@@ -2234,7 +2250,7 @@ public class QuerySetTab extends CTabItem
 	 */
 	private Composite createLiveTop(final Tile tile, Composite parent, String title) {
 		
-		Composite composite = new Composite(parent, SWT.NONE);
+		Composite composite = new Composite(parent, SWT.TRANSPARENT);
 		composite.setLayout(new GridLayout(2, false));
 		GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
 		composite.setLayoutData(gd);
@@ -2244,22 +2260,17 @@ public class QuerySetTab extends CTabItem
 		label.setImage(imgDotRed);
 
 		StyledText styledText = new StyledText(composite, SWT.READ_ONLY | SWT.WRAP);
-//		styledText.setLeftMargin(10);
-//		styledText.setTopMargin(10);
-//		styledText.setRightMargin(10);
-//		styledText.setBottomMargin(10);
 		styledText.setEnabled(false);
 		styledText.setBlockSelection(true);
 		styledText.setEditable(false);
 		styledText.setDoubleClickEnabled(false);
 		styledText.setCaret(null);
 		styledText.setAlignment(SWT.RIGHT);
-		styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));	
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		// set and update the live tile text
-		styledText.setFont(SWTResourceManager.getFont("Lucida Grande", 11, SWT.BOLD));
 		styledText.setAlignment(SWT.LEFT);
 		styledText.setText(title);
+		styledText.setFont(fontInactive);
 
 		// add listeners 
 		Composite c = null;
@@ -2314,6 +2325,7 @@ public class QuerySetTab extends CTabItem
 		StyledText styledText= new StyledText(parent, SWT.READ_ONLY | SWT.WRAP);
 		styledText.setRightMargin(5);
 		styledText.setBottomMargin(5);
+		styledText.setTopMargin(5);
 		styledText.setEnabled(false);
 		styledText.setBlockSelection(true);
 		styledText.setEditable(false);
@@ -3421,10 +3433,12 @@ public class QuerySetTab extends CTabItem
 
 		Control[] controls = composite.getChildren();
 		if (controls.length == 2) {
+			// update the top part
 			Control top = controls[0];
 			if (top instanceof Composite) {
 				Composite comp = (Composite) top;
 				for (Control child : comp.getChildren()) {
+					// update the image label 
 					if (child instanceof Label) {
 						Label label = (Label) child;
 						switch (status) {
@@ -3438,26 +3452,40 @@ public class QuerySetTab extends CTabItem
 							break;
 
 						}	
-					} else if (child instanceof StyledText) {
+					} 
+					// update the top label 
+					else if (child instanceof StyledText) {
 						StyledText styledText = (StyledText) child;
 						// switch
 						switch (status) {
 						case ACTIVE_OK:
 						case ACTIVE_WARNING:
-							styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
-							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_DARK_BLUE));
+							styledText.setFont(fontActive);
 							break;
 						case INACTIVE_OK:
 						case INACTIVE_WARNING:
-							styledText.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
-							styledText.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-							comp.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
+							styledText.setFont(fontInactive);
 							break;
 
-						}						
+						}
 					}
 				}
+			}
+			// update the bottom part 
+			Control bottom = controls[1];
+			if (bottom instanceof StyledText) {
+				StyledText styledText = (StyledText) bottom;
+				// switch
+				switch (status) {
+				case ACTIVE_OK:
+				case ACTIVE_WARNING:
+					styledText.setBackground(colorBg);
+					break;
+				case INACTIVE_OK:
+				case INACTIVE_WARNING:
+					styledText.setBackground(colorWidgetShadow);
+					break;
+				}							
 			}
 		}
 	}
@@ -3940,6 +3968,10 @@ public class QuerySetTab extends CTabItem
 		if (imgAdd != null)
 			imgAdd.dispose();
 		imgAdd = null;
+		
+		if (colorBg != null)
+			colorBg.dispose();
+		
 	}
 
 	/**
