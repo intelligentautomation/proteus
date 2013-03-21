@@ -56,16 +56,6 @@
          fragment="true"/>
 
    <plugin
-         id="org.eclipse.plugin.jogl.linux"
-         os="linux"
-         ws="gtk"
-         arch="x86_64"
-         download-size="0"
-         install-size="0"
-         version="1.0.1"
-         fragment="true"/>
-
-   <plugin
          id="org.eclipse.plugin.jogl.win32"
          os="win32"
          ws="win32"
@@ -80,6 +70,26 @@
          os="win32"
          ws="win32"
          arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.plugin.jogl.linux.amd64"
+         os="linux"
+         ws="gtk"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.1"
+         fragment="true"/>
+
+   <plugin
+         id="org.eclipse.plugin.jogl.linux.i586"
+         os="linux"
+         ws="gtk"
+         arch="x86"
          download-size="0"
          install-size="0"
          version="1.0.1"

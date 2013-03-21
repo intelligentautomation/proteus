@@ -6,7 +6,7 @@
       provider-name="Intelligent Automationc Inc."
       plugin="com.iai.proteus"
       os="linux,macosx,win32"
-      ws="cocoa,win32"
+      ws="gtk,cocoa,win32"
       nl="en_US"
       arch="x86,x86_64">
 
@@ -23,7 +23,7 @@
    </license>
 
    <url>
-      <update label="Intelligent Automation. Inc Update Site" url="http://metajungle.net/smt/update/"/>
+      <update label="Intelligent Automation. Inc Update Site"/>
    </url>
 
    <includes
