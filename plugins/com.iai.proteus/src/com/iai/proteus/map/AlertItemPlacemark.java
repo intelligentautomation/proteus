@@ -12,7 +12,7 @@ import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 
 import java.awt.Color;
 
-import com.iai.proteus.communityhub.apiv1.FeedItem;
+import com.iai.proteus.communityhub.apiv1.Alert;
 
 /**
  * A specialized WorldWind marker 
@@ -20,7 +20,7 @@ import com.iai.proteus.communityhub.apiv1.FeedItem;
  */
 public class AlertItemPlacemark extends PointPlacemark { 
 
-	private FeedItem data; 
+	private Alert data; 
 	private Color color; 
 
 	/**
@@ -29,7 +29,7 @@ public class AlertItemPlacemark extends PointPlacemark {
 	 * @param position
 	 * @param attrs
 	 */
-	public AlertItemPlacemark(FeedItem feedItem, Position position, PointPlacemarkAttributes attrs) 
+	public AlertItemPlacemark(Alert feedItem, Position position, PointPlacemarkAttributes attrs) 
 	{
 		super(position);
 		
@@ -44,7 +44,7 @@ public class AlertItemPlacemark extends PointPlacemark {
 	 * 
 	 * @return
 	 */
-	public FeedItem getFeedItem() {
+	public Alert getAlert() {
 		return data;
 	}
 	

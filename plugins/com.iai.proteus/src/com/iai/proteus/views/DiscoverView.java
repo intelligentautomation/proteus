@@ -7,6 +7,7 @@ package com.iai.proteus.views;
 
 import gov.nasa.worldwind.geom.Sector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -37,12 +38,17 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.iai.proteus.map.MarkerSelection;
 import com.iai.proteus.map.NotifyProperties;
 import com.iai.proteus.map.SelectionNotifier;
 import com.iai.proteus.map.SensorOfferingMarker;
+import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.queryset.FacetData;
 import com.iai.proteus.queryset.QuerySetEvent;
 import com.iai.proteus.queryset.QuerySetEventListener;
@@ -53,21 +59,26 @@ import com.iai.proteus.queryset.SosOfferingLayerStats;
 import com.iai.proteus.queryset.ui.QuerySetTab;
 import com.iai.proteus.queryset.ui.SelectionProviderIntermediate;
 import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.DiscoverPerspective;
 import com.iai.proteus.ui.UIUtil;
 
 /**
- * Discovery view
+ * Sensor discovery view
  *
  * @author Jakob Henriksson
  *
  */
 public class DiscoverView extends ViewPart implements QuerySetEventListener,
-	IPropertyChangeListener
+	IPropertyChangeListener, IPerspectiveListener
 {
 
 	public static final String ID = "com.iai.proteus.views.DiscoverView";
 
+	// the tab folder object
 	private CTabFolder tabFolder;
+
+	// the currently active tab, null if none
+	private QuerySetTab currentQuerySet;
 
 	// selection provider intermediator
 	private SelectionProviderIntermediate intermediator;
@@ -85,6 +96,9 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		QuerySetEventNotifier.getInstance().addListener(this);
 
 		intermediator = new SelectionProviderIntermediate();
+		
+		// add this object as a perspective changed listener 
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(this);
 	}
 
 	/**
@@ -219,9 +233,11 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 		// create default query set
 		QuerySetTab querySetTab =
 				new QuerySetTab(getSite(), intermediator, tabFolder, SWT.NONE);
+		// mark as the current query set 
+		currentQuerySet = querySetTab;
 		// make the new tab the active one
 		tabFolder.setSelection(querySetTab);
-
+		
 		/*
 		 * Add listeners
 		 *
@@ -251,6 +267,10 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 					toolItemSensors.setEnabled(status);
 					toolItemMaps.setSelection(status);
 					toolItemMaps.setEnabled(status);
+					
+					// update current query set
+					if (!status)
+						currentQuerySet = null;
 				}
 			}
 		});
@@ -288,15 +308,15 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 						toolItemMaps.setSelection(true);
 					}
 					
+					// update current query set
+					currentQuerySet = querySetTab;
 				}
 
 			}
 		});
 
 
-		/*
-		 * Handle double click events: rename query set
-		 */
+		// Handle double click events: rename query set
 		tabFolder.addListener(SWT.MouseDoubleClick, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -307,7 +327,8 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 			}
 
 		});
-
+		
+		// listener to create a new tab
 		toolItemNew.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -319,6 +340,8 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 						new QuerySetTab(getSite(), intermediator, tabFolder, SWT.NONE);
 				// make the new tab the active one
 				tabFolder.setSelection(querySetTab);
+				// update current query set
+				currentQuerySet = querySetTab;
 
 				// notify that we should switch tab 'context'
 				QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
@@ -509,6 +532,49 @@ public class DiscoverView extends ViewPart implements QuerySetEventListener,
 
 	@Override
 	public void setFocus() {
+	}
+
+	/** 
+	 * Called when the perspective changes 
+	 * 
+	 * @see org.eclipse.ui.IPerspectiveListener#perspectiveActivated(org.eclipse.ui.IWorkbenchPage, 
+	 *  org.eclipse.ui.IPerspectiveDescriptor)
+	 */
+	@Override
+	public void perspectiveActivated(IWorkbenchPage page,
+			IPerspectiveDescriptor perspective) {
+		
+		QuerySetEventNotifier notifier = QuerySetEventNotifier.getInstance();
+		
+		// hide all contexts when we leave the discovery perspective 
+		if (perspective.getId().equals(DiscoverPerspective.ID)) {
+			
+			// notify that we should show layers from the active 
+			// query set, if it exists
+			if (currentQuerySet != null) {
+				notifier.fireEvent(currentQuerySet,
+						QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
+						currentQuerySet.getMapLayers());
+			}
+			
+		} else {
+			
+			// notify that we should show no layers (empty array list)
+			// NOTE: the event object (currentQuerySet) may be null
+			notifier.fireEvent(currentQuerySet,
+					QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
+					new ArrayList<IMapLayer>());
+		}
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IPerspectiveListener#perspectiveChanged(org.eclipse.ui.IWorkbenchPage, 
+	 *  org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
+	 */
+	@Override
+	public void perspectiveChanged(IWorkbenchPage page,
+			IPerspectiveDescriptor perspective, String changeId) {
 	}
 
 }

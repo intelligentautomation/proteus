@@ -13,6 +13,12 @@ import com.iai.proteus.views.CommunityHubAlertsView;
 import com.iai.proteus.views.CommunityHubGroupsView;
 import com.iai.proteus.views.WorldWindView;
 
+/**
+ * Perspective for sensor alerts 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class AlertPerspective implements IPerspectiveFactory {
 
 	public static final String ID =
@@ -36,7 +42,7 @@ public class AlertPerspective implements IPerspectiveFactory {
 				IPageLayout.LEFT, 0.3f, editorArea);
 		
 		/*
-		 * Feed (alerts)
+		 * Alerts
 		 */
 		layout.addStandaloneView(CommunityHubAlertsView.ID, false, 
 				IPageLayout.BOTTOM, 0.4f, CommunityHubGroupsView.ID);

@@ -91,12 +91,15 @@ public class ProteusUtil {
 	 * Returns the groups from the Community Hub 
 	 * 
 	 * @param store
-	 * @param groupId
+	 * @param group
 	 */
-	public static Collection<Alert> getAlerts(IPreferenceStore store, int groupId) 
+	public static Collection<Alert> getAlerts(IPreferenceStore store, Group group) 
 		throws MalformedURLException, SocketTimeoutException, 
 		JsonSyntaxException, IOException 
 	{
+		
+		if (group == null) 
+			throw new IllegalArgumentException("Group cannot be null");
 
 		String serviceAddress = getCommunityHubEndpoint(store);
 
@@ -106,7 +109,7 @@ public class ProteusUtil {
 				store.getInt(PreferenceConstants.prefConnectionTimeout);
 
 		// TODO: make this generic, don't hard code here 
-		serviceAddress += "/apiv1/alerts/" + groupId + "/";
+		serviceAddress += "/apiv1/alerts/" + group.getId() + "/";
 
 		// issue GET request to API
 		String json = Util.get(serviceAddress, 

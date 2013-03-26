@@ -38,6 +38,12 @@ import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceType;
 import com.iai.proteus.ui.UIUtil;
 
+/**
+ * Utilities related to World Wind 
+ * 
+ * @author Jakob Henriksson 
+ *
+ */
 public class WorldWindUtils {
 	
 	private static final Logger log = Logger.getLogger(WorldWindUtils.class);
@@ -147,8 +153,6 @@ public class WorldWindUtils {
 				renderables.add(marker);
 			}
 		}
-		
-//		System.out.println("Just created " + renderables.size() + " renderables");
 		
 		return renderables; 
 	}

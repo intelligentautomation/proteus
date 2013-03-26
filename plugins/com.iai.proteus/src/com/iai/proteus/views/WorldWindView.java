@@ -58,16 +58,17 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.iai.proteus.Activator;
 import com.iai.proteus.common.LatLon;
-import com.iai.proteus.common.event.Event;
-import com.iai.proteus.common.event.EventListener;
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosUtil;
+import com.iai.proteus.communityhub.apiv1.Alert;
 import com.iai.proteus.communityhub.apiv1.Group;
+import com.iai.proteus.events.Event;
+import com.iai.proteus.events.EventListener;
+import com.iai.proteus.events.EventNotifier;
+import com.iai.proteus.events.EventType;
+import com.iai.proteus.map.AlertLayer;
 import com.iai.proteus.map.DataPlotProvenanceLayer;
-import com.iai.proteus.map.GeoRssLayer;
 import com.iai.proteus.map.MarkerSelection;
 import com.iai.proteus.map.SectorSelector;
 import com.iai.proteus.map.SelectionNotifier;
@@ -132,7 +133,7 @@ public class WorldWindView extends ViewPart
     private RenderableLayer tooltipLayer;
     private GlobeAnnotation tooltipAnnotation;
 
-    private GeoRssLayer geoRssLayer; 
+    private AlertLayer alertLayer; 
     
 	/*
 	 * Actions
@@ -209,8 +210,9 @@ public class WorldWindView extends ViewPart
 		tooltipLayer.addRenderable(tooltipAnnotation);
 		getWwd().getModel().getLayers().add(tooltipLayer);
 		
-		geoRssLayer = new GeoRssLayer(getWwd());
-		getWwd().getModel().getLayers().add(geoRssLayer);
+		// add alert layer 
+		alertLayer = new AlertLayer();
+		getWwd().getModel().getLayers().add(alertLayer);
 	}
 
 	/**
@@ -238,9 +240,7 @@ public class WorldWindView extends ViewPart
 		/* add select listener that responds to clicks */
 		getWwd().getInputHandler().addSelectListener(this);
 
-		/*
-		 * Listen to events
-		 */
+		// listen to events 
 		EventNotifier.getInstance().addListener(this);
 		QuerySetEventNotifier.getInstance().addListener(this);
 
@@ -891,6 +891,7 @@ public class WorldWindView extends ViewPart
 			
 			boolean found = false;
 			
+			// NOTE: we only deal with layers that have the right metadata 
 			Object obj = layer.getValue(MapAVKey.MAP_ID);
 			if (obj != null && obj instanceof String) {
 				String mapIdStr = (String) obj;
@@ -990,22 +991,27 @@ public class WorldWindView extends ViewPart
 
 			break;
 			
+		case MAP_TOGGLE_ALERT_LAYER:
+			if (value instanceof Boolean) {
+				// show or hide the alert layer 
+				alertLayer.setEnabled((Boolean) value);
+			}
+			
+			break;
+			
 		case MAP_TOGGLE_GLOBE_TYPE:
 			if (value instanceof String) {
 				String globeType = (String) value;
 				if (globeType.equalsIgnoreCase("flat")) {
 					// enable flat globe
-//					enableFlatGlobe(false);
-					// show GeoRSS layer
-					geoRssLayer.setEnabled(true);
+					enableFlatGlobe(false);
 				} else {
 					// disable flat globe
-//					enableFlatGlobe(false);
-					// hide GeoRSS layer
-					geoRssLayer.setEnabled(false);
+					enableFlatGlobe(false);
 				}
 			}
 			
+			break;
 
 		}
 	}
@@ -1067,10 +1073,18 @@ public class WorldWindView extends ViewPart
 						IPreferenceStore store =
 								Activator.getDefault().getPreferenceStore();						
 
-						String feed = 
-								ProteusUtil.getAlertFeed(store, group.getId());
-
-						geoRssLayer.useFeed(feed);	
+						try {
+							
+							// collect the alerts from the Community Hub
+							Collection<Alert> alerts = 
+									ProteusUtil.getAlerts(store, group);
+							
+							// set the alerts in the alert layer 
+							alertLayer.setAlerts(alerts);
+							
+						} catch (Exception e) {
+							log.error("Exception: " + e.getMessage());
+						}
 					}
 				}
 			}

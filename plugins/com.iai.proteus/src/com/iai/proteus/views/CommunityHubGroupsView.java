@@ -47,6 +47,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -56,7 +60,10 @@ import com.iai.proteus.Activator;
 import com.iai.proteus.communityhub.AlertEvent;
 import com.iai.proteus.communityhub.AlertEventNotifier;
 import com.iai.proteus.communityhub.apiv1.Group;
+import com.iai.proteus.events.EventNotifier;
+import com.iai.proteus.events.EventType;
 import com.iai.proteus.preference.PrefPageCommunityHub;
+import com.iai.proteus.ui.AlertPerspective;
 import com.iai.proteus.ui.SwtUtil;
 import com.iai.proteus.ui.UIUtil;
 import com.iai.proteus.util.ProteusUtil;
@@ -67,7 +74,7 @@ import com.iai.proteus.util.ProteusUtil;
  * @author Jakob Henriksson
  *
  */
-public class CommunityHubGroupsView extends ViewPart {
+public class CommunityHubGroupsView extends ViewPart implements IPerspectiveListener {
 	
 	public static final String ID = "com.iai.proteus.views.communityhub.GroupsView";
 
@@ -169,6 +176,9 @@ public class CommunityHubGroupsView extends ViewPart {
 
 		// schedule initial run
 		executorService.schedule(c, 1L, TimeUnit.SECONDS);
+		
+		// add this object as a perspective changed listener 
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().addPerspectiveListener(this);
 	}
 
 	/**
@@ -613,5 +623,40 @@ public class CommunityHubGroupsView extends ViewPart {
 			}
 			
 		}
+	}
+
+	/** 
+	 * Called when the perspective changes 
+	 * 
+	 * @see org.eclipse.ui.IPerspectiveListener#perspectiveActivated(org.eclipse.ui.IWorkbenchPage, 
+	 *  org.eclipse.ui.IPerspectiveDescriptor)
+	 */
+	@Override
+	public void perspectiveActivated(IWorkbenchPage page,
+			IPerspectiveDescriptor perspective) {
+
+		EventNotifier notifier = EventNotifier.getInstance();
+		
+		// hide all contexts when we leave the discovery perspective 
+		if (perspective.getId().equals(AlertPerspective.ID)) {
+			
+			// notify that we should toggle the alert layer on
+			notifier.fireEvent(this, EventType.MAP_TOGGLE_ALERT_LAYER, true);
+			
+		} else {
+			
+			// notify that we should toggle the alert layer off
+			notifier.fireEvent(this, EventType.MAP_TOGGLE_ALERT_LAYER, false);
+		}
+	}	
+
+	/* (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IPerspectiveListener#perspectiveChanged(org.eclipse.ui.IWorkbenchPage, 
+	 *  org.eclipse.ui.IPerspectiveDescriptor, java.lang.String)
+	 */
+	@Override
+	public void perspectiveChanged(IWorkbenchPage page,
+			IPerspectiveDescriptor perspective, String changeId) {
 	}
 }

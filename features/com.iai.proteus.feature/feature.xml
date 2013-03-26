@@ -22,13 +22,13 @@
       [Enter License Description here.]
    </license>
 
-   <url>
-      <update label="Intelligent Automation. Inc Update Site"/>
-   </url>
-
    <includes
          id="gov.nasa.worldwind.feature"
-         version="1.1.0"/>
+         version="1.1.0"
+         name="Proteus"
+         os="linux,macosx,win32"
+         ws="cocoa,gtk,win32"
+         arch="x86,x86_64"/>
 
    <plugin
          id="org.eclipse.core.databinding.property"

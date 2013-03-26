@@ -319,7 +319,7 @@ public class CommunityHubAlertsView extends ViewPart
 			// get alerts from the Community Hub 
 			// (may throw exceptions)
 			Collection<Alert> newAlerts = 
-					ProteusUtil.getAlerts(store, group.getId());
+					ProteusUtil.getAlerts(store, group);
 			
 			alerts.addAll(newAlerts);
 			

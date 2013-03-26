@@ -14,6 +14,12 @@ import com.iai.proteus.views.DataTableView;
 import com.iai.proteus.views.DiscoverView;
 import com.iai.proteus.views.WorldWindView;
 
+/**
+ * Perspective for sensor discovery 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class DiscoverPerspective implements IPerspectiveFactory {
 
 	public static final String ID =
@@ -50,6 +56,6 @@ public class DiscoverPerspective implements IPerspectiveFactory {
         bottomRight.addView(IPageLayout.ID_PROP_SHEET);
         bottomRight.addView(DataPreviewView.ID);
         bottomRight.addView(DataTableView.ID);
-
+        
 	}
 }
