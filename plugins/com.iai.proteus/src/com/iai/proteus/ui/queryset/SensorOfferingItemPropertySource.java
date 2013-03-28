@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset.ui;
+package com.iai.proteus.ui.queryset;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

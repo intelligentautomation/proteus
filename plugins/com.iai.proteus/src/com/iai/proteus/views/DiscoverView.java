@@ -44,23 +44,23 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.iai.proteus.events.QuerySetEvent;
+import com.iai.proteus.events.QuerySetEventListener;
+import com.iai.proteus.events.QuerySetEventNotifier;
+import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.MarkerSelection;
 import com.iai.proteus.map.NotifyProperties;
 import com.iai.proteus.map.SelectionNotifier;
 import com.iai.proteus.map.SensorOfferingMarker;
 import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.queryset.FacetData;
-import com.iai.proteus.queryset.QuerySetEvent;
-import com.iai.proteus.queryset.QuerySetEventListener;
-import com.iai.proteus.queryset.QuerySetEventNotifier;
-import com.iai.proteus.queryset.QuerySetEventType;
 import com.iai.proteus.queryset.SosOfferingLayer;
 import com.iai.proteus.queryset.SosOfferingLayerStats;
-import com.iai.proteus.queryset.ui.QuerySetTab;
-import com.iai.proteus.queryset.ui.SelectionProviderIntermediate;
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
 import com.iai.proteus.ui.DiscoverPerspective;
 import com.iai.proteus.ui.UIUtil;
+import com.iai.proteus.ui.queryset.QuerySetTab;
+import com.iai.proteus.ui.queryset.SelectionProviderIntermediate;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 
 /**
  * Sensor discovery view

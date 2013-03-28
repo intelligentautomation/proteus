@@ -24,7 +24,6 @@ import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.pick.PickedObject;
 import gov.nasa.worldwind.poi.PointOfInterest;
 import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
@@ -67,14 +66,16 @@ import com.iai.proteus.events.Event;
 import com.iai.proteus.events.EventListener;
 import com.iai.proteus.events.EventNotifier;
 import com.iai.proteus.events.EventType;
+import com.iai.proteus.events.QuerySetEvent;
+import com.iai.proteus.events.QuerySetEventListener;
+import com.iai.proteus.events.QuerySetEventNotifier;
+import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.AlertLayer;
 import com.iai.proteus.map.DataPlotProvenanceLayer;
 import com.iai.proteus.map.MarkerSelection;
 import com.iai.proteus.map.SectorSelector;
 import com.iai.proteus.map.SelectionNotifier;
 import com.iai.proteus.map.SensorOfferingMarker;
-import com.iai.proteus.map.SensorOfferingPlacemark;
-import com.iai.proteus.map.SensorOfferingRegion;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.map.wms.MapAVKey;
 import com.iai.proteus.map.wms.WmsCache;
@@ -83,18 +84,14 @@ import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.SensorOfferingLayer;
 import com.iai.proteus.model.map.IMapLayer;
-import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
-import com.iai.proteus.queryset.QuerySetEvent;
-import com.iai.proteus.queryset.QuerySetEventListener;
-import com.iai.proteus.queryset.QuerySetEventNotifier;
-import com.iai.proteus.queryset.QuerySetEventType;
+import com.iai.proteus.queryset.RearrangeMapsEventValue;
 import com.iai.proteus.queryset.SosOfferingLayer;
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 import com.iai.proteus.util.ProteusUtil;
 
 /**
@@ -247,7 +244,7 @@ public class WorldWindView extends ViewPart
 		// add a listener to selections in @{link DiscoverView} 
 		getSite().getPage().addSelectionListener(DiscoverView.ID, this);
 		
-		// add a listener to selections in @{link CommunityGroupView} 
+		// add a listener to selections in @{link CommunityHubGroupsView} 
 		getSite().getPage().addSelectionListener(CommunityHubGroupsView.ID, this);
 	}
 
@@ -356,51 +353,29 @@ public class WorldWindView extends ViewPart
 	 * Returns the layers corresponding to the MapLayer model object,
 	 * an empty list of none was found
 	 *
-	 * @param mapLayer
+	 * @param mapLayers
 	 * @return
 	 */
-	private Collection<Layer> getLayers(MapLayer mapLayer) {
-		Collection<Layer> foundLayers = new ArrayList<Layer>();
-		LayerList layers = getWwd().getModel().getLayers();
-		for (Layer layer : layers) {
+	private List<Layer> getLayers(List<IMapLayer> mapLayers) {
+		List<Layer> foundLayers = new ArrayList<Layer>();
+		// go through all layers 
+		for (Layer layer : getWwd().getModel().getLayers()) {
+			// see if the layer as the required metadata 
 			Object value = layer.getValue(MapAVKey.MAP_ID);
 			if (value != null && value instanceof String) {
 				String mapIdStr = (String) value;
-				if (mapLayer.getMapId().toString().equals(mapIdStr)) {
-					// only add the layer if it did not already exist
-					if (!foundLayers.contains(layer))
-						foundLayers.add(layer);
+				// go though the layers we are looking for
+				for (IMapLayer mapLayer : mapLayers) {
+					if (mapLayer.getMapId().toString().equals(mapIdStr)) {
+						// only add the layer if it did not already exist
+						if (!foundLayers.contains(layer))
+							foundLayers.add(layer);
+					}
 				}
 			}
 		}
 		return foundLayers;
 	}
-
-	/**
-	 * Updates the colors of the renderables in the layer
-	 *
-	 * @param mapLayer
-	 */
-	private void updateColorOfLayer(MapLayer mapLayer) {
-		for (Layer layer : getLayers(mapLayer)) {
-			// we can only really change the color of sensor offering layers
-			if (layer != null && layer instanceof SosOfferingLayer) {
-				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
-				for (Renderable r : offeringLayer.getRenderables()) {
-					Material material = new Material(mapLayer.getColor());
-					if (r instanceof SensorOfferingPlacemark) {
-						SensorOfferingPlacemark sop = (SensorOfferingPlacemark) r;
-						sop.getAttributes().setLineMaterial(material);
-					} else if (r instanceof SensorOfferingRegion) {
-						SensorOfferingRegion sor = (SensorOfferingRegion) r;
-						sor.getAttributes().setOutlineMaterial(material);
-					}
-				}
-			}
-		}
-		getWwd().redrawNow();
-	}
-
 
 	/**
 	 * Deletes the given map layers (by @{link MapId}), if they exist
@@ -692,6 +667,17 @@ public class WorldWindView extends ViewPart
 			}
 
 			break;
+			
+		case QUERYSET_LAYERS_REARRANGE: 
+			/*
+			 * Re-arrange layers 
+			 */
+			if (value instanceof RearrangeMapsEventValue) {
+			
+				rearrangeLayers((RearrangeMapsEventValue) value);
+			}
+			
+			break;
 
 		case QUERYSET_REGION_ENABLED:
 			/*
@@ -932,6 +918,51 @@ public class WorldWindView extends ViewPart
 			}
 		}
 	}	
+	
+	/**
+	 * Re-arranges layers 
+	 * 
+	 * TODO: need to properly implement this function 
+	 * 
+	 * @param mapLayers
+	 */
+	private void rearrangeLayers(RearrangeMapsEventValue eventValue) {
+		
+		Layer targetLayer = getLayer(eventValue.getTarget());
+		List<Layer> movedLayers = getLayers(eventValue.getMaps());
+		
+		LayerList layerList = getWwd().getModel().getLayers();
+		
+		// get the index of the target
+		int idx = layerList.indexOf(targetLayer);
+		// remove moved layers
+		layerList.removeAll(movedLayers);
+		// re-locate the moved layers
+		layerList.addAll(idx, movedLayers);
+		
+		
+//		for (int i = mapLayers.size() - 1; i >= 0; i--) {
+//			IMapLayer mapLower = mapLayers.get(i);
+//			if (i - 1 >= 0) {
+//				IMapLayer mapHigher = mapLayers.get(i - 1);
+//				
+//				// move mapHigher above mapLower
+//				Layer layerLower = getLayer(mapLower);
+//				Layer layerHigher = getLayer(mapHigher);
+//				if (layerLower != null && layerHigher != null) {
+//
+//					int idxLower = layerList.indexOf(layerLower);
+//					int idxHigher = layerList.indexOf(layerHigher);
+//					if (idxLower != -1 && idxHigher != -1) {
+//						
+//						// move 
+//						layerList.remove(layerHigher);
+//						layerList.add(idxLower, layerHigher);
+//					}
+//				}
+//			}
+//		}
+	}
 
 	/**
 	 * Enables geographical region selection in a @{link SosOfferingLayer}.

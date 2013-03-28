@@ -48,9 +48,9 @@ import com.iai.proteus.common.event.EventNotifier;
 import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.data.Field;
 import com.iai.proteus.common.sos.data.SensorData;
-import com.iai.proteus.queryset.QuerySetEvent;
-import com.iai.proteus.queryset.QuerySetEventListener;
-import com.iai.proteus.queryset.QuerySetEventNotifier;
+import com.iai.proteus.events.QuerySetEvent;
+import com.iai.proteus.events.QuerySetEventListener;
+import com.iai.proteus.events.QuerySetEventNotifier;
 import com.iai.proteus.ui.UIUtil;
 
 /**

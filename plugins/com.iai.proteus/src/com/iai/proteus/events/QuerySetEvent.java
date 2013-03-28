@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset;
+package com.iai.proteus.events;
 
 /**
  * An event 

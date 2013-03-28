@@ -21,7 +21,7 @@ import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceType;
 import com.iai.proteus.queryset.DataFetcher;
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 import com.iai.proteus.views.TimeSeriesUtil;
 
 public class DownloadModelHelper {

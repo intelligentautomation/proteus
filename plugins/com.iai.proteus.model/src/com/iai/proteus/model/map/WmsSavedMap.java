@@ -48,7 +48,7 @@ public class WmsSavedMap extends WmsMapLayer {
 	 * @param mapLayer
 	 * @return
 	 */
-	public static WmsSavedMap from(WmsMapLayer mapLayer) {
+	public static WmsSavedMap copy(WmsMapLayer mapLayer) {
 		WmsSavedMap map = new WmsSavedMap();
 		// from {@link com.iai.proteus.model.Model}
 		map.setName(mapLayer.getName());

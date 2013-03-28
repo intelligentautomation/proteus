@@ -10,10 +10,10 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.joda.time.Period;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -21,15 +21,23 @@ import com.iai.proteus.PreferenceConstants;
 import com.iai.proteus.common.Util;
 import com.iai.proteus.communityhub.apiv1.Alert;
 import com.iai.proteus.communityhub.apiv1.AlertsResponse;
+import com.iai.proteus.communityhub.apiv1.Endpoints;
 import com.iai.proteus.communityhub.apiv1.Group;
 import com.iai.proteus.communityhub.apiv1.GroupsResponse;
+import com.iai.proteus.model.map.MapLayer;
 
+/**
+ * Utility methods 
+ * 
+ * @author Jakob Henriksson 
+ *
+ */
 public class ProteusUtil {
 	
 	private static final Logger log = Logger.getLogger(ProteusUtil.class);
 	
 	// cache for feeds 
-	private static FeedCache feedCache = new FeedCache();
+//	private static FeedCache feedCache = new FeedCache();
 	
 	/**
 	 * Returns the Community Hub end point from preferences 
@@ -68,8 +76,8 @@ public class ProteusUtil {
 		int timeoutRead =
 				store.getInt(PreferenceConstants.prefConnectionTimeout);
 
-		// TODO: make this generic, don't hard code here 
-		serviceAddress += "/apiv1/groups/";
+		// construct service endpoint 
+		serviceAddress += Endpoints.groups();
 
 		// issue GET request to API
 		String json = Util.get(serviceAddress, 
@@ -108,8 +116,8 @@ public class ProteusUtil {
 		int timeoutRead =
 				store.getInt(PreferenceConstants.prefConnectionTimeout);
 
-		// TODO: make this generic, don't hard code here 
-		serviceAddress += "/apiv1/alerts/" + group.getId() + "/";
+		// construct service endpoint
+		serviceAddress += Endpoints.alerts(group);
 
 		// issue GET request to API
 		String json = Util.get(serviceAddress, 
@@ -125,69 +133,25 @@ public class ProteusUtil {
 
 		// default 
 		return new ArrayList<Alert>();
-	}	
-	
-	/**
-	 * Fetches an alert feed for a given group with default cache threshold period
-	 * 
-	 * @param store
-	 * @param groupId
-	 * @return
-	 */
-	public static String getAlertFeed(IPreferenceStore store, int groupId) {
-		// default: 5 minutes 
-		return getAlertFeed(store, groupId, new Period(0, 5, 0, 0));
 	}
 	
 	/**
-	 * Fetches an alert feed for a given group and cache threshold period  
+	 * Moves a given map higher in the ordering of a list of maps 
 	 * 
-	 * @param store
-	 * @param groupId
-	 * @param period 
+	 * @param maps
+	 * @param map
 	 * @return
 	 */
-	public static String getAlertFeed(IPreferenceStore store, int groupId, Period period) {
-		String serviceAddress = getCommunityHubEndpoint(store);
-		String feedAddress = serviceAddress += "/community/feed/" + groupId;
-		return feedCache.get(feedAddress, period);
-	}	
-	
-	public static void main(String[] args) {
-		
-		String serviceAddress = "http://localhost:8080/communityhub/apiv1/alerts/1/";
-		
-		try {
-			
-			int timeoutConnection = 1000;
-			int timeoutRead = 1000;
-
-			// issue GET request
-			String json = Util.get(serviceAddress, 
-					timeoutConnection, timeoutRead);
-			
-			AlertsResponse gson = 
-					new Gson().fromJson(json, AlertsResponse.class);
-			
-			System.out.println("V: " + gson.getVersion());
-			for (Alert g : gson.getAlerts()) {
-				System.out.println("G: " + g.getId() + "; " + g.getType());
-			}
-
-//			HubAddServiceResponse data =
-//					new Gson().fromJson(json, HubAddServiceResponse.class);
-			
-//			return data.getMessage();
-
-		} catch (MalformedURLException e) {
-			log.error("Malformed URL exception: " + e.getMessage());
-		} catch (SocketTimeoutException e) {
-			log.error("Socket timeout exception: " + e.getMessage());
-		} catch (JsonSyntaxException e) {
-			log.error("JSON syntax exception: " + e.getMessage());
-		} catch (IOException e) {
-			log.error("IOException: " + e.getMessage());
-		}						
+	public static boolean moveMapLayerHigher(List<MapLayer> maps, MapLayer map) {
+		int idx = maps.indexOf(map);
+		if (idx != -1) {
+			maps.remove(idx);
+			int newIdx = idx - 1 < 0 ? 0 : idx - 1;
+			maps.add(newIdx, map);
+			log.info("Moved map to index " + newIdx);
+			return true;
+		}
+		return false;
 	}
 
 }

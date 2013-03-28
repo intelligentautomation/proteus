@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset;
+package com.iai.proteus.events;
 
 /**
  * Event Types
@@ -21,6 +21,8 @@ public enum QuerySetEventType {
 	QUERYSET_LAYERS_DELETE,
 	// used to notify that a query set should be the active
 	QUERYSET_LAYERS_ACTIVATE,
+	// used to notify that the given layers should be re-arranged 
+	QUERYSET_LAYERS_REARRANGE, 
 
 	// used to notify that a geographic selection was enabled
 	QUERYSET_REGION_ENABLED,

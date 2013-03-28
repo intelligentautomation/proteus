@@ -7,7 +7,7 @@ package com.iai.proteus.queryset;
 
 import java.util.Collection;
 
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 
 public interface QuerySetContributor {
 
