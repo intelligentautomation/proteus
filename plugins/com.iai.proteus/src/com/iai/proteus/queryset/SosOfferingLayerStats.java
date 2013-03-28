@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 
 public class SosOfferingLayerStats {
 

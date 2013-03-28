@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset.ui;
+package com.iai.proteus.ui.queryset;
 
 /*******************************************************************************
  * Copyright (c) 2000, 2008 IBM Corporation and others.

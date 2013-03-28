@@ -29,6 +29,8 @@ import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosUtil;
+import com.iai.proteus.events.QuerySetEventNotifier;
+import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.SectorSelector;
 import com.iai.proteus.map.SelectionLayer;
 import com.iai.proteus.map.SensorOfferingMarker;
@@ -36,7 +38,7 @@ import com.iai.proteus.map.SensorOfferingPlacemark;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.map.IMapLayer;
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 
 /**
  * A map layer consisting of Sensor Observation Service (SOS) offerings

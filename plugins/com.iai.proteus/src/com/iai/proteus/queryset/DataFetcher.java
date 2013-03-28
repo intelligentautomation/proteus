@@ -40,8 +40,8 @@ import com.iai.proteus.dialogs.UnsupportedResponseFormatsDialog;
 import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.plot.VariablesHolder;
-import com.iai.proteus.queryset.ui.SensorOfferingItem;
 import com.iai.proteus.ui.UIUtil;
+import com.iai.proteus.ui.queryset.SensorOfferingItem;
 import com.iai.proteus.views.TimeSeriesUtil;
 
 public class DataFetcher implements IRunnableWithProgress {

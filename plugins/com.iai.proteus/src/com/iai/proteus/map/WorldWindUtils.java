@@ -498,6 +498,6 @@ public class WorldWindUtils {
         ovih.addPanToAnimator(position, view.getHeading(), view.getPitch(), 
         		elevation, timeInMilliseconds, true); 
         ovih.apply();
-    }	
+    }
 	
 }

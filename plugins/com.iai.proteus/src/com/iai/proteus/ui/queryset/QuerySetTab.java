@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset.ui;
+package com.iai.proteus.ui.queryset;
 
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Sector;
@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,6 +27,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -55,6 +58,8 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
@@ -109,6 +114,10 @@ import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
 import com.iai.proteus.dialogs.ManageAllServicesDialog;
 import com.iai.proteus.dialogs.ManageQuerySetServicesDialog;
+import com.iai.proteus.events.QuerySetEvent;
+import com.iai.proteus.events.QuerySetEventListener;
+import com.iai.proteus.events.QuerySetEventNotifier;
+import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.map.wms.WmsLayerInfo;
@@ -131,18 +140,16 @@ import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
 import com.iai.proteus.queryset.FacetData;
 import com.iai.proteus.queryset.FormatFacet;
-import com.iai.proteus.queryset.QuerySetEvent;
-import com.iai.proteus.queryset.QuerySetEventListener;
-import com.iai.proteus.queryset.QuerySetEventNotifier;
-import com.iai.proteus.queryset.QuerySetEventType;
 import com.iai.proteus.queryset.TimeFacet;
 import com.iai.proteus.ui.SwtUtil;
 import com.iai.proteus.ui.UIUtil;
+import com.iai.proteus.ui.dnd.SavedMapsDragListener;
+import com.iai.proteus.ui.dnd.SavedMapsDropListener;
 import com.iai.proteus.views.DataPreviewEvent;
 import com.iai.proteus.views.DataPreviewView;
 import com.iai.proteus.views.TimeSeriesUtil;
 
-/**
+/** 
  * Represents an abstract query set tab used for discovery
  *
  * (This abstract class in particular contains all the UI related artifacts.)
@@ -275,7 +282,7 @@ public class QuerySetTab extends CTabItem
 	 * Maps
 	 */
 	
-	private Collection<MapLayer> savedMaps;
+	private List<MapLayer> savedMaps;
 	
 	// true if no selection of a service has been made in the 
 	// find/discover map view, false otherwise  
@@ -300,7 +307,6 @@ public class QuerySetTab extends CTabItem
 	private FilteredTree treeFiltered;
 	private Tree treeWmsLayers;
 	
-	private ToolItem tltmDeleteSavedMap;
 	private ToolItem tltmSaveSelected;
 	
 	// to keep track of selected items
@@ -331,6 +337,8 @@ public class QuerySetTab extends CTabItem
 	private Image imgBackControl;
 	private Image imgQuestion;
 	private Image imgAdd;
+	private Image imgArrowUp;
+	private Image imgArrowDown;
 	
 	private Font fontActive;
 	private Font fontInactive; 
@@ -376,7 +384,7 @@ public class QuerySetTab extends CTabItem
 		activeFacets = new HashSet<FacetChangeToggle>();
 		
 		services = new ArrayList<Service>();
-		savedMaps = new HashSet<MapLayer>();
+		savedMaps = new CopyOnWriteArrayList<MapLayer>();
 		
 		/*
 		 * Initialize statuses
@@ -413,6 +421,8 @@ public class QuerySetTab extends CTabItem
 		imgBackControl = UIUtil.getImage("icons/fugue/navigation-180-button.png");
 		imgQuestion = UIUtil.getImage("icons/fugue/question-white.png");
 		imgAdd = UIUtil.getImage("icons/fugue/plus-button.png");
+		imgArrowUp = UIUtil.getImage("icons/fugue/arrow-090.png");
+		imgArrowDown = UIUtil.getImage("icons/fugue/arrow-270.png");
 		
 		fontActive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.BOLD | SWT.ITALIC);
 		fontInactive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.NORMAL);
@@ -1522,21 +1532,25 @@ public class QuerySetTab extends CTabItem
 			}
 		});	
 		
-		Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
+		final Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
 		groupMaps.setLayout(new GridLayout(1, false));
 		groupMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		groupMaps.setText("Saved maps");
 		
-		ToolBar toolBarSavedMaps = new ToolBar(groupMaps, SWT.FLAT | SWT.RIGHT);
+		final Composite compositeSavedMapsToolbar = new Composite(groupMaps, SWT.NONE);
+		compositeSavedMapsToolbar.setLayout(new GridLayout(2, false));
+		compositeSavedMapsToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));		
+		
+		ToolBar toolBarSavedMaps = new ToolBar(compositeSavedMapsToolbar, SWT.FLAT | SWT.RIGHT);
 		toolBarSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		tltmDeleteSavedMap = new ToolItem(toolBarSavedMaps, SWT.NONE);
-		tltmDeleteSavedMap.setText("Delete maps");
-		tltmDeleteSavedMap.setImage(imgDelete);
+		final ToolItem tltmSavedMapDelete = new ToolItem(toolBarSavedMaps, SWT.NONE);
+		tltmSavedMapDelete.setText("Delete map");
+		tltmSavedMapDelete.setImage(imgDelete);
 		// disabled by default
-		tltmDeleteSavedMap.setEnabled(false);
+		tltmSavedMapDelete.setEnabled(false);
 		// listener to remove maps saved in the Query Set 
-		tltmDeleteSavedMap.addSelectionListener(new SelectionAdapter() {
+		tltmSavedMapDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				
@@ -1579,6 +1593,27 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 		
+		ToolBar toolBarSavedMapsHelp = new ToolBar(compositeSavedMapsToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBarSavedMapsHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
+		final ToolItem tltmSavedMapHelp = new ToolItem(toolBarSavedMapsHelp, SWT.NONE);
+		tltmSavedMapHelp.setText("");
+		tltmSavedMapHelp.setImage(imgQuestion);
+		tltmSavedMapHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// create the help controller 
+				SwtUtil.createHelpController(compositeSavedMaps, 
+						tltmSavedMapHelp, groupMaps, 
+						"Saved WMS maps will be listed below. " + 
+						"Click the 'Find maps' button above to find more maps. \n\n" + 
+						"Maps can be re-arranged using drag and drop. " + 
+						"Layers towards the bottom of the list will " +
+						"have higher priority and will be shown above other " +
+						"layers in the geo-browser.");
+			}
+		});		
+		
 		treeViewerSavedMaps = new CheckboxTreeViewer(groupMaps, SWT.BORDER | SWT.MULTI);
 		Tree treeSavedMaps = treeViewerSavedMaps.getTree();
 		treeSavedMaps.setHeaderVisible(true);
@@ -1613,7 +1648,7 @@ public class QuerySetTab extends CTabItem
 				return "-";
 			}
 		});
-
+		
 		TreeViewerColumn treeViewerSavedMapNotes = new TreeViewerColumn(treeViewerSavedMaps, SWT.NONE);
 		TreeColumn trclmnSavedMapNotes = treeViewerSavedMapNotes.getColumn();
 		trclmnSavedMapNotes.setWidth(200);
@@ -1644,6 +1679,13 @@ public class QuerySetTab extends CTabItem
 			}
 		});	
 		
+		// drag-n-drop support 
+		Transfer[] transferTypes = { LocalSelectionTransfer.getTransfer() };
+		treeViewerSavedMaps.addDragSupport(DND.DROP_MOVE, transferTypes, 
+				new SavedMapsDragListener(treeViewerSavedMaps));
+		treeViewerSavedMaps.addDropSupport(DND.DROP_MOVE, transferTypes, 
+				new SavedMapsDropListener(treeViewerSavedMaps, savedMaps));
+	
 		// listener to update tool bar items, based on selection 
 		treeViewerSavedMaps.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
@@ -1653,7 +1695,8 @@ public class QuerySetTab extends CTabItem
 					StructuredSelection structuredSelection = 
 							(StructuredSelection) selection; 
 					// activate or deactivate relevant toolbar items
-					tltmDeleteSavedMap.setEnabled(!structuredSelection.isEmpty());
+					// delete map 
+					tltmSavedMapDelete.setEnabled(!structuredSelection.isEmpty());
 				}
 			}
 		});
@@ -1959,7 +2002,7 @@ public class QuerySetTab extends CTabItem
 		ToolBar toolBarLayers = new ToolBar(compositeAvailableMapLayers, SWT.FLAT | SWT.RIGHT);
 		
 		tltmSaveSelected = new ToolItem(toolBarLayers, SWT.NONE);
-		tltmSaveSelected.setText("Save checked maps");
+		tltmSaveSelected.setText("Save active maps");
 		tltmSaveSelected.setImage(imgSave);
 		tltmSaveSelected.setEnabled(false);
 		// listener, handles saving maps to the Query Set 
@@ -1975,7 +2018,7 @@ public class QuerySetTab extends CTabItem
 						if (data instanceof WmsMapLayer) {
 							WmsMapLayer mapLayer = (WmsMapLayer) data;
 							// convert the object to a sub-class 
-							WmsSavedMap map = WmsSavedMap.from(mapLayer);
+							WmsSavedMap map = WmsSavedMap.copy(mapLayer);
 							// check that the map does not already exist
 							boolean add = true;
 							for (MapLayer existing : getSavedMaps()) {
@@ -3919,55 +3962,42 @@ public class QuerySetTab extends CTabItem
 	private void disposeResources() {
 		if (imgDocument != null)
 			imgDocument.dispose();
-		imgDocument = null;
 		if (imgSectorSelection != null)
 			imgSectorSelection.dispose();
-		imgSectorSelection = null;
 		if (imgSectorClear != null)
 			imgSectorClear.dispose();
-		imgSectorClear = null;
 		if (imgLike != null)
 			imgLike.dispose();
-		imgLike = null;
 		if (imgDislike != null)
 			imgDislike.dispose();
-		imgDislike = null;
 		if (imgSensors != null)
 			imgSensors.dispose();
-		imgSensors = null;
 		if (imgMap != null)
 			imgMap.dispose();
-		imgMap = null;
 		if (imgDatabase != null)
 			imgDatabase.dispose();
-		imgDatabase = null;
 		if (imgDelete != null)
 			imgDelete.dispose();
-		imgDelete = null;
 		if (imgSave != null)
 			imgSave.dispose();
-		imgSave = null;
 		if (imgRefresh != null)
 			imgRefresh.dispose();
-		imgRefresh = null;
 		if (imgDotRed != null)
 			imgDotRed.dispose();
-		imgDotRed = null;
 		if (imgDotGreen != null)
 			imgDotGreen.dispose();
-		imgDotGreen = null;
 		if (imgAddMap != null)
 			imgAddMap.dispose();
-		imgAddMap = null;
 		if (imgBackControl != null) 
 			imgBackControl.dispose();
-		imgBackControl = null;
 		if (imgQuestion != null)
 			imgQuestion.dispose();
-		imgQuestion = null;
 		if (imgAdd != null)
 			imgAdd.dispose();
-		imgAdd = null;
+		if (imgArrowUp != null)
+			imgArrowUp.dispose();
+		if (imgArrowDown != null)
+			imgArrowDown.dispose();
 		
 		if (colorBg != null)
 			colorBg.dispose();
