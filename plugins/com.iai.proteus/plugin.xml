@@ -216,6 +216,7 @@
             </separator>
             <command
                   commandId="com.iai.proteus.command.queryset.delete"
+                  id="menu.file.delete"
                   label="Delete Query Set"
                   mnemonic="D"
                   style="push"
@@ -361,9 +362,10 @@
                 </parameter>
             </command>
             <command
-                commandId="com.iai.proteus.command.help"
-                label="Release Notes"
-                style="push">
+                  commandId="com.iai.proteus.command.help"
+                  id="menu.help.release_notes"
+                  label="Release Notes"
+                  style="push">
                 <parameter
                     name="url"
                     value="https://github.com/intelligentautomation/proteus/blob/master/CHANGELOG.md">
