@@ -19,7 +19,7 @@ public class ObservedPropertiesHolder {
 	 * Holds the actual structure of the observed properties as it will
 	 * be displayed in the UI
 	 */
-	private List<Category> observedProperties;
+	private List<Category> categories;
 
 	/*
 	 * Specification of how to organize the observed properties. Each map
@@ -27,7 +27,7 @@ public class ObservedPropertiesHolder {
 	 * matches a given regular expression will be categorized according
 	 * to that matching category (key)
 	 */
-	private Map<String, List<String>> categories;
+	private Map<String, List<String>> categorizationRules;
 
 	/*
 	 * Name of a miscellaneous category
@@ -40,13 +40,13 @@ public class ObservedPropertiesHolder {
 	 */
 	public ObservedPropertiesHolder() {
 
-		observedProperties = new ArrayList<Category>();
-		categories = new HashMap<String, List<String>>();
+		categories = new ArrayList<Category>();
+		categorizationRules = new HashMap<String, List<String>>();
 
 		/*
 		 * Create categorization specification
 		 */
-		categories.put("Weather", new ArrayList<String>() {
+		categorizationRules.put("Weather", new ArrayList<String>() {
 			private static final long serialVersionUID = 1L;
 			{
 				add("(.)*Wind(.)*");
@@ -59,7 +59,7 @@ public class ObservedPropertiesHolder {
 			}
 		});
 
-		categories.put("Climate", new ArrayList<String>() {
+		categorizationRules.put("Climate", new ArrayList<String>() {
 			private static final long serialVersionUID = 1L;
 			{
 				add("(.)*Temp(.)*");
@@ -71,7 +71,7 @@ public class ObservedPropertiesHolder {
 			}
 		});
 
-		categories.put("Water", new ArrayList<String>() {
+		categorizationRules.put("Water", new ArrayList<String>() {
 			private static final long serialVersionUID = 1L;
 			{
 				add("(.)*Water(.)*");
@@ -94,8 +94,8 @@ public class ObservedPropertiesHolder {
 	 *
 	 * @param facetData
 	 */
-	public void setObservedProperties(FacetData facetData) {
-		observedProperties =
+	public void setCategories(FacetData facetData) {
+		categories =
 				categorize(new ArrayList<String>(
 						facetData.getObservationProperties().keySet()));
 	}
@@ -105,8 +105,8 @@ public class ObservedPropertiesHolder {
 	 *
 	 * @return
 	 */
-	public List<Category> getObserverPropertes() {
-		return observedProperties;
+	public List<Category> getCategories() {
+		return categories;
 	}
 
 	/**
@@ -136,11 +136,11 @@ public class ObservedPropertiesHolder {
 
 			// go though all the categories to find if we should
 			// bin the property somewhere
-			for (String category : categories.keySet()) {
+			for (String category : categorizationRules.keySet()) {
 
 				// each category has a list of regular expressions
 				// that defines what goes into the category
-				List<String> regexps = categories.get(category);
+				List<String> regexps = categorizationRules.get(category);
 				for (String regexp : regexps) {
 
 					// if there is a match, bin the property appropriately

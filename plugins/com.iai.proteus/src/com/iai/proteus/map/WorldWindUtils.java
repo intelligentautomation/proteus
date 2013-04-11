@@ -101,7 +101,7 @@ public class WorldWindUtils {
 			
 			if (url != null) {
 				service = new Service(ServiceType.SOS);
-				service.setServiceUrl(url);
+				service.setEndpoint(url);
 				String name = 
 						capabilities.getServiceIdentification().getTitle();
 				if (name != null)

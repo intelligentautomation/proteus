@@ -5,16 +5,50 @@
  */
 package com.iai.proteus.ui.queryset;
 
+/**
+ * Model object for observed properties 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class ObservedProperty {
 
 	private String observedProperty;
+	private boolean checked; 
 
+	/**
+	 * Constructor 
+	 * 
+	 * @param observedProperty
+	 */
 	public ObservedProperty(String observedProperty) {
+		this.observedProperty = observedProperty;
+		checked = false;
+	}
+	
+	public String getObservedProperty() {
+		return observedProperty;
+	}
+	
+	/**
+	 * @param observedProperty the observedProperty to set
+	 */
+	public void setObservedProperty(String observedProperty) {
 		this.observedProperty = observedProperty;
 	}
 
-	public String getObservedProperty() {
-		return observedProperty;
+	/**
+	 * @return the checked
+	 */
+	public boolean isChecked() {
+		return checked;
+	}
+
+	/**
+	 * @param checked the checked to set
+	 */
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 	@Override

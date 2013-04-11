@@ -5,6 +5,7 @@
  */
 package com.iai.proteus.ui.dnd;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -12,13 +13,16 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.TransferData;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
-import com.iai.proteus.events.QuerySetEventNotifier;
-import com.iai.proteus.events.QuerySetEventType;
+import com.iai.proteus.Activator;
 import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
+import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.queryset.RearrangeMapsEventValue;
-import com.iai.proteus.ui.UIUtil;
 
 /**
  * Drop listener for saved maps 
@@ -46,6 +50,7 @@ public class SavedMapsDropListener extends ViewerDropAdapter {
 	 * 
 	 * @param data 
 	 */
+	@SuppressWarnings("serial")
 	@Override
 	public boolean performDrop(Object data) {
 		LocalSelectionTransfer transfer = 
@@ -66,14 +71,24 @@ public class SavedMapsDropListener extends ViewerDropAdapter {
 		// update viewer
 		getViewer().refresh();
 		// notify listeners that order has changed
-		UIUtil.update(new Runnable() {
-			@Override
-			public void run() {
-				QuerySetEventNotifier.getInstance().fireEvent(null, 
-						QuerySetEventType.QUERYSET_LAYERS_REARRANGE, 
-						new RearrangeMapsEventValue(maps, target));
+		BundleContext ctx = Activator.getContext();
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		EventAdmin eventAdminService = ctx.getService(ref);							
+		eventAdminService.sendEvent(new Event(EventTopic.QS_LAYERS_REARRANGE.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("value", new RearrangeMapsEventValue(maps, target));
 			}
-		});
+		}));			
+//		UIUtil.update(new Runnable() {
+//			@Override
+//			public void run() {
+//				QuerySetEventNotifier.getInstance().fireEvent(null, 
+//						QuerySetEventType.QUERYSET_LAYERS_REARRANGE, 
+//						new RearrangeMapsEventValue(maps, target));
+//			}
+//		});
 		return true;
 	}
 

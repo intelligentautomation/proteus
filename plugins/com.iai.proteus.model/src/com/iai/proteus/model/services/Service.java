@@ -5,9 +5,6 @@
  */
 package com.iai.proteus.model.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.w3c.dom.Document;
@@ -28,11 +25,9 @@ public class Service extends MapLayer
 	implements Cloneable, Deletable, Likable, IAdaptable
 {
 	
-//	private static final Logger log = Logger.getLogger(Source.class);
-	
 	private static final long serialVersionUID = 1L;
 	
-	private String serviceUrl;
+	private String endpoint;
 	private ServiceType serviceType;
 	
 	// indicates a "favorite" service  
@@ -73,20 +68,8 @@ public class Service extends MapLayer
 	 */
 	public Service(String name, ServiceType type, String url) {
 		this(type);
-		this.serviceUrl = url;
+		this.endpoint = url;
 		setName(name);
-	}
-	
-	/**
-	 * Returns a list of information about the source 
-	 * 
-	 * @return
-	 */
-	public List<String> getSourceDetails() {
-		List<String> children = new ArrayList<String>(); 
-    	children.add("Type: " + serviceType.toString());
-    	children.add("URL: " + serviceUrl);
-		return children;
 	}
 	
 	/**
@@ -94,20 +77,20 @@ public class Service extends MapLayer
 	 * 
 	 * @return
 	 */
-	public boolean hasUrl() {
-		return serviceUrl != null;
+	public boolean hasEndpoint() {
+		return endpoint != null;
 	}
 	
 	/*
 	 * Getters and Setters
 	 */
 	
-	public String getServiceUrl() {
-		return serviceUrl;
+	public String getEndpoint() {
+		return endpoint;
 	}
 
-	public void setServiceUrl(String url) {
-		this.serviceUrl = url;
+	public void setEndpoint(String url) {
+		this.endpoint = url;
 	}
 	
 	public ServiceType getServiceType() {
@@ -164,7 +147,7 @@ public class Service extends MapLayer
 	}
 	
 	public String prettyString() {
-		return "<" + serviceType + "; URL: " + serviceUrl + ">";
+		return "<" + serviceType + "; URL: " + endpoint + ">";
 	}
 	
 	/**
@@ -175,8 +158,8 @@ public class Service extends MapLayer
 	 * 	<url>...</url>
 	 * </service>
 	 * 
-	 * Note: the <cache> tag is only present if the source is not a "query 
-	 * source"
+	 * Note: the <cache> tag is only present if the service is not a "query 
+	 * service"
 	 * 
 	 */
 	@Override 
@@ -189,7 +172,7 @@ public class Service extends MapLayer
 		root.appendChild(name);
 		// URL
 		Element url = document.createElement("url");
-		url.setTextContent(getServiceUrl());
+		url.setTextContent(getEndpoint());
 		root.appendChild(url);
 		// color
 		Element color = document.createElement("color");
@@ -229,7 +212,7 @@ public class Service extends MapLayer
 		int result = 1;
 		result = prime * result
 				+ ((serviceType == null) ? 0 : serviceType.hashCode());
-		result = prime * result + ((serviceUrl == null) ? 0 : serviceUrl.hashCode());
+		result = prime * result + ((endpoint == null) ? 0 : endpoint.hashCode());
 		return result;
 	}
 
@@ -244,10 +227,10 @@ public class Service extends MapLayer
 		Service other = (Service) obj;
 		if (serviceType != other.serviceType)
 			return false;
-		if (serviceUrl == null) {
-			if (other.serviceUrl != null)
+		if (endpoint == null) {
+			if (other.endpoint != null)
 				return false;
-		} else if (!serviceUrl.equals(other.serviceUrl))
+		} else if (!endpoint.equals(other.endpoint))
 			return false;
 		return true;
 	}
@@ -262,7 +245,7 @@ public class Service extends MapLayer
 	public Object clone() {
 		Service service = new Service(getServiceType());
 		service.setName(getName());
-		service.setServiceUrl(getServiceUrl());
+		service.setEndpoint(getEndpoint());
 		return service; 
 	}
 

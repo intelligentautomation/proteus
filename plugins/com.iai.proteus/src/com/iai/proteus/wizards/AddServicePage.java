@@ -216,7 +216,7 @@ public class AddServicePage extends WizardPage implements Listener {
 		if (capabilities != null) {
 			// create service object 
 			Service service = new Service(ServiceType.SOS);
-			service.setServiceUrl(endpoint);
+			service.setEndpoint(endpoint);
 			// try and get the title
 			String title = capabilities.getServiceIdentification().getTitle();
 			if (title != null) {
@@ -247,7 +247,7 @@ public class AddServicePage extends WizardPage implements Listener {
             	capabilities.parse();
             	// create service object 
             	Service service = new Service(ServiceType.WMS);
-            	service.setServiceUrl(endpoint);
+            	service.setEndpoint(endpoint);
             	// try and get the title
             	String title = 
             			capabilities.getServiceInformation().getServiceTitle();
@@ -324,7 +324,7 @@ public class AddServicePage extends WizardPage implements Listener {
 	 */
 	private boolean serviceUrlExists(String url) {
 		for (Service service : ServiceRoot.getInstance()) {
-			if (service.getServiceUrl().equalsIgnoreCase(url))
+			if (service.getEndpoint().equalsIgnoreCase(url))
 				return true;
 		}
 		return false;

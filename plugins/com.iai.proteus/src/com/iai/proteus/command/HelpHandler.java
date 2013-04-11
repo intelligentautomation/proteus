@@ -19,16 +19,6 @@ import org.eclipse.core.commands.IHandlerListener;
 public class HelpHandler implements IHandler {
 
 	@Override
-	public void addHandlerListener(IHandlerListener handlerListener) {
-
-	}
-
-	@Override
-	public void dispose() {
-
-	}
-
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException 
 	{
         if (!java.awt.Desktop.isDesktopSupported()) {
@@ -64,10 +54,19 @@ public class HelpHandler implements IHandler {
 	public boolean isHandled() {
 		return true;
 	}
+	
+	@Override
+	public void addHandlerListener(IHandlerListener handlerListener) {
+
+	}
 
 	@Override
 	public void removeHandlerListener(IHandlerListener handlerListener) {
 
 	}
+	
+	@Override
+	public void dispose() {
 
+	}
 }

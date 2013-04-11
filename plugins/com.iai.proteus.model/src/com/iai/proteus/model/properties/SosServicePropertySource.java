@@ -133,7 +133,7 @@ public class SosServicePropertySource implements IPropertySource {
 			return null;
 		
 		SosCapabilities capabilities = 
-					SosCapabilitiesCache.getInstance().get(service.getServiceUrl());
+					SosCapabilitiesCache.getInstance().get(service.getEndpoint());
 		
 		if (capabilities == null)
 			return null;
@@ -176,7 +176,7 @@ public class SosServicePropertySource implements IPropertySource {
 			}
 		} else if (id.equals(PROP_USED_SERVICE_URL)) {
 			if (capabilities != null) { 
-				return service.getServiceUrl();
+				return service.getEndpoint();
 			}
 		} else if (id.equals(PROP_OFFERINGS)) {
 			if (capabilities != null) { 

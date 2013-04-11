@@ -208,7 +208,7 @@ public class DataFetcher implements IRunnableWithProgress {
 		// if needed
 		if (!sensorOffering.isLoaded()) {
 			SosCapabilities capabilities =
-				SosUtil.getCapabilities(service.getServiceUrl());
+				SosUtil.getCapabilities(service.getEndpoint());
 			sensorOffering.loadSensorOffering(capabilities);
 		}
 
@@ -246,7 +246,7 @@ public class DataFetcher implements IRunnableWithProgress {
 						TimeSeriesUtil.getSeriesLabel(sensorOffering, property);
 
 				SosDataRequest dataRequest =
-						new SosDataRequest(label, service.getServiceUrl(), observationRequest);
+						new SosDataRequest(label, service.getEndpoint(), observationRequest);
 
 				dataRequests.add(dataRequest);
 			}

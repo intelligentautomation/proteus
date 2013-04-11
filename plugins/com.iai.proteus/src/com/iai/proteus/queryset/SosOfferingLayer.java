@@ -22,15 +22,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
+import com.iai.proteus.Activator;
 import com.iai.proteus.common.TimeUtils;
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosUtil;
-import com.iai.proteus.events.QuerySetEventNotifier;
-import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.SectorSelector;
 import com.iai.proteus.map.SelectionLayer;
 import com.iai.proteus.map.SensorOfferingMarker;
@@ -53,6 +54,9 @@ public class SosOfferingLayer extends RenderableLayer
 
 	private static final Logger log =
 		Logger.getLogger(SosOfferingLayer.class);
+	
+	// EventAdmin service for communicating with other views/modules
+	private EventAdmin eventAdminService;
 
 	private WorldWindow world;
 	
@@ -127,6 +131,12 @@ public class SosOfferingLayer extends RenderableLayer
 		facets = new HashSet<FacetChangeToggle>();
 
 		setName(mapId.toString());
+		
+		// get EventAdmin service object 
+		BundleContext ctx = Activator.getContext();		
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		eventAdminService = ctx.getService(ref);
 	}
 
 	/**
@@ -144,42 +154,38 @@ public class SosOfferingLayer extends RenderableLayer
 	 *
 	 * @param changes
 	 */
-	public void addOrRemoveFacetConstraints(List<FacetChangeToggle> changes) {
+	public void addOrRemoveFacetConstraints(Collection<FacetChangeToggle> changes) {
 
-		for (Object obj : changes) {
+		for (FacetChangeToggle change : changes) {
 
-			if (obj instanceof FacetChangeToggle) {
+			log.trace("Update listeners: " +
+					(change.getStatus() ? "YES" : "NO") +
+					"; facet: " + change.getFacet() +
+					"; value: " + change.getValue());
 
-				FacetChangeToggle change = (FacetChangeToggle) obj;
-				log.trace("Update listeners: " +
-						(change.getStatus() ? "YES" : "NO") +
-						"; facet: " + change.getFacet() +
-						"; value: " + change.getValue());
+			/*
+			 * Handle time-based facets
+			 */
+			if (change.getFacet().equals(Facet.TIME_PERIOD)) {
+				// remove all old TIME PERIOD facets
+				removeFacets(Facet.TIME_PERIOD);
 
-				/*
-				 * Handle time-based facets
-				 */
-				if (change.getFacet().equals(Facet.TIME_PERIOD)) {
-					// remove all old TIME PERIOD facets
-					removeFacets(Facet.TIME_PERIOD);
-
-					// add the facet restriction if it is different from the
-					// 'No restriction' option
-					if (!change.getValue().equalsIgnoreCase(TimeFacet.ALL.toString())) {
-						getFacets().add(change);
-					}
-
-					// keep going through facets
-					continue;
+				// add the facet restriction if it is different from the
+				// 'No restriction' option
+				if (!change.getValue().equalsIgnoreCase(TimeFacet.ALL.toString())) {
+					getFacets().add(change);
 				}
 
-				if (change.getStatus()) {
-					// keep constraint if it was turned on
-					facets.add(change);
-				} else {
-					// remove constraint if it was turned off
-					facets.remove(change);
-				}
+				// keep going through facets
+				continue;
+			}
+
+			if (change.getStatus()) {
+				// keep constraint if it was turned on
+				facets.add(change);
+			} else {
+				// remove constraint if it was turned off
+				facets.remove(change);
 			}
 		}
 
@@ -209,21 +215,31 @@ public class SosOfferingLayer extends RenderableLayer
 	 *
 	 * @param sector Geographical sector restriction, may be null
 	 */
-	private void updateOfferingLayer(Sector sector) {
+	@SuppressWarnings("serial")
+	private void updateOfferingLayer(final Sector sector) {
 
 		Collection<Renderable> filtered = filterOfferingMarkers(sector, false);
 
-		/*
-		 * Update layer
-		 */
+		// update layer
 		setRenderables(filtered);
 		getWwd().redrawNow();
 
-		/*
-		 * Notify that contributions may have changed
-		 */
-		QuerySetEventNotifier.getInstance().fireEvent(this,
-				QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
+		// notify that contributions may have changed
+		fireContributionChanged();
+
+		// notify that sector may have changed
+		eventAdminService.sendEvent(new Event(EventTopic.QS_REGION_UPDATED.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("object", this);
+				put("value", sector == null ? null : sector.asDegreesArray());
+			}
+		}));
+		
+		// notify that sector may have changed 
+//		QuerySetEventNotifier.getInstance().fireEvent(this,
+//				QuerySetEventType.QUERYSET_REGION_UPDATED, 
+//				sector == null ? sector : sector.asDegreesArray());
 	}
 
 	/**
@@ -406,7 +422,7 @@ public class SosOfferingLayer extends RenderableLayer
 				// load data if we need to
 				if (!offering.isLoaded()) {
 					SosCapabilities capabilities =
-							SosUtil.getCapabilities(marker.getService().getServiceUrl());
+							SosUtil.getCapabilities(marker.getService().getEndpoint());
 					offering.loadSensorOffering(capabilities);
 				}
 
@@ -600,7 +616,7 @@ public class SosOfferingLayer extends RenderableLayer
 				// load data if we need to
 				if (!offering.isLoaded()) {
 					SosCapabilities capabilities =
-							SosUtil.getCapabilities(marker.getService().getServiceUrl());
+							SosUtil.getCapabilities(marker.getService().getEndpoint());
 					offering.loadSensorOffering(capabilities);
 				}
 
@@ -670,7 +686,7 @@ public class SosOfferingLayer extends RenderableLayer
 				// load data if we need to
 				if (!offering.isLoaded()) {
 					SosCapabilities capabilities =
-							SosUtil.getCapabilities(marker.getService().getServiceUrl());
+							SosUtil.getCapabilities(marker.getService().getEndpoint());
 					offering.loadSensorOffering(capabilities);
 				}
 
@@ -690,7 +706,7 @@ public class SosOfferingLayer extends RenderableLayer
 	}
 
 	/**
-	 * Returns true if the offering is in the
+	 * Returns true if the offering is in the sector 
 	 *
 	 * @param offering
 	 * @param sector Geographical sector restriction, may be null
@@ -721,10 +737,18 @@ public class SosOfferingLayer extends RenderableLayer
 	 * @return
 	 */
 	public Sector getSector() {
-		// update the layer displaying offerings
-//		if (locationSearchSector != null)
-//			return locationSearchSector;
 		return selector.getSector();
+	}
+	
+	/**
+	 * Sets the sector 
+	 * 
+	 * @param sector
+	 */
+	public void setSector(Sector sector) {
+		selector.setSector(sector);
+		// update offering layer after setting the sector
+		updateOfferingLayer(getSector());
 	}
 
 	/**
@@ -839,16 +863,24 @@ public class SosOfferingLayer extends RenderableLayer
 	 *
 	 * @param renderables
 	 */
+	@SuppressWarnings("serial")
 	@Override
 	public void setRenderables(Iterable<Renderable> renderables) {
-
+		
 		if (!markersInitialized) {
 			allRenderables = renderables;
 			log.trace("SET renderables");
 			markersInitialized = true;
 
-			QuerySetEventNotifier.getInstance().fireEvent(this,
-					QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
+			eventAdminService.sendEvent(new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
+					new HashMap<String, Object>() { 
+				{
+					put("object", this);
+				}
+			}));
+
+//			QuerySetEventNotifier.getInstance().fireEvent(this,
+//					QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
 
 			log.trace("Updating contributions from setRenderables()");
 			log.trace("Initialized markers for layer: " + getName());
@@ -868,7 +900,8 @@ public class SosOfferingLayer extends RenderableLayer
 	 *
 	 * @param renderables
 	 */
-	public void resetRenderables(Iterable<Renderable> renderables) {
+	@SuppressWarnings("serial")
+	public void resetRenderables(Collection<Renderable> renderables) {
 		log.trace("RESETnig renderables (was: " +
 				countRenderables(allRenderables) + ", new: " +
 				countRenderables(renderables) + ")");
@@ -882,8 +915,14 @@ public class SosOfferingLayer extends RenderableLayer
 		//  hides selection
 		hideSelection();
 
-		QuerySetEventNotifier.getInstance().fireEvent(this,
-				QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
+		eventAdminService.sendEvent(new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("object", this);
+			}
+		}));		
+//		QuerySetEventNotifier.getInstance().fireEvent(this,
+//				QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
 		log.trace("Updating contributions from resetRenderables()");
 	}
 
@@ -919,15 +958,11 @@ public class SosOfferingLayer extends RenderableLayer
 			// show selection layer
 			layerSelection.setEnabled(false);
 		}
-
-		// notify facet viewer that this layer was enabled/disabled
-		EventNotifier.getInstance().fireEvent(this,
-				EventType.DISCOVERY_FACET_DATA_CHANGE, this);
 	}
 
 	private int countRenderables(Iterable<Renderable> renderables) {
 		int count = 0;
-		for (Renderable r : renderables) {
+		for (@SuppressWarnings("unused") Renderable r : renderables) {
 			count++;
 		}
 		return count;
@@ -953,31 +988,38 @@ public class SosOfferingLayer extends RenderableLayer
 				if (latestUserSelection == null ||
 						!latestUserSelection.equals(oldSector))	{
 
-					// remove all OBSERVED FACETS since we moved the sector
-					// (i.e. we "start over")
-//					removeFacets(Facet.OBSERVED_PROPERTY);
-
 					// update discovery layer
 					updateOfferingLayer(oldSector);
 
-					// notify facet viewer that the underlying facet data may
-					// have changed
-//					EventNotifier.getInstance().fireEvent(this,
-//							EventType.DISCOVERY_FACET_DATA_CHANGE, this);
-
-//					QuerySetEventNotifier.getInstance().fireEvent(this,
-//							QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED,
-//							this);
 					log.trace("Updating contributions from propertyChange()");
 				}
 
 				latestUserSelection = oldSector;
 
-				// clear the location sector
-				//		locationSearchSector = null;
-
 			}
 		}
+	}
+	
+	/**
+	 * Notify listeners that this sensor offering layer contribution changed
+	 * 
+	 */
+	private void fireContributionChanged() {
+		
+		// get service 
+		BundleContext ctx = Activator.getContext();
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		EventAdmin eventAdminService = ctx.getService(ref);
+
+		Map<String,Object> properties = new HashMap<String, Object>();
+		properties.put("object", this);
+
+		// send event 
+		Event event = 
+				new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
+				properties);
+		eventAdminService.sendEvent(event);
 	}
 
 	/**

@@ -40,6 +40,7 @@ public class ManageServicesHandler implements IHandler {
 				new ManageAllServicesDialog(UIUtil.getShell(), 
 						ServiceRoot.getInstance());
 		dialog.open();
+		dialog.close();
 		
 		return null;
 	}

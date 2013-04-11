@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="com.iai.proteus.feature"
-      label="Sensor Management"
-      version="1.1.0"
+      label="Sensor Discovery"
+      version="1.2.0"
       provider-name="Intelligent Automationc Inc."
       plugin="com.iai.proteus"
       os="linux,macosx,win32"
@@ -384,6 +384,53 @@
 
    <plugin
          id="org.apache.lucene.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.iai.proteus.macosx"
+         os="macosx"
+         ws="cocoa"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.iai.proteus.win32"
+         os="win32"
+         ws="win32"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.iai.proteus.macosx"
+         os="macosx"
+         ws="cocoa"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.ds"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.equinox.event"
          download-size="0"
          install-size="0"
          version="0.0.0"

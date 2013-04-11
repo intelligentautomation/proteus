@@ -219,7 +219,7 @@ public class ManageAllServicesDialog extends TitleAreaDialog {
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service service = (Service) element;
-					return service.getServiceUrl();
+					return service.getEndpoint();
 				}
 				return "";
 			}
@@ -251,11 +251,8 @@ public class ManageAllServicesDialog extends TitleAreaDialog {
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (!tableViewer.getSelection().isEmpty()) { 
-					tltmDelete.setEnabled(true);
-					return;
-				} 
-				tltmDelete.setEnabled(false);
+				// update tool item status
+				tltmDelete.setEnabled(!tableViewer.getSelection().isEmpty());
 			}
 		});
 
@@ -401,8 +398,8 @@ public class ManageAllServicesDialog extends TitleAreaDialog {
 		public int compare(Viewer viewer, Object e1, Object e2) {
 			Service item1 = (Service) e1;
 			Service item2 = (Service) e2;
-			String s1 = item1.getServiceUrl();
-			String s2 = item2.getServiceUrl();
+			String s1 = item1.getEndpoint();
+			String s2 = item2.getEndpoint();
 			return sort(s1, s2);
 		}		
 	}		

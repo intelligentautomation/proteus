@@ -12,22 +12,30 @@ package com.iai.proteus.events;
  *
  */
 public enum QuerySetEventType {
+	
+	// used to load a new query set 
+	QUERYSET_LOAD_QUERYSET, 
 
 	// used to notify that a layer should be initialized
-	QUERYSET_INITIALIZE_LAYER,
+//	QUERYSET_INITIALIZE_LAYER,
 	// used to notify that a service has changed
-	QUERYSET_SERVICE_TOGGLE,
+//	QUERYSET_SERVICE_TOGGLE,
 	// used to notify that a query set has been closed/deleted
-	QUERYSET_LAYERS_DELETE,
+//	QUERYSET_LAYERS_DELETE,
 	// used to notify that a query set should be the active
-	QUERYSET_LAYERS_ACTIVATE,
+//	QUERYSET_LAYERS_ACTIVATE,
 	// used to notify that the given layers should be re-arranged 
-	QUERYSET_LAYERS_REARRANGE, 
+//	QUERYSET_LAYERS_REARRANGE, 
 
 	// used to notify that a geographic selection was enabled
-	QUERYSET_REGION_ENABLED,
+//	QUERYSET_REGION_ENABLED,
 	// used to notify that a geographic selection was disabled
-	QUERYSET_REGION_DISABLE,
+//	QUERYSET_REGION_DISABLED,
+	// used to notify what the geographical selection is 
+//	QUERYSET_REGION_SET, 
+	// used to notify that the region restriction was changed  
+//	QUERYSET_REGION_UPDATED,
+
 
 	// used to notify that the offering layer contributions have changed
 	QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED,

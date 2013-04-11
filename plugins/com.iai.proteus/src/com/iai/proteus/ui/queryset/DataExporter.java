@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus.queryset;
+package com.iai.proteus.ui.queryset;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +18,7 @@ import com.iai.proteus.common.sos.data.SensorData;
 import com.iai.proteus.common.sos.exception.ExceptionReportException;
 import com.iai.proteus.common.sos.util.SosDataRequest;
 import com.iai.proteus.dialogs.DownloadModel;
+import com.iai.proteus.queryset.DataFetcher;
 import com.iai.proteus.views.TimeSeriesUtil;
 
 public class DataExporter implements IRunnableWithProgress {

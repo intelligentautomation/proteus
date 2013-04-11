@@ -114,7 +114,7 @@ public class ServiceRoot extends Model implements Iterable<Service>, ServiceMana
 	 */
 	public synchronized Service getService(String serviceUrl) {
 		for (Service service : getServices()) {
-			if (service.getServiceUrl().equals(serviceUrl))
+			if (service.getEndpoint().equals(serviceUrl))
 				return service;
 		}
 		return null;
@@ -129,7 +129,7 @@ public class ServiceRoot extends Model implements Iterable<Service>, ServiceMana
 	 */
 	public synchronized boolean containsServiceUrl(String serviceUrl) {
 		for (Service service : getServices()) {
-			if (service.getServiceUrl().equals(serviceUrl))
+			if (service.getEndpoint().equals(serviceUrl))
 				return true;
 		}
 		return false;

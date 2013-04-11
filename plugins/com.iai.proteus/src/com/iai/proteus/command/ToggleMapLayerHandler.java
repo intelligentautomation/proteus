@@ -10,8 +10,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.commands.IHandlerListener;
 
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
+import com.iai.proteus.events.EventNotifier;
+import com.iai.proteus.events.EventType;
+
 
 /**
  * Handler for toggling map layers 
@@ -25,7 +26,7 @@ public class ToggleMapLayerHandler implements IHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 
 		String layer = event.getParameter("com.iai.proteus.map.layer.name");
-
+		
 		if (layer != null) {
 			// toggle layer with given name
 			EventNotifier.getInstance().fireEvent(this,

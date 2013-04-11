@@ -215,7 +215,7 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service service = (Service) element;
-					return service.getServiceUrl();
+					return service.getEndpoint();
 				}
 				return "";
 			}
@@ -287,6 +287,7 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 						new ManageAllServicesDialog(UIUtil.getShell(), 
 								ServiceRoot.getInstance());
 				dialog.open();
+				dialog.close();
 				// update the viewers whose input may have changed
 				tableViewerServicesAvailable.refresh();
 			}
@@ -352,7 +353,7 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service service = (Service) element;
-					return service.getServiceUrl();
+					return service.getEndpoint();
 				}
 				return "";
 			}

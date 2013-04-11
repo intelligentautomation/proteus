@@ -18,6 +18,8 @@ import java.util.Collection;
  */
 public class QuerySetEventNotifier {
 
+	private Object lock = new Object(); 
+	
 	// Collection of listeners on this model object
 	protected Collection<QuerySetEventListener> listeners =
 		new ArrayList<QuerySetEventListener>();
@@ -36,7 +38,9 @@ public class QuerySetEventNotifier {
 	 * @param listener
 	 */
 	public void addListener(QuerySetEventListener listener) {
-		listeners.add(listener);
+		synchronized (lock) {
+			listeners.add(listener);	
+		}
 	}
 
 	/**
@@ -45,7 +49,9 @@ public class QuerySetEventNotifier {
 	 * @param listener
 	 */
 	public void removeListener(QuerySetEventListener listener) {
-		listeners.remove(listener);
+		synchronized (lock) {
+			listeners.remove(listener);
+		}
 	}
 
 	/**
@@ -66,12 +72,14 @@ public class QuerySetEventNotifier {
 	 * @param value
 	 */
 	public void fireEvent(Object eventObject, QuerySetEventType eventType, Object value) {
-		QuerySetEvent event = new QuerySetEvent(eventObject);
-		event.setEventType(eventType);
-		if (value != null)
-			event.setValue(value);
-		for (QuerySetEventListener listener : listeners) {
-			listener.querySetEventHandler(event);
+		synchronized (lock) {
+			QuerySetEvent event = new QuerySetEvent(eventObject);
+			event.setEventType(eventType);
+			if (value != null)
+				event.setValue(value);
+			for (QuerySetEventListener listener : listeners) {
+				listener.querySetEventHandler(event);
+			}
 		}
 	}
 

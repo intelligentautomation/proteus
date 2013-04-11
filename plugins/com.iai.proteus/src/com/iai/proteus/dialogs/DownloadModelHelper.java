@@ -35,7 +35,7 @@ public class DownloadModelHelper {
 				new ArrayList<SensorOfferingItem>();
 		
 		Service service = new Service(ServiceType.SOS);
-		service.setServiceUrl("http://noaa.gov/sos");
+		service.setEndpoint("http://noaa.gov/sos");
 		
 		SensorOffering sensorOffering = new SensorOffering("id1");
 		sensorOffering.addObservedProperty("http://prop1");
@@ -128,7 +128,7 @@ public class DownloadModelHelper {
 		// if needed
 		if (!sensorOffering.isLoaded()) {
 			SosCapabilities capabilities =
-				SosUtil.getCapabilities(service.getServiceUrl());
+				SosUtil.getCapabilities(service.getEndpoint());
 			sensorOffering.loadSensorOffering(capabilities);
 		}
 
@@ -158,7 +158,7 @@ public class DownloadModelHelper {
 				TimeSeriesUtil.getSeriesLabel(sensorOffering, observedProperty);
 
 		SosDataRequest dataRequest =
-				new SosDataRequest(label, service.getServiceUrl(), observationRequest);
+				new SosDataRequest(label, service.getEndpoint(), observationRequest);
 
 		return dataRequest;
 	}		
@@ -169,7 +169,7 @@ public class DownloadModelHelper {
 		// if needed
 		if (!sensorOffering.isLoaded()) {
 			SosCapabilities capabilities =
-					SosUtil.getCapabilities(service.getServiceUrl());
+					SosUtil.getCapabilities(service.getEndpoint());
 			sensorOffering.loadSensorOffering(capabilities);
 		}					
 	}	

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2013 Intelligent Automation Inc. 
  * 
- * All Rights Reserved.
+ * All Rights Reserved. Modified code originally developed by NASA (see below).
  */
 package com.iai.proteus.map;
 
@@ -24,6 +24,7 @@ import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Intersection;
+import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Sector;
@@ -177,9 +178,6 @@ public class SectorSelector extends WWObjectImpl
         this.getShape().clear();
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-        EventNotifier.getInstance().fireEvent(this,
-        		EventType.DISCOVERY_LAYER_REGION_DISABLED);
     }
 
     /**
@@ -215,8 +213,32 @@ public class SectorSelector extends WWObjectImpl
         // TODO: Determine how to handle date-line spanning sectors.
     }
 
+    /**
+     * For programmatically setting the sector 
+     * 
+     * @param sector
+     */
     public void setSector(Sector sector) {
-    	this.shape.setSector(sector);
+    	if (sector != null) {
+    		LatLon[] corners = sector.getCorners();
+
+    		// set the start and end positions 
+    		// start: NW
+    		// end: SE
+    		this.shape.setStartPosition(new Position(corners[3], 0));
+    		this.shape.setEndPosition(new Position(corners[1], 0));
+    		// also set the actual sector 
+    		this.shape.setSector(sector);
+
+	    	// make sure we show the layer if the sector is set explicitly 
+    		this.show();
+
+    		// add all listeners 
+    		this.getWwd().addRenderingListener(this);
+    		this.getWwd().addSelectListener(this);
+    		this.getWwd().getInputHandler().addMouseListener(this);
+    		this.getWwd().getInputHandler().addMouseMotionListener(this);
+    	}
     }
 
     public Color getInteriorColor()

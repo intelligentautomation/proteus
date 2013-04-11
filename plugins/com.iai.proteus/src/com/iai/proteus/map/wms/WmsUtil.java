@@ -43,7 +43,7 @@ public class WmsUtil {
 	public static Object[] loadLayersFromWMS(Service service) {
 		
 		Collection<WmsLayerInfo> layerInfos = 
-				WmsUtil.getLayers(service.getServiceUrl());
+				WmsUtil.getLayers(service.getEndpoint());
 		
 		if (layerInfos == null || layerInfos.size() == 0)
 			// empty 
@@ -108,7 +108,6 @@ public class WmsUtil {
 			return cache.getLayers(serviceUrl);
 		
         try {
-        	
             WMSCapabilities caps = WMSCapabilities.retrieve(new URI(serviceUrl));
             caps.parse(); 
             

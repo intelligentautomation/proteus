@@ -153,7 +153,7 @@ public class SensorOfferingItemPropertySource implements IPropertySource {
 		if (!sensorOffering.isLoaded()) {
 			Service service = sensorOfferingItem.getService();
 			SosCapabilities capabilities =
-					SosUtil.getCapabilities(service.getServiceUrl());
+					SosUtil.getCapabilities(service.getEndpoint());
 			sensorOffering.loadSensorOffering(capabilities);
 		}
 

@@ -8,11 +8,23 @@ package com.iai.proteus.ui.queryset;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Model object for categorizes that are used for organizing 
+ * observed properties 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class Category {
 
 	private String name;
 	private List<ObservedProperty> observedProperties;
 
+	/**
+	 * Constructor 
+	 * 
+	 * @param name
+	 */
 	public Category(String name) {
 		this.name = name;
 		observedProperties = new ArrayList<ObservedProperty>();

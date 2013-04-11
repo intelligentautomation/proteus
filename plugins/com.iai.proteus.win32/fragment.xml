@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="file"
+               label="File">
+            <separator
+                  name="com.iai.proteus.win32.separator1">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.window.preferences"
+                  icon="icons/fugue/gear.png"
+                  label="Preferences"
+                  style="push">
+            </command>
+            <separator
+                  name="com.iai.proteus.win32.separator2">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.file.exit"
+                  icon="icons/fugue/door-open-out.png"
+                  label="Exit"
+                  mnemonic="Q"
+                  style="push">
+            </command>
+         </menu>
+         <menu
+               id="menu.help"
+               label="Help">
+            <separator
+                  name="com.iai.proteus.win32.separator1">
+            </separator>
+            <command
+                  commandId="org.eclipse.ui.help.aboutAction"
+                  label="About"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="org.eclipse.ui.contexts.window"
+            platform="win32"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Q">
+      </key>
+   </extension>
+
+</fragment>

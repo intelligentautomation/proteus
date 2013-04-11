@@ -26,6 +26,8 @@ public class WmsSavedMap extends WmsMapLayer {
 	 * @param mapName
 	 */
 	public WmsSavedMap() {
+		// default 
+		notes = "";
 	}
 
 	/**

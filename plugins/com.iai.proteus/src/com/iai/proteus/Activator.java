@@ -29,6 +29,9 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	// Context
+	private static BundleContext context;
 
 	// Shared state location
 	public static IPath stateLocation;
@@ -50,7 +53,8 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this;
+		Activator.plugin = this;
+		Activator.context = context;
 		stateLocation = getStateLocation();
 
 		registerP2Policy(context);
@@ -62,7 +66,8 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		plugin = null;
+		Activator.plugin = null;
+		Activator.context = null;
 		// unregister the UI policy
 		policyRegistration.unregister();
 		policyRegistration = null;
@@ -115,7 +120,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @return
 	 */
 	public static BundleContext getContext() {
-		return getContext();
+		return context;
 	}
 
 	/**

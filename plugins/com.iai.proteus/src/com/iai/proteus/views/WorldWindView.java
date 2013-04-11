@@ -13,6 +13,7 @@ import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.globes.EarthFlat;
 import gov.nasa.worldwind.globes.FlatGlobe;
 import gov.nasa.worldwind.globes.Globe;
@@ -34,6 +35,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -54,6 +57,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import com.iai.proteus.Activator;
 import com.iai.proteus.common.LatLon;
@@ -62,7 +69,6 @@ import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosUtil;
 import com.iai.proteus.communityhub.apiv1.Alert;
 import com.iai.proteus.communityhub.apiv1.Group;
-import com.iai.proteus.events.Event;
 import com.iai.proteus.events.EventListener;
 import com.iai.proteus.events.EventNotifier;
 import com.iai.proteus.events.EventType;
@@ -87,6 +93,7 @@ import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
 import com.iai.proteus.model.services.Service;
+import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
 import com.iai.proteus.queryset.RearrangeMapsEventValue;
@@ -246,6 +253,102 @@ public class WorldWindView extends ViewPart
 		
 		// add a listener to selections in @{link CommunityHubGroupsView} 
 		getSite().getPage().addSelectionListener(CommunityHubGroupsView.ID, this);
+		
+		// get service 
+		BundleContext ctx = Activator.getContext();
+		// create handler 
+		EventHandler handler = new EventHandler() {
+			public void handleEvent(final Event event) {
+				
+				Object obj = event.getProperty("object");
+				Object value = event.getProperty("value");
+				
+				// initialize layer 
+				if (match(event, EventTopic.QS_LAYERS_INIT)) {
+					
+					if (value instanceof SensorOfferingLayer) {
+						initializeSosLayer((SensorOfferingLayer) value);
+					}
+				}
+				
+				// delete layers
+				else if (match(event, EventTopic.QS_LAYERS_DELETE)) {
+					
+					if (value instanceof Collection<?>) {
+						deleteLayers((Collection<IMapLayer>) value);
+					}					
+				}
+				
+				// activate layers
+				else if (match(event, EventTopic.QS_LAYERS_ACTIVATE)) {
+					
+					if (value instanceof Collection<?>) {
+						activateLayers((Collection<IMapLayer>) value);
+					}					
+				}
+				
+				// re-arrange layers
+				else if (match(event, EventTopic.QS_LAYERS_REARRANGE)) {
+					
+					if (value instanceof RearrangeMapsEventValue) {
+						rearrangeLayers((RearrangeMapsEventValue) value);
+					}					
+				}
+				
+				// toggle SOS services
+				else if (match(event, EventTopic.QS_TOGGLE_SERVICES)) {
+					
+					if (obj instanceof IMapLayer && value instanceof Collection<?>) {
+						setServices((IMapLayer) obj, (ArrayList<?>) value);
+					}
+				}
+				
+				// bounding box region enabled 
+				else if (match(event, EventTopic.QS_REGION_ENABLED)) {
+					
+					if (obj instanceof MapId) {
+						enableRegionSelection((MapId) obj);
+					}
+				}
+				
+				// bounding box region disabled 
+				else if (match(event, EventTopic.QS_REGION_DISABLED)) {
+					
+					if (obj instanceof MapId) {
+						disableRegionSelection((MapId) obj);
+					}
+				}
+				
+				// set bound box region restriction
+				else if (match(event, EventTopic.QS_REGION_SET)) {
+					
+					if (obj instanceof MapId && value instanceof double[]) {
+						setRegionSelection((MapId) obj, (double[]) value);
+					}
+					
+				}
+				
+			}
+		};
+
+		// register service 
+		Dictionary<String,String> properties = new Hashtable<String, String>();
+		properties.put(EventConstants.EVENT_TOPIC, 
+				EventTopic.TOPIC_QUERYSET.toString());
+		// listen to query set topics 
+		ctx.registerService(EventHandler.class.getName(), handler, properties);
+		
+	}
+	
+	/**
+	 * Returns true if the event matches the event topic, false otherwise 
+	 * 
+	 * @param event
+	 * @param topic
+	 * @return
+	 */
+	private boolean match(Event event, EventTopic topic) {
+		return event.getTopic().equals(topic.toString());
 	}
 
 
@@ -429,7 +532,7 @@ public class WorldWindView extends ViewPart
 					for (Service service : services) {
 
 						SosCapabilities capabilities =
-								SosUtil.getCapabilities(service.getServiceUrl());
+								SosUtil.getCapabilities(service.getEndpoint());
 						List<Renderable> markers =
 								WorldWindUtils.getCapabilitiesMarkers(capabilities,
 										service.getColor());
@@ -468,7 +571,7 @@ public class WorldWindView extends ViewPart
 			//       documents
 
 			SosCapabilities capabilities =
-					SosUtil.getCapabilities(service.getServiceUrl());
+					SosUtil.getCapabilities(service.getEndpoint());
 			List<Renderable> markers =
 					WorldWindUtils.getCapabilitiesMarkers(capabilities,
 							service.getColor());
@@ -619,96 +722,107 @@ public class WorldWindView extends ViewPart
 	@Override
 	public void querySetEventHandler(QuerySetEvent event) {
 
-		Object obj = event.getEventObject();
+		final Object obj = event.getEventObject();
 		QuerySetEventType type = event.getEventType();
-		Object value = event.getValue();
+		final Object value = event.getValue();
 
 		switch (type) {
 		
-		case QUERYSET_INITIALIZE_LAYER:
-			/*
-			 * Initialize layer
-			 */
-			if (value instanceof SensorOfferingLayer) {
-				initializeSosLayer((SensorOfferingLayer) value);
-			}
+//		case QUERYSET_INITIALIZE_LAYER:
+//			/*
+//			 * Initialize layer
+//			 */
+//			if (value instanceof SensorOfferingLayer) {
+//				initializeSosLayer((SensorOfferingLayer) value);
+//			}
+//
+//			break;
 
-			break;
+//		case QUERYSET_SERVICE_TOGGLE:
+//			/*
+//			 * Toggle layer
+//			 */
+//			if (obj instanceof IMapLayer && value instanceof Collection<?>) {
+//
+//				setServices((IMapLayer) obj, (ArrayList<?>) value);
+//			}
+//
+//			break;
 
-		case QUERYSET_SERVICE_TOGGLE:
-			/*
-			 * Toggle layer
-			 */
-			if (obj instanceof IMapLayer && value instanceof Collection<?>) {
+//		case QUERYSET_LAYERS_DELETE:
+//			/*
+//			 * Delete layers
+//			 */
+//			if (value instanceof Collection<?>) {
+//				
+//				deleteLayers((Collection<IMapLayer>) value);
+//			}
 
-				setServices((IMapLayer) obj, (ArrayList<?>) value);
-			}
+//			break;
 
-			break;
-
-		case QUERYSET_LAYERS_DELETE:
-			/*
-			 * Delete layers
-			 */
-			if (value instanceof Collection<?>) {
-				
-				deleteLayers((Collection<IMapLayer>) value);
-			}
-
-			break;
-
-		case QUERYSET_LAYERS_ACTIVATE:
-			/*
-			 * Show a specific set of layers
-			 */
-			if (value instanceof Collection<?>) {
-				
-				activateLayers((Collection<IMapLayer>) value);
-			}
-
-			break;
+//		case QUERYSET_LAYERS_ACTIVATE:
+//			/*
+//			 * Show a specific set of layers
+//			 */
+//			if (value instanceof Collection<?>) {
+//				
+//				activateLayers((Collection<IMapLayer>) value);
+//			}
+//
+//			break;
 			
-		case QUERYSET_LAYERS_REARRANGE: 
-			/*
-			 * Re-arrange layers 
-			 */
-			if (value instanceof RearrangeMapsEventValue) {
+//		case QUERYSET_LAYERS_REARRANGE: 
+//			/*
+//			 * Re-arrange layers 
+//			 */
+//			if (value instanceof RearrangeMapsEventValue) {
+//			
+//				rearrangeLayers((RearrangeMapsEventValue) value);
+//			}
+//			
+//			break;
+
+//		case QUERYSET_REGION_ENABLED:
+//			/*
+//			 * Enables geographical area selection
+//			 */
+//			if (obj instanceof MapId) {
+//
+//				enableRegionSelection((MapId) obj);
+//			}
+//
+//			break;
+//
+//		case QUERYSET_REGION_DISABLED:
+//			/*
+//			 * Disables geographical area selection
+//			 */
+//			if (obj instanceof MapId) {
+//
+//				disableRegionSelection((MapId) obj);
+//			}
+
+//			break;
 			
-				rearrangeLayers((RearrangeMapsEventValue) value);
-			}
-			
-			break;
-
-		case QUERYSET_REGION_ENABLED:
-			/*
-			 * Enables geographical area selection
-			 */
-			if (value instanceof MapId) {
-
-				enableRegionSelection((MapId) value);
-			}
-
-			break;
-
-		case QUERYSET_REGION_DISABLE:
-			/*
-			 * Disables geographical area selection
-			 */
-			if (value instanceof MapId) {
-
-				disableRegionSelection((MapId) value);
-			}
-
-			break;
+//		case QUERYSET_REGION_SET:
+//			/*
+//			 * Sets the geographical area selection
+//			 */
+//			if (obj instanceof MapId && value instanceof double[]) {
+//				
+//				setRegionSelection((MapId) obj, (double[]) value);
+//			}
+//			
+//			break;
 
 		case QUERYSET_FACET_CHANGE:
 
 			if (obj instanceof MapId) {
 
-				if (value instanceof List) {
+				if (value instanceof Collection<?>) {
 
 					// notify all layers of the facet changes
-					notifyLayerOfFacetSelection((MapId) obj, (List<?>) value);
+					notifyLayerOfFacetSelection((MapId) obj, (Collection<?>) value);
 
 				} else if (value instanceof FacetChangeToggle) {
 
@@ -748,7 +862,7 @@ public class WorldWindView extends ViewPart
 		case QUERYSET_MAP_TOGGLE_LAYER:
 
 			if (obj instanceof WmsMapLayer) {
-				WmsMapLayer mapLayer = (WmsMapLayer) obj;
+				final WmsMapLayer mapLayer = (WmsMapLayer) obj;
 
 				// check if the layer exists
 				Layer layer = getLayer(mapLayer.getMapId());
@@ -765,31 +879,47 @@ public class WorldWindView extends ViewPart
 					break;
 				}
 				
-				/*
-				 * If it did not, try and get it
-				 */
-				Object wmsLayer = getWmsLayer(mapLayer);
-				
-				if (wmsLayer != null && wmsLayer instanceof Layer) {
-					log.trace("A layer was returned from WMS: " + wmsLayer);
-					Layer newLayer = (Layer) wmsLayer;
-					newLayer.setName(mapLayer.getMapId().toString());
-					newLayer.setEnabled(true);
-
-					// set attributes
-					newLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
-					newLayer.setValue(MapAVKey.WMS_SERVICE_URL, 
-							mapLayer.getServiceEndpoint());
-					if (!(obj instanceof WmsSavedMap))
-						// indicates that the layer is a preview from a WMS
-						// in contrast to a saved map 
-						newLayer.setValue(MapAVKey.WMS_MAP_PREVIEW, true);
+				// run long-running job in separate thread 
+				Job job = new Job("Contacting WMS service") {
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
 						
-					// add layer
-					getWwd().getModel().getLayers().add(newLayer);
-				} else {
-					log.warn("Return object was not a Layer object");
-				}
+						monitor.beginTask("Retrieving WMS layers",
+								IProgressMonitor.UNKNOWN);
+						
+						/*
+						 * If it did not, try and get it
+						 */
+						Object wmsLayer = getWmsLayer(mapLayer);
+
+						if (wmsLayer != null && wmsLayer instanceof Layer) {
+							log.trace("A layer was returned from WMS: " + wmsLayer);
+							Layer newLayer = (Layer) wmsLayer;
+							newLayer.setName(mapLayer.getMapId().toString());
+							newLayer.setEnabled(true);
+
+							// set attributes
+							newLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
+							newLayer.setValue(MapAVKey.WMS_SERVICE_URL, 
+									mapLayer.getServiceEndpoint());
+							if (!(obj instanceof WmsSavedMap))
+								// indicates that the layer is a preview from a WMS
+								// in contrast to a saved map 
+								newLayer.setValue(MapAVKey.WMS_MAP_PREVIEW, true);
+
+							// add layer
+							getWwd().getModel().getLayers().add(newLayer);
+						} else {
+							log.warn("Return object was not a Layer object");
+						}
+						
+						monitor.done();
+						
+						return Status.OK_STATUS;
+					}
+				};
+				job.setUser(true);
+				job.schedule();
 				
 			}
 			
@@ -994,6 +1124,26 @@ public class WorldWindView extends ViewPart
 			}
 		}
 	}
+	
+	/**
+	 * Sets the geographical selection in a @{link SosOfferingLayer}
+	 * 
+	 * @param mapId
+	 * @param bbox
+	 */
+	private void setRegionSelection(MapId mapId, double[] bbox) {
+		Layer layer = getLayer(mapId);
+		if (layer != null) {
+			if (layer instanceof SosOfferingLayer) {
+				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
+				// create sector
+				Sector sector = Sector.fromDegrees(bbox);
+				System.out.println("SECTOR: " + sector);
+				// set the sector for the offering layer 
+				offeringLayer.setSector(sector);
+			}
+		}
+	}
 
 	/**
 	 * Handles events
@@ -1001,7 +1151,7 @@ public class WorldWindView extends ViewPart
 	 * @param event
 	 */
 	@Override
-	public void update(Event event) {
+	public void update(com.iai.proteus.events.Event event) {
 
 		final Object value = event.getValue();
 		EventType type = event.getEventType();
@@ -1148,26 +1298,26 @@ public class WorldWindView extends ViewPart
 		WmsCache cache = WmsCache.getInstance();
 		
 		String serviceEndpoint = mapLayer.getServiceEndpoint();
-
-		if (cache.containsLayers(serviceEndpoint)) {
-			
-			Collection<WmsLayerInfo> layerInfos =
-					cache.getLayers(serviceEndpoint);
-			
-			for (WmsLayerInfo layerInfo : layerInfos) {
-				
-				if (layerInfo.getName().equals(mapLayer.getName())) {
-					return WmsUtil.getWMSLayer(layerInfo);
-				}
-			}
-			
-		} else {
-
-			// TODO: implement 
-			log.debug("Should try and fetch the layers...");
-		}
 		
-		log.warn("Something went wrong when getting a WMS layer");
+		Collection<WmsLayerInfo> layerInfos = new ArrayList<WmsLayerInfo>();
+
+		// check if the cache has the layers, if so, fetch them 
+		if (cache.containsLayers(serviceEndpoint)) {
+			layerInfos = cache.getLayers(serviceEndpoint);
+		} else {
+			// if not, fetch the layers from the service
+			// (they will be put in the cache) 
+			layerInfos = WmsUtil.getLayers(serviceEndpoint);
+		}
+
+		// try and find the layer with the right name 
+		for (WmsLayerInfo layerInfo : layerInfos) {
+			if (layerInfo.getName().equals(mapLayer.getName())) {
+				return WmsUtil.getWMSLayer(layerInfo);
+			}
+		}
+			
+		log.warn("Sorry, could not find the requested layer");
 		return null;
 	}
 
@@ -1231,7 +1381,7 @@ public class WorldWindView extends ViewPart
      * @param mapId
      * @param facets
      */
-    private void notifyLayerOfFacetSelection(MapId mapId, List<?> facets) {
+    private void notifyLayerOfFacetSelection(MapId mapId, Collection<?> facets) {
 
     	/*
     	 * Make sure we are dealing with objects of the right type
@@ -1253,7 +1403,7 @@ public class WorldWindView extends ViewPart
      * @param facets
      */
     private void notifyLayerOfFacetChanges(MapId mapId,
-    		List<FacetChangeToggle> facets)
+    		Collection<FacetChangeToggle> facets)
     {
     	/*
     	 * Notify layer of the change so it can update

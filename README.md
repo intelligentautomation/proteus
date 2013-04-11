@@ -105,6 +105,14 @@ To run Proteus from Eclipse:
 2. Right-click on the _proteus.product_ file found in the _com.iai.proteus_ plugin. 
 3. Select _Run As_ -> _Eclipse Application_
 
+## Getting Started
+
+*Coming soon.*
+
+## FAQ
+
+*Currently none.*
+
 ## License 
 
 This software is released under the GNU Lesser General Public License (LGPL). See the file "LICENSE" for more details. 
