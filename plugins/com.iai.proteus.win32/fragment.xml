@@ -7,23 +7,23 @@
             allPopups="false"
             locationURI="menu:org.eclipse.ui.main.menu">
          <menu
-               id="file"
+               id="menu.file"
                label="File">
             <separator
-                  name="com.iai.proteus.win32.separator1">
+                  name="com.iai.proteus.win32.separator1"
+                  visible="true">
             </separator>
             <command
                   commandId="org.eclipse.ui.window.preferences"
-                  icon="icons/fugue/gear.png"
                   label="Preferences"
                   style="push">
             </command>
             <separator
-                  name="com.iai.proteus.win32.separator2">
+                  name="com.iai.proteus.win32.separator2"
+                  visible="true">
             </separator>
             <command
                   commandId="org.eclipse.ui.file.exit"
-                  icon="icons/fugue/door-open-out.png"
                   label="Exit"
                   mnemonic="Q"
                   style="push">
@@ -33,7 +33,8 @@
                id="menu.help"
                label="Help">
             <separator
-                  name="com.iai.proteus.win32.separator1">
+                  name="com.iai.proteus.win32.separator1"
+                  visible="true">
             </separator>
             <command
                   commandId="org.eclipse.ui.help.aboutAction"
