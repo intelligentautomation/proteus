@@ -66,28 +66,28 @@
 	<property name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.ppc" value="true" />
  	<target name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.ppc">
  		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
- 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.ppc.tar.gz"/>
+ 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.ppc.zip"/>
 		</ant>
  	</target>
 	
 	<property name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.x86" value="true" />
  	<target name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.x86">
  		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
- 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.x86.tar.gz"/>
+ 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.x86.zip"/>
 		</ant>
  	</target>
 	
 	<property name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.x86_64" value="true" />
  	<target name="assemble.org.eclipse.pde.build.container.feature.linux.gtk.x86_64">
  		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
- 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.x86_64.tar.gz"/>
+ 			<property name="archiveName" value="${archiveNamePrefix}-linux.gtk.x86_64.zip"/>
 		</ant>
  	</target>
 	
 	<property name="assemble.org.eclipse.pde.build.container.feature.linux.motif.x86" value="true" />
  	<target name="assemble.org.eclipse.pde.build.container.feature.linux.motif.x86">
  		<ant antfile="${assembleScriptName}" dir="${buildDirectory}">			
- 			<property name="archiveName" value="${archiveNamePrefix}-linux.motif.x86.tar.gz"/>
+ 			<property name="archiveName" value="${archiveNamePrefix}-linux.motif.x86.zip"/>
 		</ant>
  	</target>
 	
