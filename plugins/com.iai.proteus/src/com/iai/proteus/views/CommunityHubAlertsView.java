@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EventObject;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -46,6 +47,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 import com.google.gson.JsonSyntaxException;
 import com.iai.proteus.Activator;
@@ -54,9 +59,8 @@ import com.iai.proteus.communityhub.AlertEventListener;
 import com.iai.proteus.communityhub.AlertEventNotifier;
 import com.iai.proteus.communityhub.apiv1.Alert;
 import com.iai.proteus.communityhub.apiv1.Group;
-import com.iai.proteus.events.QuerySetEventNotifier;
-import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.WorldWindUtils;
+import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.ui.SwtUtil;
 import com.iai.proteus.ui.UIUtil;
 import com.iai.proteus.util.ProteusUtil;
@@ -74,6 +78,8 @@ public class CommunityHubAlertsView extends ViewPart
 	
 	private static final Logger log = Logger.getLogger(CommunityHubAlertsView.class);
 
+	// EventAdmin service for communicating with other views/modules
+	private EventAdmin eventAdminService;	
 	
 	private TableViewer tableViewer;
 
@@ -212,16 +218,22 @@ public class CommunityHubAlertsView extends ViewPart
 		
 		// add double click listener
 		tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+			@SuppressWarnings("serial")
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				Object elmt = 
 						SwtUtil.getFirstSelectedElement(event.getSelection());
 				if (elmt != null && elmt instanceof Alert) {
-					Alert alert = (Alert) elmt;
-					LatLon pos = getCentralPosition(alert);
-					// ask us to move to this lat-lon
-					QuerySetEventNotifier.getInstance().fireEvent(alert,
-							QuerySetEventType.QUERYSET_FLY_TO_LATLON, pos);
+					final Alert alert = (Alert) elmt;
+					final LatLon pos = getCentralPosition(alert);
+					// ask us to move to this position 
+					eventAdminService.sendEvent(new Event(EventTopic.QS_FLY_TO_LATLON.toString(), 
+							new HashMap<String, Object>() { 
+						{
+							put("object", alert);
+							put("value", pos);
+						}
+					}));					
 				}
 			}
 		});
@@ -243,6 +255,12 @@ public class CommunityHubAlertsView extends ViewPart
 		
 		// add this view as a selection provider 
 		getSite().setSelectionProvider(tableViewer);
+		
+		// get EventAdmin service 
+		BundleContext ctx = Activator.getContext();
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		eventAdminService = ctx.getService(ref);
 	}
 	
 	/**

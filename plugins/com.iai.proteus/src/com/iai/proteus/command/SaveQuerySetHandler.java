@@ -47,6 +47,12 @@ public class SaveQuerySetHandler implements IHandler {
 				DiscoverView discoverView = (DiscoverView) view;
 				QuerySetTab querySetTab = discoverView.getCurrentQuerySet();
 				if (querySetTab != null) {
+					
+					// provide a name 
+					if (!querySetTab.isSaved()) {
+						querySetTab.nameQuerySet();
+					}
+					
 					// persist the query set 
 					QuerySet qs = QuerySetPersist.write(querySetTab);
 					// update status

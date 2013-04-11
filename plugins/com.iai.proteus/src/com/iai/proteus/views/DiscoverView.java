@@ -322,10 +322,6 @@ public class DiscoverView extends ViewPart
 							put("value", querySetTab.getMapLayers());
 						}
 					}));
-//					// notify that we should switch tab 'context'
-//					QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
-//							QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-//							querySetTab.getMapLayers());
 					
 					// switch the selection provider
 					intermediator.setSelectionProviderDelegate(
@@ -605,8 +601,6 @@ public class DiscoverView extends ViewPart
 	public void perspectiveActivated(IWorkbenchPage page,
 			IPerspectiveDescriptor perspective) {
 		
-//		QuerySetEventNotifier notifier = QuerySetEventNotifier.getInstance();
-
 		CTabItem tabItem = tabFolder.getSelection();
 		if (!(tabItem != null && tabItem instanceof QuerySetTab))
 			return;
@@ -626,10 +620,6 @@ public class DiscoverView extends ViewPart
 						put("value", querySetTab.getMapLayers());
 					}
 				}));
-				
-//				notifier.fireEvent(querySetTab,
-//						QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-//						querySetTab.getMapLayers());
 			}
 			
 		} else {
@@ -643,9 +633,6 @@ public class DiscoverView extends ViewPart
 					put("value", new ArrayList<IMapLayer>());
 				}
 			}));
-//			notifier.fireEvent(querySetTab,
-//					QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-//					new ArrayList<IMapLayer>());
 		}
 		
 		// notify that we should switch tab 'context' - send event 
@@ -678,10 +665,6 @@ public class DiscoverView extends ViewPart
 			}
 		}));			
 		
-//		QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
-//				QuerySetEventType.QUERYSET_LAYERS_ACTIVATE,
-//				querySetTab.getMapLayers());
-
 		// get source provider service 
 		ISourceProviderService sourceProviderService =
 				(ISourceProviderService) getSite().

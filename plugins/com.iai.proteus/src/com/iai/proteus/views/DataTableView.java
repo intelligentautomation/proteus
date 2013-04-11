@@ -5,6 +5,9 @@
  */
 package com.iai.proteus.views;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
@@ -19,16 +22,20 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ViewPart;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
-import com.iai.proteus.common.event.Event;
-import com.iai.proteus.common.event.EventListener;
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
+import com.iai.proteus.Activator;
 import com.iai.proteus.common.sos.data.Field;
 import com.iai.proteus.common.sos.data.SensorData;
+import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.ui.UIUtil;
 
-public class DataTableView extends ViewPart implements EventListener {
+public class DataTableView extends ViewPart {
 
 	public static final String ID = "com.iai.proteus.views.DataTableView"; //$NON-NLS-1$
 
@@ -58,6 +65,7 @@ public class DataTableView extends ViewPart implements EventListener {
 	 * Create contents of the view part.
 	 * @param parent
 	 */
+	@SuppressWarnings("serial")
 	@Override
 	public void createPartControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
@@ -71,15 +79,60 @@ public class DataTableView extends ViewPart implements EventListener {
 
 		initializeToolBar();
 		initializeMenu();
+		
+		// get EventAdmin service 
+		BundleContext ctx = Activator.getContext();
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		EventAdmin eventAdminService = ctx.getService(ref);
+		
+		// create handler 
+		EventHandler handler = new EventHandler() {
+			public void handleEvent(final Event event) {
+				
+				Object value = event.getProperty("value");
+				
+				// preview plot 
+				if (match(event, EventTopic.QS_PREVIEW_TABLE_UPDATE)) {
+					
+					if (value instanceof SensorData) {
+						updateTable((SensorData) value);
+					}					
+				}
+				
+				else if (match(event, EventTopic.QS_PREVIEW_TABLE_CLEAR)) {
 
-		EventNotifier.getInstance().addListener(this);
+					clearTable();
+				}
+			}
+		};
+		
+		// register service 
+		Dictionary<String,String> properties = new Hashtable<String, String>();
+		properties.put(EventConstants.EVENT_TOPIC, 
+				EventTopic.TOPIC_QUERYSET.toString());
+		// listen to query set topics 
+		ctx.registerService(EventHandler.class.getName(), handler, properties);				
 
-		/*
-		 * Ask for data that may be available to display
-		 */
-		EventNotifier.getInstance().fireEvent(this,
-				EventType.DATA_TABLE_VIEWER_DATA_REQUEST);
+		// ask for data that may be available to display
+		eventAdminService.sendEvent(new Event(EventTopic.QS_PREVIEW_TABLE_REQUEST.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("object", this);
+			}
+		}));		
 	}
+	
+	/**
+	 * Returns true if the event matches the event topic, false otherwise 
+	 * 
+	 * @param event
+	 * @param topic
+	 * @return
+	 */
+	private boolean match(Event event, EventTopic topic) {
+		return event.getTopic().equals(topic.toString());
+	}	
 
 	/**
 	 * Initialize the toolbar.
@@ -106,26 +159,6 @@ public class DataTableView extends ViewPart implements EventListener {
 	@Override
 	public void setFocus() {
 		// Set the focus
-	}
-
-	@Override
-	public void update(Event event) {
-		Object value = event.getValue();
-		switch (event.getEventType()) {
-		case DATA_TABLE_VIEWER_UPDATE:
-
-			if (value instanceof SensorData) {
-				updateTable((SensorData) value);
-			}
-
-			break;
-
-		case DATA_TABLE_VIEWER_CLEAR:
-
-			clearTable();
-
-			break;
-		}
 	}
 
 	/**

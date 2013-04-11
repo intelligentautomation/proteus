@@ -84,10 +84,6 @@ public class DeleteQuerySetHandler implements IHandler {
 							}
 						}));
 						
-//						QuerySetEventNotifier.getInstance().fireEvent(querySetTab,
-//								QuerySetEventType.QUERYSET_LAYERS_DELETE,
-//								querySetTab.getMapLayers());
-						
 						QuerySetManager qm = QuerySetManager.getInstance();
 
 						// get the stored query set model object that 

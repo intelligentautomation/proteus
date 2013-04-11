@@ -72,10 +72,6 @@ import com.iai.proteus.communityhub.apiv1.Group;
 import com.iai.proteus.events.EventListener;
 import com.iai.proteus.events.EventNotifier;
 import com.iai.proteus.events.EventType;
-import com.iai.proteus.events.QuerySetEvent;
-import com.iai.proteus.events.QuerySetEventListener;
-import com.iai.proteus.events.QuerySetEventNotifier;
-import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.map.AlertLayer;
 import com.iai.proteus.map.DataPlotProvenanceLayer;
 import com.iai.proteus.map.MarkerSelection;
@@ -108,7 +104,7 @@ import com.iai.proteus.util.ProteusUtil;
  *
  */
 public class WorldWindView extends ViewPart
-	implements QuerySetEventListener, EventListener, SelectListener,
+	implements EventListener, SelectListener,
 		ISelectionListener
 {
 
@@ -246,7 +242,6 @@ public class WorldWindView extends ViewPart
 
 		// listen to events 
 		EventNotifier.getInstance().addListener(this);
-		QuerySetEventNotifier.getInstance().addListener(this);
 
 		// add a listener to selections in @{link DiscoverView} 
 		getSite().getPage().addSelectionListener(DiscoverView.ID, this);
@@ -258,6 +253,7 @@ public class WorldWindView extends ViewPart
 		BundleContext ctx = Activator.getContext();
 		// create handler 
 		EventHandler handler = new EventHandler() {
+			@Override
 			public void handleEvent(final Event event) {
 				
 				Object obj = event.getProperty("object");
@@ -325,9 +321,71 @@ public class WorldWindView extends ViewPart
 					if (obj instanceof MapId && value instanceof double[]) {
 						setRegionSelection((MapId) obj, (double[]) value);
 					}
-					
 				}
 				
+				// facet changed 
+				else if (match(event, EventTopic.QS_FACET_CHANGED)) {
+					
+					if (obj instanceof MapId) {
+
+						if (value instanceof Collection<?>) {
+
+							// notify all layers of the facet changes
+							notifyLayerOfFacetSelection((MapId) obj, 
+									(Collection<?>) value);
+
+						} else if (value instanceof FacetChangeToggle) {
+
+							// notify all layers of the facet change
+							notifyLayerOfFacetSelection((MapId) obj,
+									(FacetChangeToggle) value);
+						}
+					}
+				}
+				
+				// facets cleared
+				else if (match(event, EventTopic.QS_FACET_CLEARED)) {
+					
+					if (value instanceof Facet) {
+						// notify all layers of the facet changes
+						notifyLayerOfFacetClearing((MapId) obj, (Facet) value);
+					}
+
+				}
+				
+				// fly to location
+				else if (match(event, EventTopic.QS_FLY_TO_LATLON)) {
+					
+					if (value instanceof LatLon) {
+						LatLon ll = (LatLon)value;
+						/*
+						 * Fly to location
+						 */
+						PointOfInterest point =
+								WorldWindUtils.getPointOfInterest(ll.getLat(),
+										ll.getLon());
+
+						WorldWindUtils.moveToLocation(getWwd().getView(), point);
+					}					
+				}
+				
+				// toggle WMS map layer 
+				else if (match(event, EventTopic.QS_MAPS_LAYER_TOGGLE)) {
+					
+					if (obj instanceof WmsMapLayer) {
+						toggleWmsMapLayer((WmsMapLayer) obj);
+					}
+				}
+				
+				// remove WMS map layers assocaited with a service 
+				else if (match(event, EventTopic.QS_MAPS_DELETE_FROM_SERVICE)) {
+					
+					if (value == null)
+						removeWmsMapLayers(null);
+					else if (value != null && value instanceof String) 
+						removeWmsMapLayers((String) value);
+				}
+
 			}
 		};
 
@@ -714,267 +772,6 @@ public class WorldWindView extends ViewPart
 		return selector;
 	}
 
-	/**
-	 * Handles events
-	 *
-	 * @param event
-	 */
-	@Override
-	public void querySetEventHandler(QuerySetEvent event) {
-
-		final Object obj = event.getEventObject();
-		QuerySetEventType type = event.getEventType();
-		final Object value = event.getValue();
-
-		switch (type) {
-		
-//		case QUERYSET_INITIALIZE_LAYER:
-//			/*
-//			 * Initialize layer
-//			 */
-//			if (value instanceof SensorOfferingLayer) {
-//				initializeSosLayer((SensorOfferingLayer) value);
-//			}
-//
-//			break;
-
-//		case QUERYSET_SERVICE_TOGGLE:
-//			/*
-//			 * Toggle layer
-//			 */
-//			if (obj instanceof IMapLayer && value instanceof Collection<?>) {
-//
-//				setServices((IMapLayer) obj, (ArrayList<?>) value);
-//			}
-//
-//			break;
-
-//		case QUERYSET_LAYERS_DELETE:
-//			/*
-//			 * Delete layers
-//			 */
-//			if (value instanceof Collection<?>) {
-//				
-//				deleteLayers((Collection<IMapLayer>) value);
-//			}
-
-//			break;
-
-//		case QUERYSET_LAYERS_ACTIVATE:
-//			/*
-//			 * Show a specific set of layers
-//			 */
-//			if (value instanceof Collection<?>) {
-//				
-//				activateLayers((Collection<IMapLayer>) value);
-//			}
-//
-//			break;
-			
-//		case QUERYSET_LAYERS_REARRANGE: 
-//			/*
-//			 * Re-arrange layers 
-//			 */
-//			if (value instanceof RearrangeMapsEventValue) {
-//			
-//				rearrangeLayers((RearrangeMapsEventValue) value);
-//			}
-//			
-//			break;
-
-//		case QUERYSET_REGION_ENABLED:
-//			/*
-//			 * Enables geographical area selection
-//			 */
-//			if (obj instanceof MapId) {
-//
-//				enableRegionSelection((MapId) obj);
-//			}
-//
-//			break;
-//
-//		case QUERYSET_REGION_DISABLED:
-//			/*
-//			 * Disables geographical area selection
-//			 */
-//			if (obj instanceof MapId) {
-//
-//				disableRegionSelection((MapId) obj);
-//			}
-
-//			break;
-			
-//		case QUERYSET_REGION_SET:
-//			/*
-//			 * Sets the geographical area selection
-//			 */
-//			if (obj instanceof MapId && value instanceof double[]) {
-//				
-//				setRegionSelection((MapId) obj, (double[]) value);
-//			}
-//			
-//			break;
-
-		case QUERYSET_FACET_CHANGE:
-
-			if (obj instanceof MapId) {
-
-				if (value instanceof Collection<?>) {
-
-					// notify all layers of the facet changes
-					notifyLayerOfFacetSelection((MapId) obj, (Collection<?>) value);
-
-				} else if (value instanceof FacetChangeToggle) {
-
-					// notify all layers of the facet change
-					notifyLayerOfFacetSelection((MapId) obj,
-							(FacetChangeToggle) value);
-				}
-			}
-
-			break;
-
-		case QUERYSET_FACET_CLEAR:
-
-			if (value instanceof Facet) {
-				// notify all layers of the facet changes
-				notifyLayerOfFacetClearing((MapId) obj, (Facet) value);
-			}
-
-			break;
-
-		case QUERYSET_FLY_TO_LATLON:
-
-			if (value instanceof LatLon) {
-				LatLon ll = (LatLon)value;
-				/*
-				 * Fly to location
-				 */
-				PointOfInterest point =
-						WorldWindUtils.getPointOfInterest(ll.getLat(),
-								ll.getLon());
-
-				WorldWindUtils.moveToLocation(getWwd().getView(), point);
-			}
-
-			break;
-			
-		case QUERYSET_MAP_TOGGLE_LAYER:
-
-			if (obj instanceof WmsMapLayer) {
-				final WmsMapLayer mapLayer = (WmsMapLayer) obj;
-
-				// check if the layer exists
-				Layer layer = getLayer(mapLayer.getMapId());
-				if (layer != null) {
-					
-					// toggle the layer  
-					layer.setEnabled(mapLayer.isActive());
-					
-					// check if we should remove the 'preview' tag 
-					if (obj instanceof WmsSavedMap)
-						layer.removeKey(MapAVKey.WMS_MAP_PREVIEW);
-
-					// we're done
-					break;
-				}
-				
-				// run long-running job in separate thread 
-				Job job = new Job("Contacting WMS service") {
-					@Override
-					protected IStatus run(IProgressMonitor monitor) {
-						
-						monitor.beginTask("Retrieving WMS layers",
-								IProgressMonitor.UNKNOWN);
-						
-						/*
-						 * If it did not, try and get it
-						 */
-						Object wmsLayer = getWmsLayer(mapLayer);
-
-						if (wmsLayer != null && wmsLayer instanceof Layer) {
-							log.trace("A layer was returned from WMS: " + wmsLayer);
-							Layer newLayer = (Layer) wmsLayer;
-							newLayer.setName(mapLayer.getMapId().toString());
-							newLayer.setEnabled(true);
-
-							// set attributes
-							newLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
-							newLayer.setValue(MapAVKey.WMS_SERVICE_URL, 
-									mapLayer.getServiceEndpoint());
-							if (!(obj instanceof WmsSavedMap))
-								// indicates that the layer is a preview from a WMS
-								// in contrast to a saved map 
-								newLayer.setValue(MapAVKey.WMS_MAP_PREVIEW, true);
-
-							// add layer
-							getWwd().getModel().getLayers().add(newLayer);
-						} else {
-							log.warn("Return object was not a Layer object");
-						}
-						
-						monitor.done();
-						
-						return Status.OK_STATUS;
-					}
-				};
-				job.setUser(true);
-				job.schedule();
-				
-			}
-			
-			break;			
-			
-		case QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE:
-
-			/*
-			 * Remove all layers with associated 
-			 */
-			if (value == null) {
-				
-				LayerList layerList = getWwd().getModel().getLayers();
-				for (Layer layer : layerList) {
-					Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
-					Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
-					// only remove the layer if it has an associated service
-					// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
-					if (valueServiceUrl != null && valueServiceUrl instanceof String
-							&& valuePreview != null && (Boolean)valuePreview) {
-						layerList.remove(layer);
-						log.trace("Removed layer " + layer.getName());
-					}
-				}
-			}
-			/*
-			 * Removes layers from a WMS service that is no longer 
-			 * active. When the service is activated, new layers
-			 * will be created 
-			 */
-			else if (value instanceof String) {
-				
-				int count = 0;
-				LayerList layerList = getWwd().getModel().getLayers();
-				for (Layer layer : layerList) {
-					Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
-					Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
-					// only remove the layer if it has an associated service
-					// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
-					if (valueServiceUrl != null && valueServiceUrl instanceof String
-							&& valuePreview != null && (Boolean)valuePreview) {
-						if (valueServiceUrl.equals(value)) {
-							layerList.remove(layer);
-							log.trace("Removed layer " + layer.getName());
-							count++;
-						}
-					}
-				}
-				log.trace("Removed " + count + " layers related to: " + 
-						value);
-			} 
-			
-			break;
-		}
-	}
 
 	/**
 	 * Toggles the services on or off for the given map (query set)
@@ -1285,6 +1082,124 @@ public class WorldWindView extends ViewPart
 				offeringLayer.showSelection(sensorOfferings);
 			}
 		}
+	}
+	
+	/**
+	 * Toggling WMS map layer 
+	 * 
+	 * @param mapLayer
+	 */
+	private void toggleWmsMapLayer(final WmsMapLayer mapLayer) {
+		
+		// check if the layer exists
+		Layer layer = getLayer(mapLayer.getMapId());
+		if (layer != null) {
+
+			// toggle the layer  
+			layer.setEnabled(mapLayer.isActive());
+
+			// check if we should remove the 'preview' tag 
+			if (mapLayer instanceof WmsSavedMap)
+				layer.removeKey(MapAVKey.WMS_MAP_PREVIEW);
+
+			// we're done
+			return;
+		}
+
+		// run long-running job in separate thread 
+		Job job = new Job("Contacting WMS service") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+
+				monitor.beginTask("Retrieving WMS layers",
+						IProgressMonitor.UNKNOWN);
+
+				/*
+				 * If it did not, try and get it
+				 */
+				Object wmsLayer = getWmsLayer(mapLayer);
+
+				if (wmsLayer != null && wmsLayer instanceof Layer) {
+					log.trace("A layer was returned from WMS: " + wmsLayer);
+					Layer newLayer = (Layer) wmsLayer;
+					newLayer.setName(mapLayer.getMapId().toString());
+					newLayer.setEnabled(true);
+
+					// set attributes
+					newLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
+					newLayer.setValue(MapAVKey.WMS_SERVICE_URL, 
+							mapLayer.getServiceEndpoint());
+					if (!(mapLayer instanceof WmsSavedMap))
+						// indicates that the layer is a preview from a WMS
+						// in contrast to a saved map 
+						newLayer.setValue(MapAVKey.WMS_MAP_PREVIEW, true);
+
+					// add layer
+					getWwd().getModel().getLayers().add(newLayer);
+				} else {
+					log.warn("Return object was not a Layer object");
+				}
+
+				monitor.done();
+
+				return Status.OK_STATUS;
+			}
+		};
+		job.setUser(true);
+		job.schedule();
+	}
+	
+	/**
+	 * Removes all WMS map layers from a given endpoint 
+	 * 
+	 * @param endpoint
+	 */
+	private void removeWmsMapLayers(String endpoint) {
+		
+		/*
+		 * Remove all layers that are from a WMS service 
+		 */
+		if (endpoint == null) {
+
+			LayerList layerList = getWwd().getModel().getLayers();
+			for (Layer layer : layerList) {
+				Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
+				Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
+				// only remove the layer if it has an associated service
+				// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
+				if (valueServiceUrl != null && valueServiceUrl instanceof String
+						&& valuePreview != null && (Boolean)valuePreview) {
+					layerList.remove(layer);
+					log.trace("Removed layer " + layer.getName());
+				}
+			}
+		}
+		/*
+		 * Removes layers from a WMS service that is no longer 
+		 * active. When the service is activated, new layers
+		 * will be created 
+		 */
+		else {
+
+			int count = 0;
+			LayerList layerList = getWwd().getModel().getLayers();
+			for (Layer layer : layerList) {
+				Object valueServiceUrl = layer.getValue(MapAVKey.WMS_SERVICE_URL);
+				Object valuePreview = layer.getValue(MapAVKey.WMS_MAP_PREVIEW);
+				// only remove the layer if it has an associated service
+				// and has the @{link MapAVKey.WMS_MAP_PREVIEW} value set
+				if (valueServiceUrl != null && valueServiceUrl instanceof String
+						&& valuePreview != null && (Boolean)valuePreview) {
+					if (valueServiceUrl.equals(endpoint)) {
+						layerList.remove(layer);
+						log.trace("Removed layer " + layer.getName());
+						count++;
+					}
+				}
+			}
+			log.trace("Removed " + count + " layers related to: " + 
+					endpoint);
+		} 
 	}
 
 	/**

@@ -235,11 +235,6 @@ public class SosOfferingLayer extends RenderableLayer
 				put("value", sector == null ? null : sector.asDegreesArray());
 			}
 		}));
-		
-		// notify that sector may have changed 
-//		QuerySetEventNotifier.getInstance().fireEvent(this,
-//				QuerySetEventType.QUERYSET_REGION_UPDATED, 
-//				sector == null ? sector : sector.asDegreesArray());
 	}
 
 	/**
@@ -872,15 +867,13 @@ public class SosOfferingLayer extends RenderableLayer
 			log.trace("SET renderables");
 			markersInitialized = true;
 
+			// notify that offerings may have changed 
 			eventAdminService.sendEvent(new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
 					new HashMap<String, Object>() { 
 				{
 					put("object", this);
 				}
 			}));
-
-//			QuerySetEventNotifier.getInstance().fireEvent(this,
-//					QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
 
 			log.trace("Updating contributions from setRenderables()");
 			log.trace("Initialized markers for layer: " + getName());
@@ -915,14 +908,14 @@ public class SosOfferingLayer extends RenderableLayer
 		//  hides selection
 		hideSelection();
 
+		// notify that offerings may have changed 
 		eventAdminService.sendEvent(new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
 				new HashMap<String, Object>() { 
 			{
 				put("object", this);
 			}
-		}));		
-//		QuerySetEventNotifier.getInstance().fireEvent(this,
-//				QuerySetEventType.QUERYSET_OFFERING_LAYER_CONTRIBUTION_CHANGED);
+		}));
+		
 		log.trace("Updating contributions from resetRenderables()");
 	}
 

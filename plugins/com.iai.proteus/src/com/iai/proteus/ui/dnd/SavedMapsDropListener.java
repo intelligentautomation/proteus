@@ -81,14 +81,7 @@ public class SavedMapsDropListener extends ViewerDropAdapter {
 				put("value", new RearrangeMapsEventValue(maps, target));
 			}
 		}));			
-//		UIUtil.update(new Runnable() {
-//			@Override
-//			public void run() {
-//				QuerySetEventNotifier.getInstance().fireEvent(null, 
-//						QuerySetEventType.QUERYSET_LAYERS_REARRANGE, 
-//						new RearrangeMapsEventValue(maps, target));
-//			}
-//		});
+
 		return true;
 	}
 

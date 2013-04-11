@@ -13,8 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -109,6 +111,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
 import com.iai.proteus.Activator;
 import com.iai.proteus.common.Labeling;
@@ -124,10 +128,6 @@ import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
 import com.iai.proteus.dialogs.ManageAllServicesDialog;
 import com.iai.proteus.dialogs.ManageQuerySetServicesDialog;
-import com.iai.proteus.events.QuerySetEvent;
-import com.iai.proteus.events.QuerySetEventListener;
-import com.iai.proteus.events.QuerySetEventNotifier;
-import com.iai.proteus.events.QuerySetEventType;
 import com.iai.proteus.exceptions.ResponseFormatNotSupportedException;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.map.wms.WmsLayerInfo;
@@ -169,7 +169,7 @@ import com.iai.proteus.views.TimeSeriesUtil;
  *
  */
 public class QuerySetTab extends CTabItem
-	implements MapIdentifier, QuerySetEventListener, ServiceManager
+	implements MapIdentifier, ServiceManager
 {
 
 	private static final Logger log = Logger.getLogger(QuerySetTab.class);
@@ -507,9 +507,6 @@ public class QuerySetTab extends CTabItem
 		// in the process
 		activateTile(Tile.SERVICES);
 
-		// make this class listener for events
-		QuerySetEventNotifier.getInstance().addListener(this);
-		
 		// get EventAdmin service 
 		BundleContext ctx = Activator.getContext();
 		ServiceReference<EventAdmin> ref = 
@@ -523,7 +520,49 @@ public class QuerySetTab extends CTabItem
 					put("object", this);
 					put("value", offeringLayer);
 				}
-		}));	
+		}));
+		
+		// create handler 
+		EventHandler handler = new EventHandler() {
+			@Override
+			public void handleEvent(final Event event) {
+				
+//				Object obj = event.getProperty("object");
+				Object value = event.getProperty("value");
+				
+				// clear facets 
+				if (match(event, EventTopic.QS_FACET_CLEARED)) {
+					
+					if (value instanceof Facet) {
+						Facet facet = (Facet) value;
+						if (facet.equals(Facet.OBSERVED_PROPERTY)) {
+							// remove all remembered observed properties facets
+							activeFacets.clear();
+						}
+					}
+					
+					// TODO: refresh observed property viewer? 
+				}
+			}
+		};
+		
+		// register service 
+		Dictionary<String,String> properties = new Hashtable<String, String>();
+		properties.put(EventConstants.EVENT_TOPIC, 
+				EventTopic.TOPIC_QUERYSET.toString());
+		// listen to query set topics 
+		ctx.registerService(EventHandler.class.getName(), handler, properties);
+	}
+
+	/**
+	 * Returns true if the event matches the event topic, false otherwise 
+	 * 
+	 * @param event
+	 * @param topic
+	 * @return
+	 */
+	private boolean match(Event event, EventTopic topic) {
+		return event.getTopic().equals(topic.toString());
 	}
 
 	/**
@@ -972,12 +1011,17 @@ public class QuerySetTab extends CTabItem
 		itemClearProperties.setEnabled(false);
 		// listener
 		itemClearProperties.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// clear OBSERVED PROPERTIES facets
-				QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-						QuerySetEventType.QUERYSET_FACET_CLEAR,
-						Facet.OBSERVED_PROPERTY);
+				eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CLEARED.toString(), 
+						new HashMap<String, Object>() { 
+					{
+						put("object", getMapId());
+						put("value", Facet.OBSERVED_PROPERTY);
+					}
+				}));				
 			}
 		});
 
@@ -1001,6 +1045,7 @@ public class QuerySetTab extends CTabItem
 
 		// listener to update facets
 		treeObservedProperties.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.detail == SWT.CHECK) {
@@ -1014,12 +1059,13 @@ public class QuerySetTab extends CTabItem
 					updateFacetState(changes);
 
 					// fire event
-					new Thread(new Runnable() {
-						public void run() {
-							QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-									QuerySetEventType.QUERYSET_FACET_CHANGE, changes);
+					eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+							new HashMap<String, Object>() { 
+						{
+							put("object", getMapId());
+							put("value", changes);
 						}
-					}).start();
+					}));
 					
 					// mark as dirty
 					setDirty(true);
@@ -1315,6 +1361,7 @@ public class QuerySetTab extends CTabItem
 
 		// listening to double clicks on sensor offering list
 		tableViewerSensorOfferings.addDoubleClickListener(new IDoubleClickListener() {
+			@SuppressWarnings("serial")
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				ISelection selection = event.getSelection();
@@ -1325,13 +1372,19 @@ public class QuerySetTab extends CTabItem
 						SensorOffering offering =
 								((SensorOfferingItem) elmt).getSensorOffering();
 
-						Position pos =
+						final Position pos =
 								WorldWindUtils.getCentralPosition(offering);
 
-						QuerySetEventNotifier.getInstance().fireEvent(this,
-								QuerySetEventType.QUERYSET_FLY_TO_LATLON,
-								new LatLon(pos.getLatitude().degrees,
+						// fire event to fly to location 
+						eventAdminService.sendEvent(new Event(EventTopic.QS_FLY_TO_LATLON.toString(), 
+								new HashMap<String, Object>() { 
+							{
+								put("object", this);
+								put("value", new LatLon(pos.getLatitude().degrees,
 										pos.getLongitude().degrees));
+							}
+						}));
+						
 					}
 				}
 			}
@@ -1862,6 +1915,7 @@ public class QuerySetTab extends CTabItem
 		 * 
 		 */
 		treeSavedMaps.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.detail == SWT.CHECK) {
@@ -1871,14 +1925,18 @@ public class QuerySetTab extends CTabItem
 						Object data = treeItem.getData();
 						// only react to items with the right data model 
 						if (data instanceof WmsSavedMap) {
-							WmsSavedMap map = (WmsSavedMap) data;
+							final WmsSavedMap map = (WmsSavedMap) data;
 							
 							// maintain activity status of model object 
 							map.setActive(treeItem.getChecked());
 							
 							 // notify listeners that the layer should be toggled 
-							QuerySetEventNotifier.getInstance().fireEvent(map,
-									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);
+							eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_LAYER_TOGGLE.toString(), 
+									new HashMap<String, Object>() { 
+								{
+									put("object", map);
+								}
+							}));
 						}
 					}
 				}
@@ -1908,6 +1966,7 @@ public class QuerySetTab extends CTabItem
 		btnSwitchStackBack.setText("Back to saved maps");
 		btnSwitchStackBack.setImage(imgBackControl);
 		btnSwitchStackBack.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
@@ -1919,8 +1978,12 @@ public class QuerySetTab extends CTabItem
 				 * notify listeners that all layers from 
 				 * the map discovery (with service) should be removed 
 				 */
-				QuerySetEventNotifier.getInstance().fireEvent(this,
-						QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE);
+				eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_DELETE_FROM_SERVICE.toString(), 
+						new HashMap<String, Object>() { 
+					{
+						put("object", this);
+					}
+				}));				
 				
 				// put the right stack on top 
 				compositeStackMapsLayout.topControl = compositeSavedMaps;
@@ -2021,6 +2084,7 @@ public class QuerySetTab extends CTabItem
 		 * 
 		 */
 		tableViewerWmsServices.addSelectionChangedListener(new ISelectionChangedListener() {
+			@SuppressWarnings("serial")
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				
@@ -2060,15 +2124,19 @@ public class QuerySetTab extends CTabItem
 						countSelectedWmsLayers = 0;
 						
 						// remove layers from previously selected service 
-						String oldEndpoint = oldSelectedService.getEndpoint();
+						final String oldEndpoint = oldSelectedService.getEndpoint();
 						if (oldEndpoint != null) {
 							/*
 							 * notify listeners that all layers from 
 							 * the old service should be removed 
 							 */
-							QuerySetEventNotifier.getInstance().fireEvent(this,
-									QuerySetEventType.QUERYSET_MAP_REMOVE_LAYERS_FROM_SERVICE,
-									oldEndpoint);
+							eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_DELETE_FROM_SERVICE.toString(), 
+									new HashMap<String, Object>() { 
+								{
+									put("object", this);
+									put("value", oldEndpoint);
+								}
+							}));							
 						}
 
 						// run in separate thread  
@@ -2301,6 +2369,7 @@ public class QuerySetTab extends CTabItem
 		 * 
 		 */
 		treeWmsLayers.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.detail == SWT.CHECK) {
@@ -2310,7 +2379,7 @@ public class QuerySetTab extends CTabItem
 						Object data = treeItem.getData();
 						// only react to items with the right data model 
 						if (data instanceof WmsMapLayer) {
-							WmsMapLayer mapLayer = (WmsMapLayer) data;
+							final WmsMapLayer mapLayer = (WmsMapLayer) data;
 							
 							// maintain activity status of model object 
 							mapLayer.setActive(treeItem.getChecked());
@@ -2322,8 +2391,12 @@ public class QuerySetTab extends CTabItem
 							tltmSaveSelected.setEnabled(countSelectedWmsLayers > 0);
 							
 							 // notify listeners that the layer should be toggled 
-							QuerySetEventNotifier.getInstance().fireEvent(mapLayer,
-									QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);
+							eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_LAYER_TOGGLE.toString(), 
+									new HashMap<String, Object>() { 
+								{
+									put("object", mapLayer);
+								}
+							}));							
 						}
 					}
 				}
@@ -2490,12 +2563,17 @@ public class QuerySetTab extends CTabItem
 	 * Updates the active WMS maps
 	 * 
 	 */
+	@SuppressWarnings("serial")
 	public void updateSavedMaps() {
-		for (MapLayer map : getSavedMaps()) {
+		for (final MapLayer map : getSavedMaps()) {
 			if (map.isActive()) {
 				// notify listeners that the layer should be toggled 
-				QuerySetEventNotifier.getInstance().fireEvent(map,
-						QuerySetEventType.QUERYSET_MAP_TOGGLE_LAYER);
+				eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_LAYER_TOGGLE.toString(), 
+						new HashMap<String, Object>() { 
+					{
+						put("object", map);
+					}
+				}));
 			}
 		}
 	}	
@@ -2637,6 +2715,7 @@ public class QuerySetTab extends CTabItem
 	 * @param domainVariable
 	 * @param rangeVariables
 	 */
+	@SuppressWarnings("serial")
 	private void previewData(SensorOfferingItem offeringItem,
 			String observedProperty,
 			Field domainVariable, Collection<Field> rangeVariables)
@@ -2657,14 +2736,19 @@ public class QuerySetTab extends CTabItem
 			
 			SensorData sensorData = fetcher.executeRequest(dataRequest);
 
-			DataPreviewEvent dataPreview =
+			final DataPreviewEvent dataPreview =
 					new DataPreviewEvent(sensorOffering.getGmlId(),
 							observedProperty, sensorData,
 							domainVariable, rangeVariables);
 
 			// notify the data preview view to display the data
-			QuerySetEventNotifier.getInstance().fireEvent(this,
-					QuerySetEventType.QUERYSET_PREVIEW_PLOT, dataPreview);
+			eventAdminService.sendEvent(new Event(EventTopic.QS_PREVIEW_PLOT.toString(), 
+					new HashMap<String, Object>() { 
+				{
+					put("object", this);
+					put("value", dataPreview);
+				}
+			}));			
 
 		} catch (ResponseFormatNotSupportedException e) {
 			System.err.println("Error: " + e.getMessage());
@@ -3886,6 +3970,7 @@ public class QuerySetTab extends CTabItem
 	 *
 	 * @param timeFacet
 	 */
+	@SuppressWarnings("serial")
 	private void updateTimeRestriction(TimeFacet timeFacet) {
 
 		// save the currently specified time period type
@@ -3894,11 +3979,17 @@ public class QuerySetTab extends CTabItem
 		 // update live time tile
 //		updateLiveTileTime(timeFacet);
 
-		FacetChangeToggle change =
+		final FacetChangeToggle change =
 				new FacetChangeToggle(Facet.TIME_PERIOD, true,
 						timeFacet.toString());
-		QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-				QuerySetEventType.QUERYSET_FACET_CHANGE, change);
+		
+		eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("object", getMapId());
+				put("value", change);
+			}
+		}));		
 	}
 
 	/**
@@ -3906,6 +3997,7 @@ public class QuerySetTab extends CTabItem
 	 *
 	 * @param formatFacet
 	 */
+	@SuppressWarnings("serial")
 	private void updateFormatRestriction(FormatFacet formatFacet) {
 
 		// save the currently specified format restriction
@@ -3915,15 +4007,20 @@ public class QuerySetTab extends CTabItem
 		case ALL:
 
 			// clear response FORMAT facets
-			QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-					QuerySetEventType.QUERYSET_FACET_CLEAR, Facet.RESPONSE_FORMAT);
-
+			eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CLEARED.toString(), 
+					new HashMap<String, Object>() { 
+				{
+					put("object", getMapId());
+					put("value", Facet.RESPONSE_FORMAT);
+				}
+			}));
+			
 			break;
 
 		case SUPPORTED:
 
 			// construct list of supported facets
-			java.util.List<FacetChangeToggle> changes =
+			final java.util.List<FacetChangeToggle> changes =
 				new ArrayList<FacetChangeToggle>();
 
 			for (SupportedResponseFormats format : SupportedResponseFormats.values()) {
@@ -3933,69 +4030,18 @@ public class QuerySetTab extends CTabItem
 				changes.add(change);
 			}
 
-			QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-					QuerySetEventType.QUERYSET_FACET_CHANGE, changes);
+			eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+					new HashMap<String, Object>() { 
+				{
+					put("object", getMapId());
+					put("value", changes);
+				}
+			}));			
 
 			break;
 		}
 	}
 
-	/**
-	 * Implements #{link QuerySetEventListener} interface.
-	 *
-	 */
-	@Override
-	public void querySetEventHandler(QuerySetEvent event) {
-		Object obj = event.getEventObject();
-		Object value = event.getValue();
-
-		if (obj instanceof MapId) {
-			MapId mapId = (MapId) obj;
-
-			// only listen to info about our own query set
-			if (mapId.equals(getMapId())) {
-
-				switch (event.getEventType()) {
-				case QUERYSET_FACET_CLEAR:
-
-					if (value instanceof Facet) {
-						Facet facet = (Facet) value;
-						if (facet.equals(Facet.OBSERVED_PROPERTY)) {
-							// remove all remembered observed properties facets
-							activeFacets.clear();
-						}
-					}
-
-					break;
-
-				case QUERYSET_FACET_CHANGE:
-
-//					if (value instanceof java.util.List) {
-//
-//						// update state of facet changes
-//						updateFacetSelection((MapId) obj, (java.util.List<?>) value);
-//
-//					} else if (value instanceof FacetChangeToggle) {
-//
-//						// update state of facet changes
-//						updateFacetSelection((MapId) obj, (FacetChangeToggle) value);
-//					}
-
-					break;
-
-				}
-
-				// update the viewer
-				UIUtil.update(new Runnable() {
-					@Override
-					public void run() {
-						treeViewerObservedProperties.refresh();		
-					}
-				});
-				
-			}
-		}
-	}
 
 	/**
 	 * Saves the current facet state
@@ -4350,6 +4396,7 @@ public class QuerySetTab extends CTabItem
 	 * 
 	 * @param ops
 	 */
+	@SuppressWarnings("serial")
 	public void setActiveObservedProperties(final Collection<String> ops) {
 		
 		final Collection<FacetChangeToggle> changes = 
@@ -4370,9 +4417,13 @@ public class QuerySetTab extends CTabItem
 		this.activeObservedPropertyURIs.addAll(ops);
 
 		// fire event
-		QuerySetEventNotifier.getInstance().fireEvent(getMapId(),
-				QuerySetEventType.QUERYSET_FACET_CHANGE, changes);
-		
+		eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+				new HashMap<String, Object>() { 
+			{
+				put("object", getMapId());
+				put("value", changes);
+			}
+		}));		
 	}
 	
 	/**

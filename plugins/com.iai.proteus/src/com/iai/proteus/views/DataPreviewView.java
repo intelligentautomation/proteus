@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -40,17 +43,20 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.experimental.swt.SWTUtils;
 import org.jfree.ui.HorizontalAlignment;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
 
+import com.iai.proteus.Activator;
 import com.iai.proteus.common.TimeUtils;
-import com.iai.proteus.common.event.Event;
-import com.iai.proteus.common.event.EventListener;
 import com.iai.proteus.common.event.EventNotifier;
 import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.data.Field;
 import com.iai.proteus.common.sos.data.SensorData;
-import com.iai.proteus.events.QuerySetEvent;
-import com.iai.proteus.events.QuerySetEventListener;
-import com.iai.proteus.events.QuerySetEventNotifier;
+import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.ui.UIUtil;
 
 /**
@@ -59,13 +65,14 @@ import com.iai.proteus.ui.UIUtil;
  * @author Jakob Henriksson
  *
  */
-public class DataPreviewView extends ViewPart
-	implements EventListener, QuerySetEventListener
-{
+public class DataPreviewView extends ViewPart {
 
 	private static final Logger log = Logger.getLogger(DataPreviewView.class);
 
 	public static final String ID = "com.iai.proteus.chart.DataPreviewView";
+	
+	// EventAdmin service for communicating with other views/modules
+	private EventAdmin eventAdminService;	
 
 	private StackLayout stackLayout;
 	// the stack that holds the various plots
@@ -117,11 +124,8 @@ public class DataPreviewView extends ViewPart
 	 */
 	public DataPreviewView() {
 
+		// default 
 		currentSensorData = null;
-
-		EventNotifier.getInstance().addListener(this);
-		QuerySetEventNotifier.getInstance().addListener(this);
-		
 	}
 
 	/**
@@ -131,7 +135,6 @@ public class DataPreviewView extends ViewPart
 	 */
 	@Override
 	public void createPartControl(Composite parent) {
-//		this.parent = parent;
 
 		parent.setLayout(new GridLayout(1, false));
 
@@ -156,8 +159,67 @@ public class DataPreviewView extends ViewPart
 		initializeToolBar();
 		initializeMenu();
 		initializeListeners();
+		
+		// get EventAdmin service 
+		BundleContext ctx = Activator.getContext();
+		ServiceReference<EventAdmin> ref = 
+				ctx.getServiceReference(EventAdmin.class);
+		eventAdminService = ctx.getService(ref);
+		
+		// create handler 
+		EventHandler handler = new EventHandler() {
+			@SuppressWarnings("serial")
+			@Override
+			public void handleEvent(final Event event) {
+				
+				Object value = event.getProperty("value");
+				
+				// preview plot 
+				if (match(event, EventTopic.QS_PREVIEW_PLOT)) {
+					
+					if (value instanceof DataPreviewEvent) {
+						plot((DataPreviewEvent) value);
+					}
+				}
+				
+				else if (match(event, EventTopic.QS_PREVIEW_TABLE_REQUEST)) {
+					
+					if (currentSensorData != null) {
+						// send event to update the table view with the 
+						// current set of data 
+						eventAdminService.sendEvent(new Event(EventTopic.QS_PREVIEW_TABLE_UPDATE.toString(), 
+								new HashMap<String, Object>() { 
+							{
+								put("object", this);
+								put("value", currentSensorData);
+							}
+						}));
+					}					
+
+				}
+			}
+		};
+		
+		// register service 
+		Dictionary<String,String> properties = new Hashtable<String, String>();
+		properties.put(EventConstants.EVENT_TOPIC, 
+				EventTopic.TOPIC_QUERYSET.toString());
+		// listen to query set topics 
+		ctx.registerService(EventHandler.class.getName(), handler, properties);		
 
 	}
+	
+	/**
+	 * Returns true if the event matches the event topic, false otherwise 
+	 * 
+	 * @param event
+	 * @param topic
+	 * @return
+	 */
+	private boolean match(Event event, EventTopic topic) {
+		return event.getTopic().equals(topic.toString());
+	}
+	
 
 	public void dispose() {
 		super.dispose();
@@ -204,7 +266,7 @@ public class DataPreviewView extends ViewPart
 		/*
 		 * Add as listener
 		 */
-		EventNotifier.getInstance().addListener(this);
+//		EventNotifier.getInstance().addListener(this);
 	}
 
 	@Override
@@ -469,45 +531,6 @@ public class DataPreviewView extends ViewPart
 				((ChartComposite)compositeTimeSeries).restoreAutoBounds();
 			}
 		});
-	}
-
-	/**
-	 *
-	 */
-	public void querySetEventHandler(QuerySetEvent event) {
-
-		Object value = event.getValue();
-
-		switch (event.getEventType()) {
-
-		case QUERYSET_PREVIEW_PLOT:
-
-			if (value instanceof DataPreviewEvent) {
-				DataPreviewEvent plotData = (DataPreviewEvent) value;
-
-				plot(plotData);
-					
-			}
-
-			break;
-		}
-	}
-
-	/**
-	 * Handles notifications
-	 *
-	 */
-	@Override
-	public void update(Event event) {
-		switch (event.getEventType()) {
-		case DATA_TABLE_VIEWER_DATA_REQUEST:
-			if (currentSensorData != null) {
-				// notify listeners, for just one data set
-				EventNotifier.getInstance().fireEvent(this,
-						EventType.DATA_TABLE_VIEWER_UPDATE, currentSensorData);
-			}
-			break;
-		}
 	}
 
 }
