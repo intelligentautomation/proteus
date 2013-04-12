@@ -4,7 +4,15 @@ This repository contains the source code for Proteus. Proteus is a
 desktop client for sensor discovery and management developed by
 [Intelligent Automation Inc.](http://www.i-a-i.com)
 
-![proteus](https://raw.github.com/intelligentautomation/proteus/master/utilities/screenshots/proteus-1.2.0.beta.png)
+![proteus](https://raw.github.com/intelligentautomation/proteus/master/utilities/screenshots/proteus-1.2.0.png)
+
+# Getting Started
+
+*Coming soon.*
+
+# Development 
+
+The following describes software dependencies and how to compile and build Proteus from the source code. 
 
 ## Software Dependencies 
 
@@ -36,7 +44,7 @@ Proteus has been tested with JDK6, JDK7 and Eclipse RCP 3.7.x. (_Indigo_). The b
 
 To [build](#building) Proteus for multiple platforms (e.g. Mac OS X, Linux and Windows), the Eclipse target installation needs to have the [Delta pack](#delta-pack) installed. The Delta pack contains platform-specific bundles and executables for multiple platforms. By default an Eclipse RCP installation only contains bundles for the specific platform it will run on. 
 
-#### Delta pack
+### Delta pack
 
 The Delta pack is specific to each Eclipse version. The Delta pack for Eclipse 3.7.2, for example, can be found [here](http://download.eclipse.org/eclipse/downloads/drops/R-3.7.2-201202080800/). 
 
@@ -95,7 +103,7 @@ There is an issue with the PDE/Build system on Eclipse 3.7.x with Java 7 on Mac 
 
 You may need root access for the above.
 
-## Running
+### Running
 
 You can run Proteus either from within Eclipse or by using the [built product](#execute-the-build). 
 
@@ -105,19 +113,15 @@ To run Proteus from Eclipse:
 2. Right-click on the _proteus.product_ file found in the _com.iai.proteus_ plugin. 
 3. Select _Run As_ -> _Eclipse Application_
 
-## Getting Started
-
-*Coming soon.*
-
-## FAQ
+# FAQ
 
 *Currently none.*
 
-## License 
+# License 
 
 This software is released under the GNU Lesser General Public License (LGPL). See the file "LICENSE" for more details. 
 
-## Acknowledgments
+# Acknowledgments
 
 This software was initially developed by [Intelligent Automation, Inc.](http://www.i-a-i.com "IAI"), under NASA funding (contract no: NNX11CA19C). 
 
