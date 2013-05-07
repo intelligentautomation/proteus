@@ -272,7 +272,7 @@ public class DataFetcher implements IRunnableWithProgress {
 
 		try {
 
-			monitor.beginTask("Downloading sensor data preview, should be done shortly...", dataRequests.size());
+			monitor.beginTask("Downloading sensor data preview...", dataRequests.size());
 
 			for (SosDataRequest dataRequest : dataRequests) {
 

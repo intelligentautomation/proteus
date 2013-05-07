@@ -11,6 +11,12 @@ import org.eclipse.swt.graphics.Image;
 
 import com.iai.proteus.common.Labeling;
 
+/**
+ * Simple label provider for viewers 
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class LabelProvider implements ILabelProvider {
 
 	@Override
@@ -35,6 +41,8 @@ public class LabelProvider implements ILabelProvider {
 		else if (element instanceof ObservedProperty) {
 			return Labeling.labelProperty(element.toString());
 		}
+		
+		// default 
 		return element.toString();
 	}
 

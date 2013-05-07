@@ -116,11 +116,8 @@ public class QuerySetPersist {
 			JSONArray observedProperties = new JSONArray();
 			ObservedPropertiesHolder opHolder = 
 					querySet.getObservedPropertiesHolder();
-			System.out.println("CATS: " + opHolder.getCategories().size());
 			for (Category cat : opHolder.getCategories()) {
-				System.out.println("OPS: " + cat.getObservedProperties().size());
 				for (ObservedProperty op : cat.getObservedProperties()) {
-					System.out.println("OP: " + op.getObservedProperty() + "; ST: " + op.isChecked());
 					if (op.isChecked()) {
 						observedProperties.put(op.getObservedProperty());
 					}

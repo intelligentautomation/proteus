@@ -12,6 +12,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -300,11 +302,14 @@ public class QuerySetTab extends CTabItem
 
 	private Combo comboObservedProperties;
 	private Combo comboPlotTimeSeriesDomain;
-	private Table tableTimeSeriesVariables;
+	private CheckboxTableViewer tableViewerRangeVariables;
+	// input to the table viewer 
+	private List<String> listRangeVariables;
 
 	private Button btnClearRegion;
 	
 	private Button btnFetchPreview;
+	private Button btnUpdatePreview; 
 	private Button btnExportData;
 
 	private ToolItem itemClearProperties;
@@ -359,6 +364,7 @@ public class QuerySetTab extends CTabItem
 	private Image imgChart;
 	private Image imgMap;
 	private Image imgDatabase;
+	private Image imgDatabaseExport;
 	private Image imgDelete;
 	private Image imgClear;
 	private Image imgSave;
@@ -449,6 +455,7 @@ public class QuerySetTab extends CTabItem
 		imgChart = UIUtil.getImage("icons/fugue/chart.png");
 		imgMap = UIUtil.getImage("icons/fugue/map.png");
 		imgDatabase = UIUtil.getImage("icons/fugue/database.png");
+		imgDatabaseExport = UIUtil.getImage("icons/fugue/database-export.png");
 		imgDelete = UIUtil.getImage("icons/fugue/minus-button.png");
 		imgClear = UIUtil.getImage("icons/fugue/cross-button.png");
 		imgSave = UIUtil.getImage("icons/fugue/disk-black.png");
@@ -488,6 +495,8 @@ public class QuerySetTab extends CTabItem
 		setImage(imgDocument);
 
 		offeringLayer = new SensorOfferingLayer();
+		
+		listRangeVariables = new ArrayList<String>();
 		
 		// Create tab interface
 		createTab(parent);
@@ -1541,9 +1550,18 @@ public class QuerySetTab extends CTabItem
 		lblRange.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		lblRange.setText("Range");
 
-		tableTimeSeriesVariables = new Table(plotTimeSeriesOptions,
-				SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		tableTimeSeriesVariables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+		// checkbox table viewer for displaying available range variables 
+		tableViewerRangeVariables = 
+				CheckboxTableViewer.newCheckList(plotTimeSeriesOptions, 
+						SWT.BORDER | SWT.MULTI);
+		Table tblRangeVariables = tableViewerRangeVariables.getTable();
+		
+		tblRangeVariables.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+		
+		tableViewerRangeVariables.setContentProvider(ArrayContentProvider.getInstance());
+		// label provider returns toString() value by default 
+		tableViewerRangeVariables.setLabelProvider(labelProvider);
+		tableViewerRangeVariables.setInput(listRangeVariables);
 
 		/*
 		 * Contour plot options 
@@ -1584,15 +1602,26 @@ public class QuerySetTab extends CTabItem
 		});
 
 
-		Button btnPreview = new Button(compositePreviewAvailable, SWT.CENTER);
-		btnPreview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnPreview.setText("Update preview");
-		btnPreview.setImage(UIUtil.getImage("icons/fugue/chart.png"));
+		btnUpdatePreview = new Button(compositePreviewAvailable, SWT.CENTER);
+		btnUpdatePreview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		btnUpdatePreview.setText("Update preview");
+		btnUpdatePreview.setImage(UIUtil.getImage("icons/fugue/chart.png"));
 
-		btnPreview.addSelectionListener(new SelectionAdapter() {
+		btnUpdatePreview.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
 				previewSensorData();
+			}
+		});
+		
+		// range variable listener - enable 'update preview' button if 
+		// there are variables selected, disable otherwise
+		tableViewerRangeVariables.addCheckStateListener(new ICheckStateListener() {
+			@Override
+			public void checkStateChanged(CheckStateChangedEvent event) {
+				// update the status of the preview button depending on 
+				// the number of checked range variables 
+				setUpdatePreviewButtonStatus(tableViewerRangeVariables.getCheckedElements().length > 0);
 			}
 		});
 
@@ -1618,6 +1647,7 @@ public class QuerySetTab extends CTabItem
 
 		btnExportData = new Button(stackExport, SWT.TOGGLE);
 		btnExportData.setText("Export data");
+		btnExportData.setImage(imgDatabaseExport);
 		btnExportData.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 		// default 
 		btnExportData.setEnabled(false);
@@ -2908,22 +2938,18 @@ public class QuerySetTab extends CTabItem
 			showPreviewDetails(true);
 
 			String[] vars = variables.getVariableStrings();
-			/*
-			 * Update domain
-			 */
+			
+			// update domain variables
 			comboPlotTimeSeriesDomain.setItems(variables.getVariableStrings());
 			comboPlotTimeSeriesDomain.setEnabled(true);
 
-			/*
-			 * Update range
-			 */
-			tableTimeSeriesVariables.removeAll();
-			for (String var : vars) {
-				TableItem item = new TableItem(tableTimeSeriesVariables, SWT.NONE);
-				item.setText(var);
-			}
-			if (vars.length > 0)
-				tableTimeSeriesVariables.setEnabled(true);
+			// update range variables 
+			listRangeVariables.clear();
+			listRangeVariables.addAll(Arrays.asList(vars));
+			// set enabled status on viewer
+			tableViewerRangeVariables.getTable().setEnabled(vars.length > 0);
+			// refresh viewer 
+			tableViewerRangeVariables.refresh();
 
 			// guess the default domain variable
 			guessTimeSeriesDomainVarible(variables);
@@ -2970,13 +2996,14 @@ public class QuerySetTab extends CTabItem
 					comboPlotTimeSeriesDomain.setItems(variables.getVariableStrings());
 					comboPlotTimeSeriesDomain.setEnabled(true);
 
-					tableTimeSeriesVariables.removeAll();
-					for (String var : variables.getVariableStrings()) {
-						TableItem item =
-								new TableItem(tableTimeSeriesVariables, SWT.NONE);
-						item.setText(var);
-					}
-					tableTimeSeriesVariables.setEnabled(true);
+					// update range variables
+					String[] vars = variables.getVariableStrings();
+					listRangeVariables.clear();
+					listRangeVariables.addAll(Arrays.asList(vars));
+					// set enabled status on viewer
+					tableViewerRangeVariables.getTable().setEnabled(vars.length > 0);
+					// refresh viewer 
+					tableViewerRangeVariables.refresh();
 
 					// guess the default domain variable
 					guessTimeSeriesDomainVarible(variables);
@@ -2999,8 +3026,11 @@ public class QuerySetTab extends CTabItem
 					comboPlotTimeSeriesDomain.removeAll();
 					comboPlotTimeSeriesDomain.setEnabled(false);
 
-					tableTimeSeriesVariables.removeAll();
-					tableTimeSeriesVariables.setEnabled(false);
+					// clear and disable range variable viewer   
+					listRangeVariables.clear();
+					// refresh viewer
+					tableViewerRangeVariables.refresh();
+					tableViewerRangeVariables.getTable().setEnabled(false);
 
 					// enable button
 					btnFetchPreview.setEnabled(true);
@@ -3063,16 +3093,29 @@ public class QuerySetTab extends CTabItem
 		for (Field field : varibles.getVariables()) {
 			if (!TimeSeriesUtil.notRangeCandidate(field)) {
 				// select the first one for now...
-				for (TableItem item : tableTimeSeriesVariables.getItems()) {
-					if (item.getText().equals(field.getName()))
-						item.setChecked(true);
-					else
-						item.setChecked(false);
-				}
+				// NOTE: does not fire check state listeners 
+				tableViewerRangeVariables.setChecked(field.getName(), true);
+				// make sure that the preview button is enabled 
+				setUpdatePreviewButtonStatus(true);
+
+				// refresh viewer 
+				tableViewerRangeVariables.refresh();
 				break;
 			}
 
 		}
+	}
+	
+	/**
+	 * Updates the 'Update preview' button status 
+	 * 
+	 * @param state
+	 */
+	private void setUpdatePreviewButtonStatus(boolean state) {
+		if (tableViewerRangeVariables.getCheckedElements().length > 0)
+			btnUpdatePreview.setEnabled(true);
+		else
+			btnUpdatePreview.setEnabled(false);
 	}
 
 
@@ -3472,10 +3515,9 @@ public class QuerySetTab extends CTabItem
 		}
 
 		final Collection<Field> rangeVariables = new ArrayList<Field>();
-		for (TableItem tableItem : tableTimeSeriesVariables.getItems()) {
-			if (tableItem.getChecked()) {
-				rangeVariables.add(new Field(tableItem.getText()));
-			}
+		for (Object obj : tableViewerRangeVariables.getCheckedElements()) {
+			if (obj instanceof String)
+				rangeVariables.add(new Field((String) obj));
 		}
 
 		final Field domain =
@@ -4252,6 +4294,8 @@ public class QuerySetTab extends CTabItem
 			imgMap.dispose();
 		if (imgDatabase != null)
 			imgDatabase.dispose();
+		if (imgDatabaseExport != null)
+			imgDatabaseExport.dispose();
 		if (imgDelete != null)
 			imgDelete.dispose();
 		if (imgClear != null)

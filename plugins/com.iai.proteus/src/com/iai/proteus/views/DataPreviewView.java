@@ -6,6 +6,7 @@
 package com.iai.proteus.views;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -83,6 +85,8 @@ public class DataPreviewView extends ViewPart {
 	// Time Series
 	private JFreeChart chartTimeSeries;
 	private TimeSeriesCollection datasetTimeSeries;
+	
+	private static String sep = " - ";
 
 	/*
 	 * Holds the currently plotted data
@@ -245,6 +249,7 @@ public class DataPreviewView extends ViewPart {
 			getViewSite().getActionBars().getToolBarManager();
 
 		toolbarManager.add(actionExportToCSV);
+		toolbarManager.add(actionExportPlot);
 	}
 
 	/**
@@ -319,7 +324,7 @@ public class DataPreviewView extends ViewPart {
 		legend.setFrame(BlockBorder.NONE);
 		legend.setBackgroundPaint(colorBg);
 		legend.setHorizontalAlignment(HorizontalAlignment.CENTER);
-
+		
 		// date/time axis
 		DateAxis dateAxis = new DateAxis();
 		dateAxis.setAutoTickUnitSelection(true);
@@ -361,7 +366,13 @@ public class DataPreviewView extends ViewPart {
 
 		currentSensorData = plotData.getSensorData();
 		
-		plot(currentSensorData,
+		// provide title or information for plot legend
+		String title = plotData.getOfferingId() + 
+				sep + 
+				plotData.getObservedProperty();
+//				Labeling.labelProperty(plotData.getObservedProperty());
+				
+		plot(currentSensorData, title, 
 				plotData.getDomainVariable(), plotData.getRangeVariasbles());
 		
 		// notify listeners, for just one data set
@@ -374,19 +385,19 @@ public class DataPreviewView extends ViewPart {
 	 * Plots a time series
 	 *
 	 * @param sensorData
+	 * @param title 
 	 * @param domainVariable
 	 * @param rangeVariables
 	 */
-	private void plot(SensorData sensorData, Field domainVariable,
+	private void plot(SensorData sensorData, final String title, Field domainVariable,
 			Collection<Field> rangeVariables)
 	{
 
 		String description = "";
-		String label = "";
 
 		// get the time series for the data of this request
 		final List<TimeSeries> timeSeries =
-				generateTimeSeries(sensorData, description, label, domainVariable,
+				generateTimeSeries(sensorData, description, title, domainVariable,
 						rangeVariables);
 
 		clearPlot();
@@ -398,6 +409,13 @@ public class DataPreviewView extends ViewPart {
 			 */
 			UIUtil.update(new Runnable() {
 				public void run() {
+
+					// set title 
+					TextTitle tt = new TextTitle();
+					tt.setFont(new Font("SansSerif", SWT.NORMAL, 14));
+					tt.setText(title);
+					chartTimeSeries.setTitle(tt);
+					
 					for (TimeSeries series : timeSeries) {
 						datasetTimeSeries.addSeries(series);
 					}
@@ -436,7 +454,7 @@ public class DataPreviewView extends ViewPart {
 
 		if (rangeVariables.size() > 0) {
 
-			System.out.println("Range variables: " + rangeVariables);
+//			System.out.println("Range variables: " + rangeVariables);
 
 			List<Field> allVariables = new ArrayList<Field>();
 			// domain
@@ -451,14 +469,14 @@ public class DataPreviewView extends ViewPart {
 			 */
 			List<String[]> data = sensorData.getData(allVariables);
 
-			System.out.println("DATA ROWS: " + data.size());
+//			System.out.println("DATA ROWS: " + data.size());
 
 			// create as many time series as we have variables
 			TimeSeries[] allSeries = new TimeSeries[rangeVariables.size()];
 			for (int i = 0; i < allSeries.length; i++) {
 				// create label for time series
 				String variable = allVariables.get(i + 1).getName();
-				String label = title + " - " + variable;
+				String label = variable;
 				allSeries[i] = new TimeSeries(label);
 				allSeries[i].setDescription(description + "##" + variable);
 			}
