@@ -423,6 +423,17 @@
          unpack="false"/>
 
    <plugin
+         id="com.iai.proteus.linux"
+         os="linux"
+         ws="linux"
+         arch="x86,x86_64"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
          id="org.eclipse.equinox.ds"
          download-size="0"
          install-size="0"
