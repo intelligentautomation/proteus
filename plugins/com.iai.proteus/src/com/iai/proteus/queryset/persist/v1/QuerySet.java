@@ -138,6 +138,7 @@ public class QuerySet {
 		String endpoint;
 		String title; 
 		boolean active;
+		String color; 
 		
 		/**
 		 * @return the endpoint
@@ -158,6 +159,13 @@ public class QuerySet {
 		 */
 		public boolean isActive() {
 			return active;
+		}
+		
+		/**
+		 * @return the color 
+		 */
+		public String getColor() {
+			return color;
 		}
 	}
 	

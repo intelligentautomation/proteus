@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
  * User Interface utilities
@@ -228,6 +229,18 @@ public class UIUtil {
 		return new Color(rgb.red, rgb.green, rgb.blue);
 	}
 
+	/**
+	 * Converts AWT Color object to an SWT Color object
+	 * 
+	 * @param color
+	 * @return
+	 */
+	public static org.eclipse.swt.graphics.Color swtColorFromAwtColor(Color color) {
+		return SWTResourceManager.getColor(color.getRed(), 
+				color.getGreen(), 
+				color.getBlue());
+	}
+	
 	/**
 	 * Logs a message at ERROR level
 	 *

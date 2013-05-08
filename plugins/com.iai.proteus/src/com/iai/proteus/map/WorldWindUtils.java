@@ -139,7 +139,6 @@ public class WorldWindUtils {
 						new SensorOfferingPlacemark(offering, getCentralPosition(offering), 
 								placemarkAttributes);
 
-				//			marker.setLabelText(offering.getGmlId());
 				marker.setValue(AVKey.DISPLAY_NAME, 
 						offering.getGmlId());
 
@@ -147,8 +146,8 @@ public class WorldWindUtils {
 					marker.setService(service);
 
 				// update attributes appropriately
-				// (must happen after setting the source!)
-				setAttributesFromColor(color, marker);
+				// (must happen after setting the service!)
+				setMarkerAttributesFromColor(color, marker);
 				
 				renderables.add(marker);
 			}
@@ -199,6 +198,7 @@ public class WorldWindUtils {
 	 * @return
 	 */
 	public static Position getUpperPosition(SensorOffering offering) {
+		
 		double lat = offering.getUpperCornerLat();
 		double lon = offering.getUpperCornerLong();
 		
@@ -345,19 +345,21 @@ public class WorldWindUtils {
 	public static void setAttributesFromLayer(MapLayer mapLayer, 
 			SensorOfferingMarker marker)
 	{
+		// placemarks 
 		if (marker instanceof SensorOfferingPlacemark) {
 			SensorOfferingPlacemark placemark = (SensorOfferingPlacemark) marker;
 			PointPlacemarkAttributes attrs = getPlacemarkAttributes(mapLayer);
 			attrs.setLineMaterial(new Material(mapLayer.getColor()));
 			placemark.setAttributes(attrs);
 			marker.setColor(mapLayer.getColor());
-		} else {
+		} 
+		// regions
+		else if (marker instanceof SensorOfferingRegion) {
 			SensorOfferingRegion region = (SensorOfferingRegion) marker;
 			BasicShapeAttributes attrs = getRegionAttributes(mapLayer);
 			region.setAttributes(attrs);
 			marker.setColor(mapLayer.getColor());			
 		}
-		
 	}
 	
 	/**
@@ -369,7 +371,7 @@ public class WorldWindUtils {
 	{
 		PointPlacemarkAttributes attr = new 
 			PointPlacemarkAttributes(placemarkAttributes);
-		// use the color of the source 
+		// use the color of the layer 
 		Color color = mapLayer.getColor();
 		attr.setImageColor(color);
 		return attr; 
@@ -383,28 +385,45 @@ public class WorldWindUtils {
 	private static BasicShapeAttributes getRegionAttributes(MapLayer mapLayer) 
 	{
 		BasicShapeAttributes attr = new BasicShapeAttributes(regionAttributes);
-		// use the color of the source 
+		// use the color of the layer 
 		Color color = mapLayer.getColor();
 		attr.setOutlineMaterial(new Material(color));
 		return attr; 
 	}	
 	
 	/**
-	 * Sets the appropriate attributes for this marker 
+	 * Sets the appropriate attributes for the given marker 
 	 * 
 	 * @param color
 	 * @param marker
 	 */
-	public static void setAttributesFromColor(Color color, 
-			SensorOfferingPlacemark marker) 
+	public static void setMarkerAttributesFromColor(Color color, 
+			SensorOfferingMarker marker) 
 	{
-		PointPlacemarkAttributes attrs = new 
-			PointPlacemarkAttributes(placemarkAttributes);
-		// set the color 
-		Material material = new Material(color); 
-		attrs.setLineMaterial(material);
-		marker.setAttributes(attrs);
-		marker.setColor(color); 
+		// placemarks 
+		if (marker instanceof SensorOfferingPlacemark) {
+			SensorOfferingPlacemark placemark = (SensorOfferingPlacemark) marker;
+			PointPlacemarkAttributes attrs = new 
+					PointPlacemarkAttributes(placemarkAttributes);
+			// set the color 
+			Material material = new Material(color); 
+			attrs.setLineMaterial(material);
+			placemark.setAttributes(attrs);
+			// remember color
+			placemark.setColor(color);
+		} 
+		// regions 
+		else if (marker instanceof SensorOfferingRegion) {
+			SensorOfferingRegion region = (SensorOfferingRegion) marker;
+			BasicShapeAttributes attr = 
+					new BasicShapeAttributes(regionAttributes);
+			// set the color 
+			attr.setDrawInterior(false);
+			attr.setOutlineMaterial(new Material(color));
+			region.setAttributes(attr);
+			// remember color
+			region.setColor(color);
+		}
 	}	
 	
 	/**

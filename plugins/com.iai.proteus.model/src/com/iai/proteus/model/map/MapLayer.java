@@ -127,7 +127,7 @@ public abstract class MapLayer extends Model implements IMapLayer {
 			return Color.WHITE; 			
 		return color;
 	}
-		
+	
 	@Override
 	public String toString() {
 		return "Map layer, ID: " + getMapId();

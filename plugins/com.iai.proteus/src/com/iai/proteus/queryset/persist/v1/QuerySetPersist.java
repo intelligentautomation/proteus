@@ -98,6 +98,9 @@ public class QuerySetPersist {
 				sosService.put(Keys.SERVICE_ENDPOINT.toString(), service.getEndpoint());
 				sosService.put(Keys.SERVICE_TITLE.toString(), service.getName());
 				sosService.put(Keys.SERVICE_ACTIVE.toString(), service.isActive());
+				String color = Integer.toHexString(service.getColor().getRGB());
+				color = "#" + color.substring(2, color.length());
+				sosService.put(Keys.SERVICE_COLOR.toString(), color);
 				sosServices.put(sosService);
 			}
 			sos.put(Keys.SOS_SERVICES.toString(), sosServices);
@@ -243,6 +246,13 @@ public class QuerySetPersist {
 						objSosService.getString(Keys.SERVICE_TITLE.toString());
 				sosService.active = 
 						objSosService.getBoolean(Keys.SERVICE_ACTIVE.toString());
+				// color is optional 
+				try {
+					sosService.color = 
+							objSosService.getString(Keys.SERVICE_COLOR.toString());
+				} catch (JSONException e) {
+					
+				}
 				
 				// add to services
 				qs.sectionSos.sosServices.add(sosService);
@@ -299,7 +309,6 @@ public class QuerySetPersist {
 		
 		// error
 		return null;
-
 	}	
 	
 	/**
@@ -318,6 +327,7 @@ public class QuerySetPersist {
 		SERVICE_ENDPOINT("endpoint"),
 		SERVICE_TITLE("title"),
 		SERVICE_ACTIVE("active"),
+		SERVICE_COLOR("color"), 
 		
 		MAP_NAME("name"),
 		MAP_TITLE("title"),

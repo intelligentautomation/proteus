@@ -58,6 +58,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -80,10 +81,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -377,6 +380,7 @@ public class QuerySetTab extends CTabItem
 	private Image imgAdd;
 	private Image imgArrowUp;
 	private Image imgArrowDown;
+	private Image imgColor;
 	
 	private Font fontActive;
 	private Font fontInactive; 
@@ -468,6 +472,7 @@ public class QuerySetTab extends CTabItem
 		imgAdd = UIUtil.getImage("icons/fugue/plus-button.png");
 		imgArrowUp = UIUtil.getImage("icons/fugue/arrow-090.png");
 		imgArrowDown = UIUtil.getImage("icons/fugue/arrow-270.png");
+		imgColor = UIUtil.getImage("icons/fugue/color.png");
 		
 		fontActive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.BOLD | SWT.ITALIC);
 		fontInactive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.NORMAL);
@@ -845,7 +850,7 @@ public class QuerySetTab extends CTabItem
 		});
 		
 		final ToolItem itemServiceRemove = new ToolItem(toolBarServices, SWT.NONE);
-		itemServiceRemove.setText("Remove");
+//		itemServiceRemove.setText("Remove");
 		itemServiceRemove.setImage(imgDelete);
 		// default
 		itemServiceRemove.setEnabled(false);
@@ -890,7 +895,47 @@ public class QuerySetTab extends CTabItem
 				// refresh viewer as input might have changed 
 				tableViewerSosServices.refresh();
 			}
-		});		
+		});
+		
+		final ToolItem itemServiceColor = new ToolItem(toolBarServices, SWT.NONE);
+		itemServiceColor.setImage(imgColor);
+		// default
+		itemServiceColor.setEnabled(false);
+		// manage services listener
+		itemServiceColor.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ISelection selection = tableViewerSosServices.getSelection(); 
+                Object selected = SwtUtil.getFirstSelectedElement(selection);
+                if (selected != null) {
+                	if (selected instanceof Service) {
+                		// get the service 
+                		final Service service = (Service) selected;
+                		
+                		ColorDialog dialog = 
+                				new ColorDialog(UIUtil.getShell(), SWT.NONE);
+                		// show dialog to change color
+                		RGB rgb = dialog.open();
+                		final java.awt.Color color = UIUtil.colorFromRGB(rgb);
+                		// update the color of the service 
+                		service.setColor(color);
+                		// update viewer
+                		tableViewerSosServices.refresh();
+
+                		// send event to layer to update the color
+                		eventAdminService.sendEvent(new Event(EventTopic.QS_LAYER_SET_COLOR.toString(), 
+                				new HashMap<String, Object>() { 
+                			{
+                				put("object", offeringLayer.getMapId());
+                				put("value", color);
+                				put("service", service.getEndpoint());
+                			}
+                		}));	                		
+                	}
+                }
+			}
+		});
 		
 		ToolBar toolBarHelp = new ToolBar(compositeToolbar, SWT.FLAT | SWT.RIGHT);
 		toolBarHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
@@ -924,6 +969,7 @@ public class QuerySetTab extends CTabItem
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				itemServiceRemove.setEnabled(!event.getSelection().isEmpty());
+				itemServiceColor.setEnabled(!event.getSelection().isEmpty());
 			}
 		});
 
@@ -931,6 +977,54 @@ public class QuerySetTab extends CTabItem
 		tableViewerSosServices.setContentProvider(new ServiceContentProvider(ServiceType.SOS));
 		tableViewerSosServices.setUseHashlookup(true);
 		tableViewerSosServices.setInput(services);
+		
+		// pop menu for service 
+//		MenuManager menuMgr = new MenuManager("#PopupMenu");
+//        menuMgr.setRemoveAllWhenShown(true);
+// 
+//        menuMgr.addMenuListener(new IMenuListener() {
+//            @Override
+//            public void menuAboutToShow(IMenuManager manager) {
+//                ISelection selection = tableViewerSosServices.getSelection();
+//                Object selected = SwtUtil.getFirstSelectedElement(selection);
+//                if (selected != null) {
+//                	if (selected instanceof Service) {
+//                		// get the service 
+//                		final Service service = (Service) selected;
+//                		// create action 
+//                		Action action = new Action("Set color...") {
+//                			public void run() {
+//                				ColorDialog dialog = 
+//                						new ColorDialog(UIUtil.getShell(), SWT.NONE);
+//                				// show dialog to change color
+//                				RGB rgb = dialog.open();
+//                				final java.awt.Color color = UIUtil.colorFromRGB(rgb);
+//                				// update the color of the service 
+//                				service.setColor(color);
+//                				// update viewer
+//                				tableViewerSosServices.refresh();
+//                				
+//                				// send event to layer to update the color
+//                				eventAdminService.sendEvent(new Event(EventTopic.QS_LAYER_SET_COLOR.toString(), 
+//                						new HashMap<String, Object>() { 
+//                					{
+//                						put("object", offeringLayer.getMapId());
+//                						put("value", color);
+//                						put("service", service.getEndpoint());
+//                					}
+//                				}));
+//                				
+//                			}
+//                		};                		
+//                        manager.add(action);
+//                	}
+//                }
+//            }
+//        });
+//        
+//        Menu menu = menuMgr.createContextMenu(tableServices);
+//        tableServices.setMenu(menu);
+		
 		
 		/*
 		 * STACK: geographic
@@ -2476,6 +2570,46 @@ public class QuerySetTab extends CTabItem
 		CheckboxTableViewer tableViewer = 
 				CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.MULTI);
 
+		final TableViewerColumn colEmpty = new TableViewerColumn(tableViewer, SWT.NONE);
+		colEmpty.getColumn().setText("");
+		colEmpty.getColumn().setWidth(5);
+		colEmpty.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return "";
+			}
+		});
+		
+		final TableViewerColumn colColor = new TableViewerColumn(tableViewer, SWT.NONE);
+		colColor.getColumn().setText("Color");
+		colColor.getColumn().setWidth(40);
+		colColor.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return " ";
+			}
+			
+			/**
+			 * Update the color of the cell 
+			 * 
+			 */
+			@Override
+			public void update(ViewerCell cell) {
+				Object elmt = cell.getElement();
+				if (elmt instanceof Service) {
+					Service service = (Service) elmt;
+					// set background color
+					cell.setBackground(UIUtil.swtColorFromAwtColor(service.getColor()));
+				}
+			}
+		});
+		colColor.getColumn().addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Change color...");
+			}
+		});
+		
 		TableViewerColumn colName = new TableViewerColumn(tableViewer, SWT.NONE);
 		colName.getColumn().setText("Name");
 		colName.getColumn().setWidth(200);
@@ -4320,6 +4454,8 @@ public class QuerySetTab extends CTabItem
 			imgArrowUp.dispose();
 		if (imgArrowDown != null)
 			imgArrowDown.dispose();
+		if (imgColor != null)
+			imgColor.dispose();
 		
 		if (colorBg != null)
 			colorBg.dispose();
@@ -4478,7 +4614,7 @@ public class QuerySetTab extends CTabItem
 	public Sector getSector() {
 		return sector;
 	}
-	
+		
 	/**
 	 * Content provider for service viewers
 	 * 

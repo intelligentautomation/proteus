@@ -299,6 +299,15 @@ public class WorldWindView extends ViewPart
 					}
 				}
 				
+				// set color of SOS offering layer 
+				else if (match(event, EventTopic.QS_LAYER_SET_COLOR)) {
+					
+					if (obj instanceof MapId && value instanceof Color) {
+						String endpoint = (String) event.getProperty("service");
+						setSosOfferingLayerColor((MapId) obj, (Color) value, endpoint);
+					}
+				}
+				
 				// bounding box region enabled 
 				else if (match(event, EventTopic.QS_REGION_ENABLED)) {
 					
@@ -772,7 +781,24 @@ public class WorldWindView extends ViewPart
 		return selector;
 	}
 
-
+	/**
+	 * Sets the color of the SOS offering layer  
+	 * 
+	 * @param mapId
+	 * @param color
+	 * @param serviceEndpoint
+	 */
+	private void setSosOfferingLayerColor(MapId mapId, Color color, 
+			String serviceEndpoint) 
+	{
+		Layer layer = getLayer(mapId);
+		if (layer != null && layer instanceof SosOfferingLayer) {
+			SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
+			// set the color for the offerings from the relevant service 
+			offeringLayer.setOfferingColorForService(color, serviceEndpoint);
+		}
+	}
+	
 	/**
 	 * Toggles the services on or off for the given map (query set)
 	 *

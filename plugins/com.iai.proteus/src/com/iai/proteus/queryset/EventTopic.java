@@ -31,6 +31,9 @@ public enum EventTopic {
 	// delete layers 
 	QS_LAYERS_REARRANGE("proteus/queryset/layers/rearrange"),
 	
+	// set the color of an SOS sensor offering layer
+	QS_LAYER_SET_COLOR("proteus/queryset/layer/color/set"), 
+	
 	// bounding box region enabled
 	QS_REGION_ENABLED("proteus/queryset/region/enabled"),
 	// bounding box region disabled 

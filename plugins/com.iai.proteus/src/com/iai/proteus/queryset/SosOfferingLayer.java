@@ -10,6 +10,7 @@ import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Renderable;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ import com.iai.proteus.map.SensorOfferingPlacemark;
 import com.iai.proteus.map.WorldWindUtils;
 import com.iai.proteus.model.MapId;
 import com.iai.proteus.model.map.IMapLayer;
+import com.iai.proteus.model.services.Service;
 import com.iai.proteus.ui.queryset.SensorOfferingItem;
 
 /**
@@ -1041,6 +1043,31 @@ public class SosOfferingLayer extends RenderableLayer
 		disableSector();
 		// remove selection layer
 		getWwd().getModel().getLayers().remove(layerSelection);
+	}
+
+	/**
+	 * Set the color of the sensor offerings 
+	 *  
+	 * @param color
+	 * @param serviceEndpoint 
+	 */
+	public void setOfferingColorForService(Color color, String serviceEndpoint) {
+		for (Renderable r : allRenderables) {
+			if (r instanceof SensorOfferingMarker) {
+				SensorOfferingMarker marker = (SensorOfferingMarker) r;
+				Service service = marker.getService();
+				if (service != null) {
+					// only change attributes on the markers from the 
+					// relevant service 
+					if (service.getEndpoint().equals(serviceEndpoint)) {
+						WorldWindUtils.setMarkerAttributesFromColor(color, 
+								(SensorOfferingMarker) r); 
+					}
+				}
+			}
+		}
+		// update 
+		getWwd().redrawNow();
 	}
 
 }

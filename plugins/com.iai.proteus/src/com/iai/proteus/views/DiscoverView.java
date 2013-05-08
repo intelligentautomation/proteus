@@ -7,6 +7,7 @@ package com.iai.proteus.views;
 
 import gov.nasa.worldwind.geom.Sector;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Dictionary;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -81,8 +83,10 @@ import com.iai.proteus.ui.queryset.SensorOfferingItem;
 public class DiscoverView extends ViewPart 
 	implements IPropertyChangeListener, IPerspectiveListener
 {
-
+	
 	public static final String ID = "com.iai.proteus.views.DiscoverView";
+	
+	private static final Logger log = Logger.getLogger(DiscoverView.class);
 	
 	// EventAdmin service for communicating with other views/modules
 	private EventAdmin eventAdminService;
@@ -391,7 +395,7 @@ public class DiscoverView extends ViewPart
 				
 				Object obj = event.getProperty("object");
 				
-				// load
+				// load the given query set 
 				if (event.getTopic().equals(EventTopic.QS_LOAD.toString())) {
 					
 					if (obj instanceof QuerySet) {
@@ -456,6 +460,12 @@ public class DiscoverView extends ViewPart
 		ctx.registerService(EventHandler.class.getName(), handler, properties);
 	}
 	
+	/**
+	 * Loads and populates a query set tab from a query set model object 
+	 * read from disk  
+	 * 
+	 * @param querySet
+	 */
 	private void loadQuerySet(QuerySet querySet) {
 		
 		// create the query set 
@@ -500,6 +510,14 @@ public class DiscoverView extends ViewPart
 			service.setName(sosService.getTitle());
 			// remember the active setting 
 			service.setActive(sosService.isActive());
+			String color = sosService.getColor();
+			if (color != null) {
+				try {
+					service.setColor(Color.decode(color));
+				} catch (NumberFormatException e) {
+					log.error("Number format exception: " + e.getMessage());
+				}
+			}
 			
 			querySetTab.addService(service);
 		}

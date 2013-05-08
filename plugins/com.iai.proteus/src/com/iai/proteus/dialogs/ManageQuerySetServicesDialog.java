@@ -263,10 +263,12 @@ public class ManageQuerySetServicesDialog extends TitleAreaDialog {
 					SwtUtil.getSelection(tableViewerServicesAvailable)) {
 					if (elmt instanceof Service) {
 						Service service = (Service) elmt;
+						// make a copy of the service 
+						Service copy = (Service)service.clone();
 						// make sure that the service is deactivated by default
 						service.deactivate();
 						// add the service to the manager
-						manager.addService(service);
+						manager.addService(copy);
 					}
 				}
 				// update the viewers whose input may have changed 
