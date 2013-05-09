@@ -211,7 +211,7 @@ public class WorldWindView extends ViewPart
 		getWwd().getModel().getLayers().add(tooltipLayer);
 		
 		// add alert layer 
-		alertLayer = new AlertLayer();
+		alertLayer = new AlertLayer(getWwd());
 		getWwd().getModel().getLayers().add(alertLayer);
 	}
 

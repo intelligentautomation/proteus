@@ -111,6 +111,7 @@ public class SwtUtil {
 		StyledText text = new StyledText(composite, SWT.WRAP);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		text.setText(helpText);
+		text.setEnabled(false);
 		// color and style 
 		text.setForeground(colorFg);
 		text.setBackground(colorBg);

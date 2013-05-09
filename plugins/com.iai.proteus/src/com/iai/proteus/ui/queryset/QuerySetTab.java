@@ -128,6 +128,7 @@ import com.iai.proteus.common.sos.data.SensorData;
 import com.iai.proteus.common.sos.exception.ExceptionReportException;
 import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.util.SosDataRequest;
+import com.iai.proteus.common.sos.util.SosUtil;
 import com.iai.proteus.dialogs.DownloadModel;
 import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
@@ -239,8 +240,9 @@ public class QuerySetTab extends CTabItem
 	private Composite compositePreview;
 	private StackLayout stackLayoutPreview;
 
-	private Composite compositePreviewNeeded;
-	private Composite compositePreviewAvailable;
+	private Composite compositePlotPreviewRequest;
+	private Composite compositePlotPreviewNotSupported;
+	private Composite compositePlotPreviewDetails;
 
 	private Cursor cursor;
 
@@ -394,7 +396,7 @@ public class QuerySetTab extends CTabItem
 	 */
 
 	private Label lblObservedProperties;
-	private String strNoObservedProperties = "Select a sensor offering";
+	private String strNoObservedProperties = "Select an observed property";
 
 	/*
 	 * Miscellaneous
@@ -1407,7 +1409,7 @@ public class QuerySetTab extends CTabItem
 		lblPreview.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.BOLD));
 		lblPreview.setText("Preview");
 
-		new Label(stackPreview, SWT.NONE).setText("Sensor offering IDs");
+		new Label(stackPreview, SWT.NONE).setText("Sensor offerings");
 
 		tableViewerSensorOfferings = new TableViewer(stackPreview);
 
@@ -1446,7 +1448,7 @@ public class QuerySetTab extends CTabItem
 							/*
 							 * Update the options for selecting observed properties
 							 */
-							updateObservedPropertiesSelection(item);
+							updateObservedPropertiesSelection(item.getSensorOffering());
 
 						}
 					} else {
@@ -1493,24 +1495,6 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 
-		lblObservedProperties = new Label(stackPreview, SWT.NONE);
-		lblObservedProperties.setText(strNoObservedProperties);
-
-		comboObservedProperties = new Combo(stackPreview, SWT.READ_ONLY);
-		comboObservedProperties.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
-		/*
-		 * Listener for changes in observed property selection
-		 */
-		comboObservedProperties.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				prepareForPreview();
-			}
-		});
-
-		Label lbl1 = new Label(stackPreview, SWT.SEPARATOR | SWT.HORIZONTAL);
-		lbl1.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
 		/*
 		 * Preview stack
@@ -1522,21 +1506,17 @@ public class QuerySetTab extends CTabItem
 		
 
 		/*
-		 * Preview stack - Top
+		 * Preview stack - Preview Button
 		 */
-		compositePreviewNeeded = new Composite(compositePreview, SWT.NONE);
-		compositePreviewNeeded.setLayout(new GridLayout());
-		compositePreviewNeeded.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		compositePlotPreviewRequest = new Composite(compositePreview, SWT.NONE);
+		compositePlotPreviewRequest.setLayout(new GridLayout(1, true));
+		compositePlotPreviewRequest.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		Composite compositeFetchData = new Composite(compositePreviewNeeded, SWT.NONE);
-		compositeFetchData.setLayout(new GridLayout(1, true));
-		compositeFetchData.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		btnFetchPreview = new Button(compositeFetchData, SWT.PUSH);
+		btnFetchPreview = new Button(compositePlotPreviewRequest, SWT.PUSH);
 		btnFetchPreview.setText("Preview sensor data");
 		btnFetchPreview.setImage(imgChart);
 		btnFetchPreview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
+		
 		btnFetchPreview.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -1585,17 +1565,60 @@ public class QuerySetTab extends CTabItem
 				}
 			}
 		});
-
+		
 		/*
-		 * Preview stack - Bottom
+		 * Preview stack - no supported format 
 		 */
-		compositePreviewAvailable = new Composite(compositePreview, SWT.NONE);
-		compositePreviewAvailable.setLayout(new GridLayout());
-		compositePreviewAvailable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		new Label(compositePreviewAvailable, SWT.NONE).setText("Plot type");
+		compositePlotPreviewNotSupported = new Composite(compositePreview, SWT.BORDER);
+		compositePlotPreviewNotSupported.setLayout(new GridLayout(1, true));
+		compositePlotPreviewNotSupported.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+//		Composite compositeText = 
+//				new Composite(compositePlotPreviewNotSupported, SWT.BORDER);
+//		compositeText.setLayout(new GridLayout(1, false));
+//		compositeText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+//		compositeText.setBackground(SWTResourceManager.getColor(255, 230, 230));
+		
+		compositePlotPreviewNotSupported.setBackground(SWTResourceManager.getColor(255, 230, 230));
 
-		Composite compositePlotTypes = new Composite(compositePreviewAvailable, SWT.NONE);
+		StyledText stNotSupported = 
+				new StyledText(compositePlotPreviewNotSupported, SWT.WRAP);
+		stNotSupported.setText("Sorry, none of the available data formats are supported.");
+		stNotSupported.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		stNotSupported.setBackground(SWTResourceManager.getColor(255, 230, 230));
+		stNotSupported.setEnabled(false);
+						
+		/*
+		 * Preview stack - Plot Details 
+		 */
+		compositePlotPreviewDetails = new Composite(compositePreview, SWT.NONE);
+		compositePlotPreviewDetails.setLayout(new GridLayout());
+		compositePlotPreviewDetails.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		lblObservedProperties = new Label(compositePlotPreviewDetails, SWT.NONE);
+		lblObservedProperties.setText(strNoObservedProperties);
+
+		comboObservedProperties = new Combo(compositePlotPreviewDetails, SWT.READ_ONLY);
+		comboObservedProperties.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
+		/*
+		 * Listener for changes in observed property selection
+		 */
+		comboObservedProperties.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				prepareForPreview();
+			}
+		});
+
+		Label lbl1 = new Label(stackPreview, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lbl1.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+	
+
+		new Label(compositePlotPreviewDetails, SWT.NONE).setText("Plot type");
+
+		Composite compositePlotTypes = new Composite(compositePlotPreviewDetails, SWT.NONE);
 		compositePlotTypes.setLayout(new GridLayout(2, true));
 		compositePlotTypes.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
 
@@ -1619,10 +1642,10 @@ public class QuerySetTab extends CTabItem
 		btnContour.setLayoutData(gridData);
 		
 
-		lbl1 = new Label(compositePreviewAvailable, SWT.SEPARATOR | SWT.HORIZONTAL);
+		lbl1 = new Label(compositePlotPreviewDetails, SWT.SEPARATOR | SWT.HORIZONTAL);
 		lbl1.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-		final Composite plotOptions = new Composite(compositePreviewAvailable, SWT.NONE);
+		final Composite plotOptions = new Composite(compositePlotPreviewDetails, SWT.NONE);
 		plotOptions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		final StackLayout plotOptionsStackLayout = new StackLayout();
 		plotOptions.setLayout(plotOptionsStackLayout);
@@ -1696,7 +1719,7 @@ public class QuerySetTab extends CTabItem
 		});
 
 
-		btnUpdatePreview = new Button(compositePreviewAvailable, SWT.CENTER);
+		btnUpdatePreview = new Button(compositePlotPreviewDetails, SWT.CENTER);
 		btnUpdatePreview.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnUpdatePreview.setText("Update preview");
 		btnUpdatePreview.setImage(UIUtil.getImage("icons/fugue/chart.png"));
@@ -1719,7 +1742,7 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 
-		stackLayoutPreview.topControl = compositePreviewNeeded;
+		stackLayoutPreview.topControl = compositePlotPreviewRequest;
 
 		/*
 		 * STACK: summary
@@ -3069,7 +3092,7 @@ public class QuerySetTab extends CTabItem
 		if (variables != null) {
 
 			// show details for previewing data
-			showPreviewDetails(true);
+			showPreviewPlotStack(PlotPreviewStack.DETAILS);
 
 			String[] vars = variables.getVariableStrings();
 			
@@ -3123,8 +3146,8 @@ public class QuerySetTab extends CTabItem
 				 */
 				if (variables != null) {
 
-					// show details
-					showPreviewDetails(true);
+					// show plot details
+					showPreviewPlotStack(PlotPreviewStack.DETAILS);
 
 					// create variables
 					comboPlotTimeSeriesDomain.setItems(variables.getVariableStrings());
@@ -3153,8 +3176,8 @@ public class QuerySetTab extends CTabItem
 					
 				} else {
 
-					// hide details
-					showPreviewDetails(false);
+					// hide plot details
+					showPreviewPlotStack(PlotPreviewStack.REQUEST);
 
 					// clear variables
 					comboPlotTimeSeriesDomain.removeAll();
@@ -3172,19 +3195,36 @@ public class QuerySetTab extends CTabItem
 			}
 		}
 	}
+	
+	/**
+	 * Available stacks for plot previews 
+	 * 
+	 * @author Jakob Henriksson
+	 *
+	 */
+	private enum PlotPreviewStack {
+		
+		REQUEST,
+		UNSUPPORTED_FORMAT,
+		DETAILS,
+	}
 
 	/**
 	 * Toggles the preview stack
 	 *
 	 * @param show
 	 */
-	private void showPreviewDetails(boolean show) {
-		if (show) {
-			// show
-			stackLayoutPreview.topControl = compositePreviewAvailable;
-		} else {
-			// hide
-			stackLayoutPreview.topControl = compositePreviewNeeded;
+	private void showPreviewPlotStack(PlotPreviewStack stack) {
+		switch (stack) {
+		case REQUEST:
+			stackLayoutPreview.topControl = compositePlotPreviewRequest;
+			break;
+		case UNSUPPORTED_FORMAT:
+			stackLayoutPreview.topControl = compositePlotPreviewNotSupported;
+			break;
+		case DETAILS:
+			stackLayoutPreview.topControl = compositePlotPreviewDetails;
+			break;
 		}
 		// update layout
 		compositePreview.layout();
@@ -3451,14 +3491,24 @@ public class QuerySetTab extends CTabItem
 	/**
 	 * Updates the possibilities for selecting an observed property
 	 *
-	 * @param offeringItem
+	 * @param sensorOffering
 	 */
-	private void updateObservedPropertiesSelection(SensorOfferingItem offeringItem) {
+	private void updateObservedPropertiesSelection(SensorOffering sensorOffering) {
 
-		if (offeringItem != null) {
-			java.util.List<String> properties =
-					offeringItem.getSensorOffering().getObservedProperties();
-			java.util.List<String> labels = new ArrayList<String>();
+		if (sensorOffering != null) {
+			
+			// check for supported formats - if there are no supported formats
+			// display a stack with an error message, and then return 
+			if (SosUtil.commonResponseFormats(sensorOffering).size() <= 0) {
+				// update stack 
+				showPreviewPlotStack(PlotPreviewStack.UNSUPPORTED_FORMAT);
+				return;
+			}
+			
+			List<String> properties =
+					sensorOffering.getObservedProperties();
+			
+			List<String> labels = new ArrayList<String>();
 
 			for (String property : properties) {
 				String label = Labeling.labelProperty(property);

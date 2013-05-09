@@ -5,10 +5,15 @@
  */
 package com.iai.proteus.map;
 
+import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.PatternFactory;
 import gov.nasa.worldwind.render.Renderable;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,12 +30,14 @@ public class AlertLayer extends RenderableLayer {
 	
 //	private static final Logger log = Logger.getLogger(AlertLayer.class);
 	
+	private WorldWindow world;
+	
 	/**
 	 * Constructor 
 	 * 
 	 */
-	public AlertLayer() {
-
+	public AlertLayer(WorldWindow ww) {
+		this.world = ww;
 	}
 	
 	/**
@@ -77,6 +84,28 @@ public class AlertLayer extends RenderableLayer {
 		}
 		
 		return shapes;
+	}
+	
+	/**
+	 * Create a blurred pattern bitmap
+	 * 
+	 * (From NASA World Wind AlarmIcons.java demo.) 
+	 * 
+	 * @param pattern
+	 * @param color
+	 * @return
+	 */
+	private BufferedImage createBitmap(String pattern, Color color)
+	{
+		// Create bitmap with pattern
+		BufferedImage image = PatternFactory.createPattern(pattern, new Dimension(128, 128), 0.7f,
+				color, new Color(color.getRed(), color.getGreen(), color.getBlue(), 0));
+		// Blur a lot to get a fuzzy edge
+		image = PatternFactory.blur(image, 13);
+		image = PatternFactory.blur(image, 13);
+		image = PatternFactory.blur(image, 13);
+		image = PatternFactory.blur(image, 13);
+		return image;
 	}
 	
 }
