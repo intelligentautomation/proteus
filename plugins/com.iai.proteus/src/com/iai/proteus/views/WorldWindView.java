@@ -576,14 +576,52 @@ public class WorldWindView extends ViewPart
 		}
 	}
 
-	private void createSosLayer(final MapId mapId, final Service service) {
-		createSosLayer(mapId, new ArrayList<Service>() {
-			private static final long serialVersionUID = 1L;
-			{
-				add(service);
-			}
-		});
-	}
+	/**
+	 * Create SOS layer from the given service 
+	 * 
+	 * @param mapId
+	 * @param service
+	 */
+//	@SuppressWarnings("unused")
+//	private void createSosLayer(final MapId mapId, final Service service) {
+//		createSosLayer(mapId, new ArrayList<Service>() {
+//			private static final long serialVersionUID = 1L;
+//			{
+//				add(service);
+//			}
+//		});
+//	}
+	
+	/**
+	 * Create SOS layer from the given services 
+	 * 
+	 * @param mapId
+	 * @param services
+	 */
+//	private void createSosLayer(final MapId mapId, List<Service> services) {
+//
+////		SosCapabilitiesCache cache = SosCapabilitiesCache.getInstance();
+//
+//		List<Renderable> allMarkers = new ArrayList<Renderable>();
+//
+//		for (final Service service : services) {
+//
+//			// NOTE: we assume that the services have cached capabilities
+//			//       documents
+//
+//			SosCapabilities capabilities =
+//					SosUtil.getCapabilities(service.getEndpoint());
+//			List<Renderable> markers =
+//					WorldWindUtils.getCapabilitiesMarkers(capabilities,
+//							service.getColor());
+//
+//			allMarkers.addAll(markers);
+//		}
+//
+//		// create layer with markers using the default map ID
+//		createSosLayerWithMarkers(mapId, allMarkers);
+//	}
+
 
 	private void createOrUpdateSosLayer(final IMapLayer mapLayer, final List<Service> services) {
 
@@ -625,31 +663,6 @@ public class WorldWindView extends ViewPart
 		job.setUser(true);
 		job.schedule();
 	}
-
-	private void createSosLayer(final MapId mapId, List<Service> services) {
-
-//		SosCapabilitiesCache cache = SosCapabilitiesCache.getInstance();
-
-		List<Renderable> allMarkers = new ArrayList<Renderable>();
-
-		for (final Service service : services) {
-
-			// NOTE: we assume that the services have cached capabilities
-			//       documents
-
-			SosCapabilities capabilities =
-					SosUtil.getCapabilities(service.getEndpoint());
-			List<Renderable> markers =
-					WorldWindUtils.getCapabilitiesMarkers(capabilities,
-							service.getColor());
-
-			allMarkers.addAll(markers);
-		}
-
-		// create layer with markers using the default map ID
-		createSosLayerWithMarkers(mapId, allMarkers);
-	}
-
 
 	/**
 	 * Initialize a #{link SosOfferingLayer}
