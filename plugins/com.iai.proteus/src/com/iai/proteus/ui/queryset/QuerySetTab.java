@@ -35,10 +35,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -59,6 +61,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -81,6 +84,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -1135,6 +1139,61 @@ public class QuerySetTab extends CTabItem
 		treeObservedProperties = treeViewerObservedProperties.getTree();
 		treeObservedProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
+		treeObservedProperties.setHeaderVisible(true);
+		
+		// activate the tool tip support for the viewer
+		ColumnViewerToolTipSupport.enableFor(treeViewerObservedProperties, 
+				ToolTip.NO_RECREATE); 
+		
+		// define a tree viewer column with its own label provider and 
+		// tool tip provider 
+		TreeViewerColumn treeViewerColOP = 
+				new TreeViewerColumn(treeViewerObservedProperties, SWT.NONE);
+		TreeColumn trclmnOPName = treeViewerColOP.getColumn();
+		trclmnOPName.setWidth(200);
+		trclmnOPName.setText("Observed property");
+		treeViewerColOP.setLabelProvider(new CellLabelProvider() {
+			
+			@Override
+			public void update(ViewerCell cell) {
+				Object elmt = cell.getElement();
+				if (elmt instanceof ObservedProperty) {
+					ObservedProperty op = (ObservedProperty) elmt;
+					cell.setText(Labeling.labelProperty(op.toString()));
+					return;
+				} 
+				// default
+				cell.setText(elmt.toString());
+			}
+			
+			@Override
+			public String getToolTipText(Object element) {
+				if (element instanceof ObservedProperty) {
+					return ((ObservedProperty) element).toString();
+				} else if (element instanceof Category) {
+					return ((Category) element).toString();
+				}
+				// default 
+				return null;
+			}
+
+			@Override
+			public Point getToolTipShift(Object object) {
+				return new Point(5, 5);
+			}
+
+			@Override
+			public int getToolTipDisplayDelayTime(Object object) {
+				return 100; //msec
+			}
+
+			@Override
+			public int getToolTipTimeDisplayed(Object object) {
+				return 5000; //msec
+			}
+			
+		});
+		
 		// listener to properly handle tree check box selections
 		treeObservedProperties.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1182,7 +1241,6 @@ public class QuerySetTab extends CTabItem
 		LabelProvider labelProvider = new LabelProvider();
 
 		treeViewerObservedProperties.setContentProvider(contentProvider);
-		treeViewerObservedProperties.setLabelProvider(labelProvider);
 		treeViewerObservedProperties.setInput(observedPropertiesHolder);
 		treeViewerObservedProperties.addCheckStateListener(new ICheckStateListener() {
 			@Override
@@ -1195,6 +1253,7 @@ public class QuerySetTab extends CTabItem
 				}
 			}
 		});
+		
 		treeViewerObservedProperties.setCheckStateProvider(new ICheckStateProvider() {
 			@Override
 			public boolean isGrayed(Object element) {
