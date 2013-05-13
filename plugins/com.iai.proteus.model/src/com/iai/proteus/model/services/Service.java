@@ -46,6 +46,8 @@ public class Service extends MapLayer
 		property = null;
 		liked = false; 
 		success = false;
+		// note: a service should be inactive by default 
+		// see MayLayer.active
 	}
 	
 	/**

@@ -86,6 +86,8 @@ public class SosOfferingLayer extends RenderableLayer
 
 	// active facets that constrain what is being displayed
 	private Set<FacetChangeToggle> facets;
+	
+	private FacetDisplayStrategy displayStrategy; 
 
 	/**
 	 * Constructor
@@ -122,6 +124,7 @@ public class SosOfferingLayer extends RenderableLayer
 		
 		// default 
 		active = false;
+		displayStrategy = FacetDisplayStrategy.SHOW_ALL;
 
 		// selection layer
 		layerSelection = new SelectionLayer(getWwd());
@@ -285,14 +288,6 @@ public class SosOfferingLayer extends RenderableLayer
 				boolean includeFormat = false;
 
 
-				boolean conjunction = false;
-
-				/*
-				 * If there are no facets, include all offerings
-				 */
-				if (facets.size() <= 0)
-					conjunction = true;
-
 				for (FacetChangeToggle facet : facets) {
 
 					String value = facet.getValue();
@@ -349,16 +344,36 @@ public class SosOfferingLayer extends RenderableLayer
 
 					}
 				}
+				
+				// default: assume the conjunction is true and that 
+				// the offering should be displayed 
+				boolean conjunction = true;
+				
+				switch (displayStrategy) {
+				case SHOW_ALL:
+					conjunction = true;
+					// make it false if we are using a facet but the facet says
+					// it should not be included 
+					if (facetObservedProperty && !includeObservedProperty ||
+							facetTime && !includeTime ||
+							facetFormat && !includeFormat)
+						conjunction = false;				
 
-				conjunction = true;
-				if (facetObservedProperty && !includeObservedProperty ||
-						facetTime && !includeTime ||
-						facetFormat && !includeFormat)
+					break;
+				case SHOW_SELECTED:
 					conjunction = false;
+					// make it false if we are using a facet but the facet says
+					// it should not be included 
+					if (facetObservedProperty && includeObservedProperty ||
+							facetTime && includeTime ||
+							facetFormat && includeFormat)
+						conjunction = true;				
+					
+					break;
+				}
 
-//				if (!conjunction && includeObservedProperty && includeTime)
-//					conjunction = true;
-
+				
+				// add the renderable if the conjunction is true 
 				if (conjunction) {
 					filtered.add(r);
 				}
@@ -371,6 +386,15 @@ public class SosOfferingLayer extends RenderableLayer
 		}
 
 		return filtered;
+	}
+	
+	/**
+	 * Sets the facet display strategy 
+	 * 
+	 * @param strategy
+	 */
+	public void setFacetDisplayStrategy(FacetDisplayStrategy strategy) {
+		this.displayStrategy = strategy;
 	}
 
 	/**
@@ -599,8 +623,8 @@ public class SosOfferingLayer extends RenderableLayer
 
 		Map<String, Integer> propertyCount = new HashMap<String, Integer>();
 
-		System.out.println("TT: Collecting from " +
-				filterOfferingMarkers(sector, true).size() + " renderables");
+//		System.out.println("TT: Collecting from " +
+//				filterOfferingMarkers(sector, true).size() + " renderables");
 
 		// we have to consider all markers that we know of
 		for (Renderable m : filterOfferingMarkers(sector, true)) {
@@ -864,10 +888,14 @@ public class SosOfferingLayer extends RenderableLayer
 	@Override
 	public void setRenderables(Iterable<Renderable> renderables) {
 		
+		// only remember all the renderables if the layer has not been 
+		// initialized before 
 		if (!markersInitialized) {
-			allRenderables = renderables;
-			log.trace("SET renderables");
+
+			// remember action 
 			markersInitialized = true;
+			// remember renderables 
+			allRenderables = renderables;
 
 			// notify that offerings may have changed 
 			eventAdminService.sendEvent(new Event(EventTopic.QS_OFFERINGS_CHANGED.toString(), 
@@ -890,22 +918,26 @@ public class SosOfferingLayer extends RenderableLayer
 	}
 
 	/**
-	 * The first time the markers are set for this layer, save them.
-	 * Otherwise, simply call the super method.
+	 * Resetting the markers for the layer, e.g. when a new service with 
+	 * new sensor offerings (markers) is being used 
 	 *
 	 * @param renderables
 	 */
 	@SuppressWarnings("serial")
 	public void resetRenderables(Collection<Renderable> renderables) {
-		log.trace("RESETnig renderables (was: " +
-				countRenderables(allRenderables) + ", new: " +
-				countRenderables(renderables) + ")");
+		
+//		log.trace("RESETnig renderables (was: " +
+//				countRenderables(allRenderables) + ", new: " +
+//				countRenderables(renderables) + ")");
+		
+		// (re-)remember all renderables 
 		allRenderables = renderables;
 		markersInitialized = true;
+		
 		log.trace("Initialized markers for layer: " + getName());
-		super.setRenderables(renderables);
 		log.trace("Layer " + getName() + " setting " +
 				getNumRenderables() + " renderables.");
+		super.setRenderables(renderables);
 
 		//  hides selection
 		hideSelection();
@@ -955,13 +987,13 @@ public class SosOfferingLayer extends RenderableLayer
 		}
 	}
 
-	private int countRenderables(Iterable<Renderable> renderables) {
-		int count = 0;
-		for (@SuppressWarnings("unused") Renderable r : renderables) {
-			count++;
-		}
-		return count;
-	}
+//	private int countRenderables(Iterable<Renderable> renderables) {
+//		int count = 0;
+//		for (@SuppressWarnings("unused") Renderable r : renderables) {
+//			count++;
+//		}
+//		return count;
+//	}
 
 	/**
 	 * Event listener for changes in the sector selector

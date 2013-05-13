@@ -84,7 +84,6 @@ import com.iai.proteus.map.wms.WmsCache;
 import com.iai.proteus.map.wms.WmsLayerInfo;
 import com.iai.proteus.map.wms.WmsUtil;
 import com.iai.proteus.model.MapId;
-import com.iai.proteus.model.SensorOfferingLayer;
 import com.iai.proteus.model.map.IMapLayer;
 import com.iai.proteus.model.map.WmsMapLayer;
 import com.iai.proteus.model.map.WmsSavedMap;
@@ -92,6 +91,7 @@ import com.iai.proteus.model.services.Service;
 import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
+import com.iai.proteus.queryset.FacetDisplayStrategy;
 import com.iai.proteus.queryset.RearrangeMapsEventValue;
 import com.iai.proteus.queryset.SosOfferingLayer;
 import com.iai.proteus.ui.queryset.SensorOfferingItem;
@@ -262,8 +262,8 @@ public class WorldWindView extends ViewPart
 				// initialize layer 
 				if (match(event, EventTopic.QS_LAYERS_INIT)) {
 					
-					if (value instanceof SensorOfferingLayer) {
-						initializeSosLayer((SensorOfferingLayer) value);
+					if (value instanceof MapId) {
+						initializeOfferingsLayer((MapId) value);
 					}
 				}
 				
@@ -294,8 +294,8 @@ public class WorldWindView extends ViewPart
 				// toggle SOS services
 				else if (match(event, EventTopic.QS_TOGGLE_SERVICES)) {
 					
-					if (obj instanceof IMapLayer && value instanceof Collection<?>) {
-						setServices((IMapLayer) obj, (ArrayList<?>) value);
+					if (obj instanceof MapId && value instanceof Collection<?>) {
+						setServices((MapId) obj, (Collection<?>) value);
 					}
 				}
 				
@@ -336,7 +336,24 @@ public class WorldWindView extends ViewPart
 				else if (match(event, EventTopic.QS_FACET_CHANGED)) {
 					
 					if (obj instanceof MapId) {
+						
+						// update 'mode' if it is available 
+						Object mode = event.getProperty("mode");
+						if (mode != null && mode instanceof FacetDisplayStrategy) {
+							
+							FacetDisplayStrategy strategy = 
+									(FacetDisplayStrategy) mode;
+							
+							Layer layer = getLayer((MapId) obj);
+							if (layer != null && layer instanceof SosOfferingLayer) {
+								SosOfferingLayer offeringLayer = 
+										(SosOfferingLayer) layer;
+								offeringLayer.setFacetDisplayStrategy(strategy);
+							}
+								
+						}						
 
+						// update facets based on input 
 						if (value instanceof Collection<?>) {
 
 							// notify all layers of the facet changes
@@ -621,10 +638,37 @@ public class WorldWindView extends ViewPart
 //		// create layer with markers using the default map ID
 //		createSosLayerWithMarkers(mapId, allMarkers);
 //	}
+	
+	/**
+	 * Initialize a #{link SosOfferingLayer}
+	 *
+	 * @param mapId
+	 */
+	private SosOfferingLayer initializeOfferingsLayer(MapId mapId) {
+		// create layer 
+		SosOfferingLayer layer =
+				new SosOfferingLayer(getWwd(),
+						createSectorSelector(), mapId);
+		// associate ID with layer 
+		layer.setValue(MapAVKey.MAP_ID, mapId.toString());
+		// add marker layer to World Wind
+		getWwd().getModel().getLayers().add(layer);
+		log.info("Initialized sensor offerings layer: " + mapId);
+		return layer;
+	}
+	
 
-
-	private void createOrUpdateSosLayer(final IMapLayer mapLayer, final List<Service> services) {
-
+	/**
+	 * Create or update the given map layer with sensor offerings from 
+	 * the given services  
+	 * 
+	 * @param mapId
+	 * @param services
+	 */
+	private void createOrUpdateOfferingsLayer(final MapId mapId, 
+			final List<Service> services) 
+	{
+		// create job for updating offerings layer
 		Job job = new Job("Downloading Capabilities documents...") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -632,7 +676,10 @@ public class WorldWindView extends ViewPart
 
 					monitor.beginTask("Downloading Capabilities documents...",
 							services.size());
+					
+					System.out.println("Services: " + services.size());
 
+					// collect markers from all given services 
 					List<Renderable> allMarkers = new ArrayList<Renderable>();
 					for (Service service : services) {
 
@@ -651,7 +698,7 @@ public class WorldWindView extends ViewPart
 					}
 
 					// create layer with markers using the default map ID
-					createOrUpdateSosLayerWithMarkers(mapLayer, allMarkers);
+					createOrUpdateOfferingsLayerWithMarkers(mapId, allMarkers);
 
 				} finally {
 					monitor.done();
@@ -665,68 +712,42 @@ public class WorldWindView extends ViewPart
 	}
 
 	/**
-	 * Initialize a #{link SosOfferingLayer}
-	 *
-	 * @param offeringLayer
-	 */
-	private void initializeSosLayer(SensorOfferingLayer offeringLayer) {
-		// create layer 
-		SosOfferingLayer layer =
-				new SosOfferingLayer(getWwd(),
-						createSectorSelector(), offeringLayer.getMapId());
-		// associate ID with layer 
-		layer.setValue(MapAVKey.MAP_ID, offeringLayer.getMapId().toString());
-		// add marker layer to World Wind
-		getWwd().getModel().getLayers().add(layer);
-	}
-
-	/**
 	 * Creates a layer with the given markers
 	 *
-	 * @param mapLayer
+	 * @param mapId
 	 * @param markers
 	 */
-	private void createOrUpdateSosLayerWithMarkers(final IMapLayer mapLayer, final List<Renderable> markers)
+	private void createOrUpdateOfferingsLayerWithMarkers(final MapId mapId, 
+			final List<Renderable> markers)
 	{
-		/*
-		 * Create the layer if there are markers to add to it
-		 */
+		// run in a separate thread 
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 
-				Layer layer = getLayer(mapLayer);
-
+				// find and use the sensor offering layer, if it exists 
+				Layer layer = getLayer(mapId);
 				if (layer != null && layer instanceof SosOfferingLayer) {
 
 					// update existing layer
 					SosOfferingLayer offeringLayer =
 							(SosOfferingLayer) layer;
+					// reset markers 
 					offeringLayer.resetRenderables(markers);
 					offeringLayer.setEnabled(true);
 
 				} else {
 
-					// create new layer
-
-					if (markers.size() > 0) {
-
-						// the name of the layer is set automatically
-						SosOfferingLayer offeringLayer =
-								new SosOfferingLayer(getWwd(),
-										createSectorSelector(), mapLayer.getMapId());
-						// associate ID with layer 
-						offeringLayer.setValue(MapAVKey.MAP_ID, mapLayer.getMapId().toString());
-						// associate id with 
-						offeringLayer.setRenderables(markers);
-						offeringLayer.setEnabled(true);
-
-						// add marker layer to World Wind
-						getWwd().getModel().getLayers().add(offeringLayer);
-
-					} else {
-						log.warn("Tried to create a layer, but there were no markers.");
-					}
+					if (markers.size() <= 0)
+						log.warn("Creating a sensor offering layer with no markers");
+					
+					// create new sensor offering layer
+					// the name of the layer is set automatically
+					SosOfferingLayer offeringLayer = 
+							initializeOfferingsLayer(mapId);
+					
+					offeringLayer.setRenderables(markers);
+					offeringLayer.setEnabled(true);
 				}
 			}
 		}).start();
@@ -738,36 +759,36 @@ public class WorldWindView extends ViewPart
 	 * @param mapId
 	 * @param markers
 	 */
-	private void createSosLayerWithMarkers(final MapId mapId, final List<Renderable> markers)
-	{
-		/*
-		 * Create the layer if there are markers to add to it
-		 */
-		if (markers.size() > 0) {
-
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-
-					LayerList layers = getWwd().getModel().getLayers();
-
-					// the name of the layer is set automatically
-					SosOfferingLayer offeringLayer =
-							new SosOfferingLayer(getWwd(), selector, mapId);
-					// associate ID with layer 
-					offeringLayer.setValue(MapAVKey.MAP_ID, mapId.toString());
-					offeringLayer.setRenderables(markers);
-					offeringLayer.setEnabled(true);
-
-					/* add marker layer to World Wind */
-					layers.add(offeringLayer);
-				}
-			}).start();
-
-		} else {
-			log.warn("Tried to create a layer, but there were no markers.");
-		}
-	}
+//	private void createSosLayerWithMarkers(final MapId mapId, final List<Renderable> markers)
+//	{
+//		/*
+//		 * Create the layer if there are markers to add to it
+//		 */
+//		if (markers.size() > 0) {
+//
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//
+//					LayerList layers = getWwd().getModel().getLayers();
+//
+//					// the name of the layer is set automatically
+//					SosOfferingLayer offeringLayer =
+//							new SosOfferingLayer(getWwd(), selector, mapId);
+//					// associate ID with layer 
+//					offeringLayer.setValue(MapAVKey.MAP_ID, mapId.toString());
+//					offeringLayer.setRenderables(markers);
+//					offeringLayer.setEnabled(true);
+//
+//					/* add marker layer to World Wind */
+//					layers.add(offeringLayer);
+//				}
+//			}).start();
+//
+//		} else {
+//			log.warn("Tried to create a layer, but there were no markers.");
+//		}
+//	}
 
 	/**
 	 * Initializes the selection of a sector
@@ -815,10 +836,11 @@ public class WorldWindView extends ViewPart
 	/**
 	 * Toggles the services on or off for the given map (query set)
 	 *
-	 * @param mapLayer
+	 * @param mapId
 	 * @param serviceObjects
 	 */
-	private void setServices(IMapLayer mapLayer, List<?> serviceObjects) {
+	private void setServices(MapId mapId, Collection<?> serviceObjects) {
+		// check and convert object types 
 		List<Service> services = new ArrayList<Service>();
 		for (Object obj : serviceObjects) {
 			if (obj instanceof Service) {
@@ -828,8 +850,8 @@ public class WorldWindView extends ViewPart
 					services.add(service);
 			}
 		}
-		// create the layer for the first time
-		createOrUpdateSosLayer(mapLayer, services);
+		// create or update the sensor offering layer 
+		createOrUpdateOfferingsLayer(mapId, services);
 	}
 	
 	/**

@@ -69,6 +69,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -160,6 +161,7 @@ import com.iai.proteus.queryset.EventTopic;
 import com.iai.proteus.queryset.Facet;
 import com.iai.proteus.queryset.FacetChangeToggle;
 import com.iai.proteus.queryset.FacetData;
+import com.iai.proteus.queryset.FacetDisplayStrategy;
 import com.iai.proteus.queryset.FormatFacet;
 import com.iai.proteus.queryset.TimeFacet;
 import com.iai.proteus.ui.SwtUtil;
@@ -387,6 +389,8 @@ public class QuerySetTab extends CTabItem
 	private Image imgArrowUp;
 	private Image imgArrowDown;
 	private Image imgColor;
+	private Image imgEye;
+	private Image imgEyeHalf;
 	
 	private Font fontActive;
 	private Font fontInactive; 
@@ -479,6 +483,8 @@ public class QuerySetTab extends CTabItem
 		imgArrowUp = UIUtil.getImage("icons/fugue/arrow-090.png");
 		imgArrowDown = UIUtil.getImage("icons/fugue/arrow-270.png");
 		imgColor = UIUtil.getImage("icons/fugue/color.png");
+		imgEye = UIUtil.getImage("icons/fugue/eye.png");
+		imgEyeHalf = UIUtil.getImage("icons/fugue/eye-half.png");
 		
 		fontActive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.BOLD | SWT.ITALIC);
 		fontInactive = SWTResourceManager.getFont("Lucida Grande", 10, SWT.NORMAL);
@@ -538,7 +544,7 @@ public class QuerySetTab extends CTabItem
 				new HashMap<String, Object>() { 
 				{
 					put("object", this);
-					put("value", offeringLayer);
+					put("value", getMapId());
 				}
 		}));
 		
@@ -830,7 +836,7 @@ public class QuerySetTab extends CTabItem
 					eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
 							new HashMap<String, Object>() { 
 						{
-							put("object", offeringLayer);
+							put("object", getMapId());
 							put("value", getServices());
 						}
 					}));
@@ -884,7 +890,7 @@ public class QuerySetTab extends CTabItem
 				eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
 						new HashMap<String, Object>() { 
 					{
-						put("object", offeringLayer);
+						put("object", getMapId());
 						put("value", getServices());
 					}
 				}));
@@ -933,7 +939,7 @@ public class QuerySetTab extends CTabItem
                 		eventAdminService.sendEvent(new Event(EventTopic.QS_LAYER_SET_COLOR.toString(), 
                 				new HashMap<String, Object>() { 
                 			{
-                				put("object", offeringLayer.getMapId());
+                				put("object", getMapId());
                 				put("value", color);
                 				put("service", service.getEndpoint());
                 			}
@@ -1111,10 +1117,15 @@ public class QuerySetTab extends CTabItem
 		lblProperties.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.BOLD));
 		lblProperties.setText("Observed properties");
 
-		final ToolBar toolBarProperties = new ToolBar(stackProperties, SWT.FLAT | SWT.RIGHT);
+		// composite to hold two different tool bars 
+		final Composite compositePropertiesToolbar = new Composite(stackProperties, SWT.NONE);
+		compositePropertiesToolbar.setLayout(new GridLayout(2, false));
+		compositePropertiesToolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
+		final ToolBar toolBarProperties = new ToolBar(compositePropertiesToolbar, SWT.FLAT | SWT.RIGHT);
 
 		itemClearProperties = new ToolItem(toolBarProperties, SWT.NONE);
-		itemClearProperties.setText("Clear all facets");
+		itemClearProperties.setText("Clear");
 		itemClearProperties.setImage(imgClear);
 		// default
 		itemClearProperties.setEnabled(false);
@@ -1130,9 +1141,99 @@ public class QuerySetTab extends CTabItem
 						put("object", getMapId());
 						put("value", Facet.OBSERVED_PROPERTY);
 					}
-				}));				
+				}));
 			}
 		});
+		
+		final ToolItem tltmPropertiesMode = new ToolItem(toolBarProperties, SWT.CHECK);
+		tltmPropertiesMode.setText("Mode");
+		tltmPropertiesMode.setImage(imgEye);
+		tltmPropertiesMode.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				final boolean checked = tltmPropertiesMode.getSelection();
+				// update mode
+//				offeringLayer.set
+				// update image 
+				tltmPropertiesMode.setImage(checked ? imgEyeHalf : imgEye);
+				// send update request
+				eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+						new HashMap<String, Object>() { 
+					{
+						put("object", getMapId());
+						put("value", new ArrayList<FacetChangeToggle>());
+						put("mode", checked ? 
+								FacetDisplayStrategy.SHOW_SELECTED : 
+									FacetDisplayStrategy.SHOW_ALL);
+					}
+				}));
+			}
+		});
+		
+		// TODO: TEST - remove
+//		ToolItem itemTest2 = new ToolItem(toolBarProperties, SWT.NONE);
+//		itemTest2.setText("Test");
+//		itemTest2.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				
+//				// TODO: automatically select 'mode' 
+//				// TODO: update sos offering layer (needed?)
+//				
+//				// TODO: get services from IOOS CSW
+//				
+//				// TODO: add services to a list and update OPs 
+//				
+//				final Collection<Service> ss = new ArrayList<Service>();
+//				
+//				Service s1 = new Service(ServiceType.SOS);
+//				s1.setEndpoint("http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi");
+//				s1.activate();
+//				
+//				Service s2 = new Service(ServiceType.SOS);
+//				s2.setEndpoint("http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi");
+//				s2.activate();
+//				
+//				ss.add(s1);
+//				ss.add(s2);
+//
+//				// send event to update 
+//				
+//				eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
+//						new HashMap<String, Object>() { 
+//					{
+//						put("object", getMapId());
+//						put("value", ss);
+//					}
+//				}));
+//				
+//				// TODO: add button to add services to query set 
+//			}
+//		});		
+		
+		ToolBar toolBarPropertiesHelp = new ToolBar(compositePropertiesToolbar, SWT.FLAT | SWT.RIGHT);
+		toolBarPropertiesHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
+		// tool bar item that shows some help information 
+		final ToolItem tltmPropertiesHelp = new ToolItem(toolBarPropertiesHelp, SWT.NONE);
+		tltmPropertiesHelp.setText("");
+		tltmPropertiesHelp.setImage(imgQuestion);
+		tltmPropertiesHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// create the help controller 
+				SwtUtil.createHelpController(stackProperties, 
+						tltmPropertiesHelp, compositePropertiesToolbar,
+						"With 'Mode' checked, sensor offerings will only be " + 
+						"shown when some observed property is selected. " + 
+						"If mulitple properties are selected, " + 
+						"the union will be shown. \n\n" + 
+						"If 'Mode' is unchecked, all " +
+						"sensor offerings will be shown if no selection is made." + 
+						"");
+			}
+		});		
 
 		treeViewerObservedProperties =
 				new CheckboxTreeViewer(stackProperties,	SWT.BORDER);
@@ -1184,12 +1285,12 @@ public class QuerySetTab extends CTabItem
 
 			@Override
 			public int getToolTipDisplayDelayTime(Object object) {
-				return 100; //msec
+				return 100; // msec
 			}
 
 			@Override
 			public int getToolTipTimeDisplayed(Object object) {
-				return 5000; //msec
+				return 5000; // msec
 			}
 			
 		});
@@ -1633,12 +1734,6 @@ public class QuerySetTab extends CTabItem
 		compositePlotPreviewNotSupported.setLayout(new GridLayout(1, true));
 		compositePlotPreviewNotSupported.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-//		Composite compositeText = 
-//				new Composite(compositePlotPreviewNotSupported, SWT.BORDER);
-//		compositeText.setLayout(new GridLayout(1, false));
-//		compositeText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-//		compositeText.setBackground(SWTResourceManager.getColor(255, 230, 230));
-		
 		compositePlotPreviewNotSupported.setBackground(SWTResourceManager.getColor(255, 230, 230));
 
 		StyledText stNotSupported = 
@@ -1647,6 +1742,13 @@ public class QuerySetTab extends CTabItem
 		stNotSupported.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		stNotSupported.setBackground(SWTResourceManager.getColor(255, 230, 230));
 		stNotSupported.setEnabled(false);
+
+		// make the text bold 
+		StyleRange styleRange = new StyleRange();
+		styleRange.start = 0;
+		styleRange.length = stNotSupported.getText().length();
+		styleRange.fontStyle = SWT.BOLD;
+		stNotSupported.setStyleRange(styleRange);
 						
 		/*
 		 * Preview stack - Plot Details 
@@ -2654,7 +2756,7 @@ public class QuerySetTab extends CTabItem
 
 		final TableViewerColumn colEmpty = new TableViewerColumn(tableViewer, SWT.NONE);
 		colEmpty.getColumn().setText("");
-		colEmpty.getColumn().setWidth(5);
+		colEmpty.getColumn().setWidth(20);
 		colEmpty.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -2664,7 +2766,7 @@ public class QuerySetTab extends CTabItem
 		
 		final TableViewerColumn colColor = new TableViewerColumn(tableViewer, SWT.NONE);
 		colColor.getColumn().setText("Color");
-		colColor.getColumn().setWidth(40);
+		colColor.getColumn().setWidth(50);
 		colColor.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
@@ -2778,7 +2880,7 @@ public class QuerySetTab extends CTabItem
 		eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
 				new HashMap<String, Object>() { 
 			{
-				put("object", offeringLayer);
+				put("object", getMapId());
 				put("value", getServices());
 			}
 		}));
@@ -4565,6 +4667,10 @@ public class QuerySetTab extends CTabItem
 			imgArrowDown.dispose();
 		if (imgColor != null)
 			imgColor.dispose();
+		if (imgEye != null)
+			imgEye.dispose();
+		if (imgEyeHalf != null)
+			imgEyeHalf.dispose();
 		
 		if (colorBg != null)
 			colorBg.dispose();
