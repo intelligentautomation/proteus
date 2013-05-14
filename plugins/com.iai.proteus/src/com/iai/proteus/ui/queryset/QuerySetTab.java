@@ -2752,7 +2752,7 @@ public class QuerySetTab extends CTabItem
 	private CheckboxTableViewer createServiceTableViewer(Composite composite) {
 		
 		CheckboxTableViewer tableViewer = 
-				CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.MULTI);
+				CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION);
 
 		final TableViewerColumn colEmpty = new TableViewerColumn(tableViewer, SWT.NONE);
 		colEmpty.getColumn().setText("");
@@ -2816,7 +2816,7 @@ public class QuerySetTab extends CTabItem
 			public String getText(Object element) {
 				if (element instanceof Service) {
 					Service service = (Service) element;
-					return service.getName();
+					return service.getEndpoint();
 				}
 				return "";
 			}
