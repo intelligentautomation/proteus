@@ -1,0 +1,46 @@
+delimiters "$", "$"
+
+query(serviceType, searchstrings, boundingboxes, start="1", max="5") ::= <<
+<?xml version="1.0"?>	
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results"
+outputSchema="http://www.isotc211.org/2005/gmd" startPosition="1" maxRecords="1000">
+  <csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+    <csw:ElementSetName>full</csw:ElementSetName> 
+    <csw:Constraint version="1.1.0">
+      <ogc:Filter>
+        <ogc:And>
+          <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>sys.siteuuid</ogc:PropertyName>
+            <ogc:Literal>{78C0463E-2FCE-4AB2-A9C9-6A34BF261F52}</ogc:Literal>
+          </ogc:PropertyIsEqualTo>
+          <ogc:PropertyIsEqualTo>
+            <ogc:PropertyName>keywords</ogc:PropertyName>
+            <ogc:Literal>sea_water_salinity</ogc:Literal>
+          </ogc:PropertyIsEqualTo>
+          <ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"> 
+            <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
+            <ogc:Literal>*sos*</ogc:Literal>
+          </ogc:PropertyIsLike>
+        </ogc:And> 
+      </ogc:Filter> 
+    </csw:Constraint> 
+  </csw:Query>
+</csw:GetRecords>
+>>
+
+propertyislike(p) ::= <<
+<ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
+    <ogc:PropertyName>AnyText</ogc:PropertyName>
+    <ogc:Literal>$p$</ogc:Literal>
+</ogc:PropertyIsLike>
+>>
+
+boundingbox(bb) ::= <<
+<ogc:Contains>
+    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+    <gml:Envelope>
+        <gml:lowerCorner>$bb.lowerCorner$</gml:lowerCorner>
+        <gml:upperCorner>$bb.upperCorner$</gml:upperCorner>
+    </gml:Envelope>
+</ogc:Contains>
+>>

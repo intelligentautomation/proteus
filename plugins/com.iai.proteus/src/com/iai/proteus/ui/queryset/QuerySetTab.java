@@ -77,6 +77,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -102,6 +104,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
@@ -132,8 +135,10 @@ import com.iai.proteus.common.sos.data.Field;
 import com.iai.proteus.common.sos.data.SensorData;
 import com.iai.proteus.common.sos.exception.ExceptionReportException;
 import com.iai.proteus.common.sos.model.SensorOffering;
+import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosDataRequest;
 import com.iai.proteus.common.sos.util.SosUtil;
+import com.iai.proteus.csw.ioos.EndpointParser;
 import com.iai.proteus.dialogs.DownloadModel;
 import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
@@ -163,6 +168,7 @@ import com.iai.proteus.queryset.FacetChangeToggle;
 import com.iai.proteus.queryset.FacetData;
 import com.iai.proteus.queryset.FacetDisplayStrategy;
 import com.iai.proteus.queryset.FormatFacet;
+import com.iai.proteus.queryset.ObservedPropertiesFilter;
 import com.iai.proteus.queryset.TimeFacet;
 import com.iai.proteus.ui.SwtUtil;
 import com.iai.proteus.ui.UIUtil;
@@ -370,8 +376,7 @@ public class QuerySetTab extends CTabItem
 	private Image imgDocument;
 	private Image imgSectorSelection;
 	private Image imgSectorClear;
-	private Image imgLike; 
-	private Image imgDislike;
+	private Image imgMagnifier;
 	private Image imgChart;
 	private Image imgMap;
 	private Image imgDatabase;
@@ -464,8 +469,7 @@ public class QuerySetTab extends CTabItem
 		imgDocument = UIUtil.getImage("icons/fugue/document.png");
 		imgSectorSelection = UIUtil.getImage("icons/fugue/zone--plus.png");
 		imgSectorClear = UIUtil.getImage("icons/fugue/zone--minus.png");
-		imgLike = UIUtil.getImage("icons/fugue/star.png");
-		imgDislike = UIUtil.getImage("icons/fugue/star-empty.png");
+		imgMagnifier = UIUtil.getImage("icons/fugue/magnifier.png");
 		imgChart = UIUtil.getImage("icons/fugue/chart.png");
 		imgMap = UIUtil.getImage("icons/fugue/map.png");
 		imgDatabase = UIUtil.getImage("icons/fugue/database.png");
@@ -1153,8 +1157,6 @@ public class QuerySetTab extends CTabItem
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				final boolean checked = tltmPropertiesMode.getSelection();
-				// update mode
-//				offeringLayer.set
 				// update image 
 				tltmPropertiesMode.setImage(checked ? imgEyeHalf : imgEye);
 				// send update request
@@ -1170,47 +1172,6 @@ public class QuerySetTab extends CTabItem
 				}));
 			}
 		});
-		
-		// TODO: TEST - remove
-//		ToolItem itemTest2 = new ToolItem(toolBarProperties, SWT.NONE);
-//		itemTest2.setText("Test");
-//		itemTest2.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				
-//				// TODO: automatically select 'mode' 
-//				// TODO: update sos offering layer (needed?)
-//				
-//				// TODO: get services from IOOS CSW
-//				
-//				// TODO: add services to a list and update OPs 
-//				
-//				final Collection<Service> ss = new ArrayList<Service>();
-//				
-//				Service s1 = new Service(ServiceType.SOS);
-//				s1.setEndpoint("http://coolcomms.mote.org/cgi-bin/sos/oostethys_sos.cgi");
-//				s1.activate();
-//				
-//				Service s2 = new Service(ServiceType.SOS);
-//				s2.setEndpoint("http://www.neracoos.org/cgi-bin/sos/V1.0/oostethys_sos.cgi");
-//				s2.activate();
-//				
-//				ss.add(s1);
-//				ss.add(s2);
-//
-//				// send event to update 
-//				
-//				eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
-//						new HashMap<String, Object>() { 
-//					{
-//						put("object", getMapId());
-//						put("value", ss);
-//					}
-//				}));
-//				
-//				// TODO: add button to add services to query set 
-//			}
-//		});		
 		
 		ToolBar toolBarPropertiesHelp = new ToolBar(compositePropertiesToolbar, SWT.FLAT | SWT.RIGHT);
 		toolBarPropertiesHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
@@ -1235,12 +1196,29 @@ public class QuerySetTab extends CTabItem
 			}
 		});		
 
+		// add support for search 
+		final ObservedPropertiesFilter filter = new ObservedPropertiesFilter();
+		// text area for filtering observed properties
+		final Text searchText = new Text(stackProperties, 
+				SWT.BORDER | SWT.SEARCH  | SWT.ICON_CANCEL);
+		searchText.setMessage("type filter text");
+		searchText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		// listener to update search results 
+		searchText.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent ke) {
+				filter.setSearchText(searchText.getText());
+				treeViewerObservedProperties.refresh();
+			}
+		});
+		
 		treeViewerObservedProperties =
-				new CheckboxTreeViewer(stackProperties,	SWT.BORDER);
+				new CheckboxTreeViewer(stackProperties, SWT.BORDER);
 		treeObservedProperties = treeViewerObservedProperties.getTree();
 		treeObservedProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-
 		treeObservedProperties.setHeaderVisible(true);
+		
+		// add the filter 
+		treeViewerObservedProperties.addFilter(filter);
 		
 		// activate the tool tip support for the viewer
 		ColumnViewerToolTipSupport.enableFor(treeViewerObservedProperties, 
@@ -1343,6 +1321,11 @@ public class QuerySetTab extends CTabItem
 
 		treeViewerObservedProperties.setContentProvider(contentProvider);
 		treeViewerObservedProperties.setInput(observedPropertiesHolder);
+		treeViewerObservedProperties.addSelectionChangedListener(new ISelectionChangedListener() {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+			}
+		});
 		treeViewerObservedProperties.addCheckStateListener(new ICheckStateListener() {
 			@Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -1400,6 +1383,97 @@ public class QuerySetTab extends CTabItem
 					}
 				}
 				return false;
+			}
+		});
+		
+		// discovery button
+		Button btnDiscover = new Button(stackProperties, SWT.NONE);
+		btnDiscover.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		btnDiscover.setText("Discover via Catalog Service");
+		btnDiscover.setImage(imgMagnifier);
+		
+		btnDiscover.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("serial")
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				
+				// automatically select 'mode'
+				tltmPropertiesMode.setSelection(true);
+				// update image 
+				tltmPropertiesMode.setImage(imgEyeHalf);
+				// send update request
+				eventAdminService.sendEvent(new Event(EventTopic.QS_FACET_CHANGED.toString(), 
+						new HashMap<String, Object>() { 
+					{
+						put("object", getMapId());
+						put("value", new ArrayList<FacetChangeToggle>());
+						put("mode", FacetDisplayStrategy.SHOW_SELECTED); 
+					}
+				}));				
+				
+
+				// TODO: update sos offering layer (needed?)
+				
+				Job job = new Job("Finding Sensor Observation Services") {
+
+					@SuppressWarnings("serial")
+					@Override
+					protected IStatus run(IProgressMonitor monitor) {
+						
+						final Collection<Service> sosServices = 
+								new HashSet<Service>();
+
+						try {
+							
+							monitor.beginTask("Contacting CSWs...", 1);
+							
+							// TODO: get services from IOOS CSW
+							Collection<Service> foundServices = 
+									new EndpointParser().run1();
+							
+							monitor.beginTask("Parsing Capabilities...", 
+									foundServices.size());
+							
+							for (Service service : foundServices) {
+								
+								SosCapabilities caps = 
+										SosUtil.getCapabilities(service.getEndpoint());
+								
+								// make sure we could parse the Capabilities
+								// document 
+								if (caps != null) {
+
+									String name = SosUtil.getServiceTitle(caps);
+									if (name != null)
+										service.setName(name);
+									
+									// collect SOSs 
+									sosServices.add(service);
+								}
+								
+								monitor.worked(1);
+							}
+
+						} finally {
+							monitor.done();
+						}
+						
+						// send event to update 
+						eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
+								new HashMap<String, Object>() { 
+							{
+								put("object", getMapId());
+								put("value", sosServices);
+							}
+						}));						
+
+						return org.eclipse.core.runtime.Status.OK_STATUS;
+					}
+				};
+				job.setUser(true);
+				job.schedule();				
+				
+				// TODO: add button to add matching services to query set 				
 			}
 		});
 
@@ -2029,7 +2103,7 @@ public class QuerySetTab extends CTabItem
 			}
 		});	
 		
-		final Group groupMaps = new Group(compositeSavedMaps, SWT.BORDER);
+		final Group groupMaps = new Group(compositeSavedMaps, SWT.NONE);
 		groupMaps.setLayout(new GridLayout(1, false));
 		groupMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		groupMaps.setText("Saved maps");
@@ -2299,7 +2373,7 @@ public class QuerySetTab extends CTabItem
 			}
 		});		
 		
-		Group groupWmsMaps = new Group(compositeAvailableMaps, SWT.BORDER);
+		Group groupWmsMaps = new Group(compositeAvailableMaps, SWT.NONE);
 		groupWmsMaps.setLayout(new GridLayout(1, false));
 		groupWmsMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		groupWmsMaps.setText("Available maps");
@@ -4629,10 +4703,8 @@ public class QuerySetTab extends CTabItem
 			imgSectorSelection.dispose();
 		if (imgSectorClear != null)
 			imgSectorClear.dispose();
-		if (imgLike != null)
-			imgLike.dispose();
-		if (imgDislike != null)
-			imgDislike.dispose();
+		if (imgMagnifier != null)
+			imgMagnifier.dispose();
 		if (imgChart != null)
 			imgChart.dispose();
 		if (imgMap != null)

@@ -56,7 +56,7 @@ public class ServiceContentProvider implements IStructuredContentProvider {
 			List<Service> otherServices = new ArrayList<Service>();
 			
 			for (Service service : services) {
-				if (service.isLiked())
+				if (service.isVisible())
 					likedServices.add(service);
 				else
 					otherServices.add(service);

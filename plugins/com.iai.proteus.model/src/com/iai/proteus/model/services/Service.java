@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.iai.proteus.model.Deletable;
-import com.iai.proteus.model.Likable;
+import com.iai.proteus.model.Visible;
 import com.iai.proteus.model.map.MapLayer;
 import com.iai.proteus.model.properties.SosServicePropertySource;
 
@@ -22,7 +22,7 @@ import com.iai.proteus.model.properties.SosServicePropertySource;
  *
  */
 public class Service extends MapLayer 
-	implements Cloneable, Deletable, Likable, IAdaptable
+	implements Cloneable, Deletable, Visible, IAdaptable
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -30,8 +30,8 @@ public class Service extends MapLayer
 	private String endpoint;
 	private ServiceType serviceType;
 	
-	// indicates a "favorite" service  
-	private boolean liked; 
+	// indicates if the service is visible or not  
+	private boolean visible; 
 	// indicates that connection to service has been successful
 	private boolean success; 
 
@@ -44,8 +44,9 @@ public class Service extends MapLayer
 	public Service() {
 		// defaults
 		property = null;
-		liked = false; 
+		visible = true; 
 		success = false;
+		setName("Untitled SOS");
 		// note: a service should be inactive by default 
 		// see MayLayer.active
 	}
@@ -58,7 +59,6 @@ public class Service extends MapLayer
 	public Service(ServiceType type) {
 		this();
 		this.serviceType = type;
-		setName("Untitled");
 	}
 	
 	/**
@@ -104,29 +104,28 @@ public class Service extends MapLayer
 	}
 	
 	@Override
-	public void like() {
-		liked = true;
+	public void show() {
+		visible = true;
 	}
 
 	@Override
-	public void dislike() {
-		liked = false;
-		
+	public void hide() {
+		visible = false;
 	}
 	
 	/**
-	 * @param liked the liked to set
+	 * @param visible the liked to set
 	 */
-	public void setLiked(boolean liked) {
-		this.liked = liked;
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	/**
 	 * @return the liked
 	 */
 	@Override
-	public boolean isLiked() {
-		return liked;
+	public boolean isVisible() {
+		return visible;
 	}
 	
 	/**

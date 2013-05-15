@@ -6,15 +6,15 @@
 package com.iai.proteus.model;
 
 /**
- * Implementing classes can be favorites 
+ * Implementing classes can set visibility status 
  * 
  * @author Jakob Henriksson 
  *
  */
-public interface Likable {
+public interface Visible {
 	
-	public void like();
-	public void dislike(); 
-	public boolean isLiked(); 
+	public void show();
+	public void hide(); 
+	public boolean isVisible(); 
 
 }

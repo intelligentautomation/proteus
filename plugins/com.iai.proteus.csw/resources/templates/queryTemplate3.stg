@@ -1,0 +1,37 @@
+delimiters "$", "$"
+
+query(serviceType, searchstrings, boundingboxes, start="1", max="5") ::= <<
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="1" maxRecords="10"> 
+    <csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml"> 
+        <csw:ElementSetName>full</csw:ElementSetName> 
+        <csw:Constraint version="1.1.0"> 
+            <ogc:Filter> 
+                <ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"> 
+                    <ogc:PropertyIsEqualTo> 
+                        <ogc:PropertyName>dc:title</ogc:PropertyName> 
+                        <ogc:Literal>Sample Document</ogc:Literal> 
+                    </ogc:PropertyIsEqualTo> 
+                </ogc:PropertyIsLike>
+            </ogc:Filter> 
+        </csw:Constraint> 
+    </csw:Query> 
+</csw:GetRecords>
+>>
+
+propertyislike(p) ::= <<
+<ogc:PropertyIsLike wildCard="%" singleChar="_" escapeChar="\">
+    <ogc:PropertyName>AnyText</ogc:PropertyName>
+    <ogc:Literal>$p$</ogc:Literal>
+</ogc:PropertyIsLike>
+>>
+
+boundingbox(bb) ::= <<
+<ogc:Contains>
+    <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+    <gml:Envelope>
+        <gml:lowerCorner>$bb.lowerCorner$</gml:lowerCorner>
+        <gml:upperCorner>$bb.upperCorner$</gml:upperCorner>
+    </gml:Envelope>
+</ogc:Contains>
+>>

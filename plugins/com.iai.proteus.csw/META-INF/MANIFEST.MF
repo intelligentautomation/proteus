@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Catalog Service for the Web
+Bundle-SymbolicName: com.iai.proteus.csw
+Bundle-Version: 1.0.0
+Bundle-Vendor: IAI
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ lib/ST-4.0.5.jar,
+ lib/antlr-3.4-complete.jar
+Require-Bundle: com.iai.proteus.common;bundle-version="1.0.0",
+ com.iai.proteus.model;bundle-version="1.0.0"
+Export-Package: com.iai.proteus.csw,
+ com.iai.proteus.csw.ioos,
+ com.iai.proteus.csw.parser,
+ org.stringtemplate.v4
