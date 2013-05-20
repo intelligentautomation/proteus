@@ -593,51 +593,6 @@ public class WorldWindView extends ViewPart
 		}
 	}
 
-	/**
-	 * Create SOS layer from the given service 
-	 * 
-	 * @param mapId
-	 * @param service
-	 */
-//	@SuppressWarnings("unused")
-//	private void createSosLayer(final MapId mapId, final Service service) {
-//		createSosLayer(mapId, new ArrayList<Service>() {
-//			private static final long serialVersionUID = 1L;
-//			{
-//				add(service);
-//			}
-//		});
-//	}
-	
-	/**
-	 * Create SOS layer from the given services 
-	 * 
-	 * @param mapId
-	 * @param services
-	 */
-//	private void createSosLayer(final MapId mapId, List<Service> services) {
-//
-////		SosCapabilitiesCache cache = SosCapabilitiesCache.getInstance();
-//
-//		List<Renderable> allMarkers = new ArrayList<Renderable>();
-//
-//		for (final Service service : services) {
-//
-//			// NOTE: we assume that the services have cached capabilities
-//			//       documents
-//
-//			SosCapabilities capabilities =
-//					SosUtil.getCapabilities(service.getEndpoint());
-//			List<Renderable> markers =
-//					WorldWindUtils.getCapabilitiesMarkers(capabilities,
-//							service.getColor());
-//
-//			allMarkers.addAll(markers);
-//		}
-//
-//		// create layer with markers using the default map ID
-//		createSosLayerWithMarkers(mapId, allMarkers);
-//	}
 	
 	/**
 	 * Initialize a #{link SosOfferingLayer}
@@ -927,29 +882,6 @@ public class WorldWindView extends ViewPart
 		layerList.removeAll(movedLayers);
 		// re-locate the moved layers
 		layerList.addAll(idx, movedLayers);
-		
-		
-//		for (int i = mapLayers.size() - 1; i >= 0; i--) {
-//			IMapLayer mapLower = mapLayers.get(i);
-//			if (i - 1 >= 0) {
-//				IMapLayer mapHigher = mapLayers.get(i - 1);
-//				
-//				// move mapHigher above mapLower
-//				Layer layerLower = getLayer(mapLower);
-//				Layer layerHigher = getLayer(mapHigher);
-//				if (layerLower != null && layerHigher != null) {
-//
-//					int idxLower = layerList.indexOf(layerLower);
-//					int idxHigher = layerList.indexOf(layerHigher);
-//					if (idxLower != -1 && idxHigher != -1) {
-//						
-//						// move 
-//						layerList.remove(layerHigher);
-//						layerList.add(idxLower, layerHigher);
-//					}
-//				}
-//			}
-//		}
 	}
 
 	/**
@@ -959,12 +891,19 @@ public class WorldWindView extends ViewPart
 	 */
 	private void enableRegionSelection(MapId mapId) {
 		Layer layer = getLayer(mapId);
+
+		// initialize SOS offering layer if needed
+		if (layer == null) {
+			initializeOfferingsLayer(mapId);
+			layer = getLayer(mapId);
+		}
+		
 		if (layer != null) {
 			if (layer instanceof SosOfferingLayer) {
 				SosOfferingLayer offeringLayer = (SosOfferingLayer) layer;
 				offeringLayer.enableSector();
 			}
-		}
+		} 
 	}
 
 	/**

@@ -833,8 +833,7 @@ public class QuerySetTab extends CTabItem
 				ManageQuerySetServicesDialog dialog = 
 						new ManageQuerySetServicesDialog(site.getShell(), 
 								QuerySetTab.this, ServiceType.SOS);
-				int res = dialog.open();
-				if (res == IDialogConstants.OK_ID) {
+				if (dialog.open() == IDialogConstants.OK_ID) {
 					
 					// toggle layers - send event
 					eventAdminService.sendEvent(new Event(EventTopic.QS_TOGGLE_SERVICES.toString(), 
@@ -1059,22 +1058,19 @@ public class QuerySetTab extends CTabItem
 				"the sensor offerings included in this query set.");
 		lblGeographicExplanation.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
 
-		final String strSectorOn = "Select region";
-		final String strSectorOff = "Clear region";
-
-		Button btnRegion = new Button(stackGeographicArea, SWT.PUSH);
-		btnRegion.setText(strSectorOn);
-		btnRegion.setImage(imgSectorSelection);
-		btnRegion.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
+		Button btnSetRegion = new Button(stackGeographicArea, SWT.PUSH);
+		btnSetRegion.setText("Select region");
+		btnSetRegion.setImage(imgSectorSelection);
+		btnSetRegion.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
 
 		btnClearRegion = new Button(stackGeographicArea, SWT.PUSH);
-		btnClearRegion.setText(strSectorOff);
+		btnClearRegion.setText("Clear region");
 		btnClearRegion.setImage(imgSectorClear);
 		btnClearRegion.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
 		// default
 		btnClearRegion.setEnabled(false);
 
-		btnRegion.addSelectionListener(new SelectionAdapter() {
+		btnSetRegion.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("serial")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -2202,7 +2198,8 @@ public class QuerySetTab extends CTabItem
 			}
 		});		
 		
-		treeViewerSavedMaps = new CheckboxTreeViewer(groupMaps, SWT.BORDER | SWT.MULTI);
+		treeViewerSavedMaps = new CheckboxTreeViewer(groupMaps, 
+				SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		Tree treeSavedMaps = treeViewerSavedMaps.getTree();
 		treeSavedMaps.setHeaderVisible(true);
 		treeSavedMaps.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -2419,7 +2416,8 @@ public class QuerySetTab extends CTabItem
 		});	
 		
 		// tree viewer showing services 
-		tableViewerWmsServices = new TableViewer(compositeServices, SWT.BORDER | SWT.MULTI);
+		tableViewerWmsServices = new TableViewer(compositeServices, 
+				SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
 		Table tableServices = tableViewerWmsServices.getTable();
 		tableServices.setHeaderVisible(true);
 		tableServices.setLinesVisible(true);
@@ -2685,7 +2683,9 @@ public class QuerySetTab extends CTabItem
 		};
 		
 		treeFiltered = 
-				new FilteredTree(compositeAvailableMapLayers, SWT.BORDER | SWT.CHECK, filter, true);
+				new FilteredTree(compositeAvailableMapLayers, 
+						SWT.BORDER | SWT.CHECK | SWT.FULL_SELECTION, 
+						filter, true);
 		// disabled by default 
 		treeFiltered.setEnabled(false);
 		treeViewerWmsLayers = treeFiltered.getViewer();
