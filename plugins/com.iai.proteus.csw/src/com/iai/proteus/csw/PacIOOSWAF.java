@@ -3,14 +3,12 @@ package com.iai.proteus.csw;
 import java.io.File;
 import java.io.IOException;
 
-
 import org.apache.commons.io.FileUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
 
 import com.iai.proteus.common.Util;
-import com.iai.proteus.csw.parser.GetRecordsResponseParser;
 
 public class PacIOOSWAF {
 	
@@ -50,13 +48,13 @@ public class PacIOOSWAF {
 		
 		System.out.println("Response: " + response);
 		
-		GetRecordsResponse getRecordsResponse = 
-			new GetRecordsResponseParser().parse(response);
-		
-		for (Record record : getRecordsResponse.getRecords()) {
-			System.out.println("Record title: " + record.getTitle());
-			System.out.println("Source: " + record.getSource());
-		}
+//		GetRecordsResponse getRecordsResponse = 
+//			new GetRecordsResponseParser().parse(response);
+//		
+//		for (Record record : getRecordsResponse.getRecords()) {
+//			System.out.println("Record title: " + record.getTitle());
+//			System.out.println("Source: " + record.getSource());
+//		}
 		
 	}
 	
