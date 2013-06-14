@@ -412,20 +412,9 @@
          unpack="false"/>
 
    <plugin
-         id="com.iai.proteus.macosx"
-         os="macosx"
-         ws="cocoa"
-         arch="x86,x86_64"
-         download-size="0"
-         install-size="0"
-         version="1.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="com.iai.proteus.linux"
          os="linux"
-         ws="linux"
+         ws="gtk"
          arch="x86,x86_64"
          download-size="0"
          install-size="0"
@@ -445,6 +434,13 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.iai.proteus.csw"
+         download-size="0"
+         install-size="0"
+         version="1.0.0"
          unpack="false"/>
 
 </feature>

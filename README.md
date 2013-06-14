@@ -6,10 +6,6 @@ desktop client for sensor discovery and management developed by
 
 ![proteus](https://raw.github.com/intelligentautomation/proteus/master/utilities/screenshots/proteus-1.2.0.png)
 
-# Getting Started
-
-*Coming soon.*
-
 # Development 
 
 The following describes software dependencies and how to compile and build Proteus from the source code. 

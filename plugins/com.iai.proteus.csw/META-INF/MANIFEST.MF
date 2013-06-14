@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Catalog Service for the Web
 Bundle-SymbolicName: com.iai.proteus.csw
 Bundle-Version: 1.0.0
-Bundle-Vendor: IAI
+Bundle-Vendor: Intelligent Automation Inc.
 Bundle-Activator: com.iai.proteus.csw.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,

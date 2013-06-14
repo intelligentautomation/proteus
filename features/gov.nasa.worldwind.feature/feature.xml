@@ -23,6 +23,8 @@
 
    <plugin
          id="gov.nasa.worldwind"
+         os="linux,macosx,win32"
+         arch="x86,x86_64"
          download-size="0"
          install-size="0"
          version="1.3.0"
