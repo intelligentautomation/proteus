@@ -252,7 +252,7 @@ public class WorldWindView extends ViewPart
 		// get service 
 		BundleContext ctx = Activator.getContext();
 		// create handler 
-		EventHandler handler = new EventHandler() {
+		EventHandler handlerQuerySet = new EventHandler() {
 			@Override
 			public void handleEvent(final Event event) {
 				
@@ -403,7 +403,7 @@ public class WorldWindView extends ViewPart
 					}
 				}
 				
-				// remove WMS map layers assocaited with a service 
+				// remove WMS map layers associated with a service 
 				else if (match(event, EventTopic.QS_MAPS_DELETE_FROM_SERVICE)) {
 					
 					if (value == null)
@@ -414,13 +414,35 @@ public class WorldWindView extends ViewPart
 
 			}
 		};
-
+		
 		// register service 
-		Dictionary<String,String> properties = new Hashtable<String, String>();
-		properties.put(EventConstants.EVENT_TOPIC, 
+		Dictionary<String,String> propertiesQuerySet = 
+				new Hashtable<String, String>();
+		propertiesQuerySet.put(EventConstants.EVENT_TOPIC, 
 				EventTopic.TOPIC_QUERYSET.toString());
 		// listen to query set topics 
-		ctx.registerService(EventHandler.class.getName(), handler, properties);
+		ctx.registerService(EventHandler.class.getName(), 
+				handlerQuerySet, propertiesQuerySet);
+		
+		
+		// handler for World Wind related events 
+		EventHandler handlerWorldWind = new EventHandler() {
+			@Override
+			public void handleEvent(final Event event) {
+				// toggle WMS map layer 
+				if (match(event, EventTopic.WW_REDRAW)) {
+					getWwd().redrawNow();
+				}				
+			}
+		};		
+		
+		Dictionary<String, String> propertiesWorldWind = 
+				new Hashtable<String, String>();
+		propertiesWorldWind.put(EventConstants.EVENT_TOPIC, 
+				EventTopic.TOPIC_WW.toString());
+		// list to world wind events 
+		ctx.registerService(EventHandler.class.getName(), 
+				handlerWorldWind, propertiesWorldWind);
 		
 	}
 	

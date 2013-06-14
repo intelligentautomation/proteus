@@ -3,7 +3,7 @@
  * 
  * All Rights Reserved.
  */
-package com.iai.proteus;
+package com.iai.proteus.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -309,6 +309,10 @@ public class CommunityHubAlertsView extends ViewPart
 					@Override
 					public void run() {
 						tableViewer.refresh(true);
+						
+						// send event to update map
+						eventAdminService.sendEvent(new Event(EventTopic.WW_REDRAW.toString(), 
+								new HashMap<String, Object>()));
 					}
 				});
 			}

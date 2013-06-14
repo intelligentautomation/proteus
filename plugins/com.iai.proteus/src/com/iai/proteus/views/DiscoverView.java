@@ -496,6 +496,8 @@ public class DiscoverView extends ViewPart
 		querySetTab.setDirty(false);
 		// has been saved before
 		querySetTab.setSaved(true);
+		// has been named before
+		querySetTab.setNamed(true);
 		// update title 
 		querySetTab.setText(querySet.getTitle());
 
@@ -722,7 +724,7 @@ public class DiscoverView extends ViewPart
 			if (result == MessageDialog.OK) {
 
 				// provide a name 
-				if (!querySetTab.isSaved()) {
+				if (!querySetTab.isNamed()) {
 					querySetTab.nameQuerySet();
 				}
 

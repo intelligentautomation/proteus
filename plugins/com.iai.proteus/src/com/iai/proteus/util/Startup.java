@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
 import com.iai.proteus.Activator;
-import com.iai.proteus.BundleUtils;
+import com.iai.proteus.common.BundleUtils;
 import com.iai.proteus.common.sos.GetCapabilities;
 import com.iai.proteus.common.sos.SosCapabilitiesCache;
 import com.iai.proteus.common.sos.model.SosCapabilities;

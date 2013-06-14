@@ -1,0 +1,16 @@
+<?xml version="1.0"?>	
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" outputSchema="http://www.isotc211.org/2005/gmd" startPosition="1" maxRecords="1000">
+  <csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+    <csw:ElementSetName>full</csw:ElementSetName> 
+    <csw:Constraint version="1.1.0">
+      <ogc:Filter>
+        <ogc:And>
+          <ogc:PropertyIsLike wildCard="*" escape="\" singleChar="?"> 
+            <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
+            <ogc:Literal>*sos*</ogc:Literal>
+          </ogc:PropertyIsLike>
+        </ogc:And> 
+      </ogc:Filter> 
+    </csw:Constraint> 
+  </csw:Query>
+</csw:GetRecords>

@@ -608,16 +608,12 @@ public class CommunityHubGroupsView extends ViewPart implements IPerspectiveList
 		 */
 		public static long toMillis(UpdateInterval interval) {
 			switch (interval) {
-			// TODO: set back to normal!
 			case ONEMINUTE:
-				return TimeUnit.SECONDS.toMillis(4);
-//				return TimeUnit.MINUTES.toMillis(1);
+				return TimeUnit.MINUTES.toMillis(1);
 			case FIVEMINUTES:
-				return TimeUnit.SECONDS.toMillis(10);
-//				return TimeUnit.MINUTES.toMillis(5);
+				return TimeUnit.MINUTES.toMillis(5);
 			case TENMINUTES:
-				return TimeUnit.SECONDS.toMillis(20);
-//				return TimeUnit.MINUTES.toMillis(10);
+				return TimeUnit.MINUTES.toMillis(10);
 			default:
 				return 0L;
 			}

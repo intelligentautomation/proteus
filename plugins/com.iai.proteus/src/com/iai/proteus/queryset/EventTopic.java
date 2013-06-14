@@ -15,7 +15,7 @@ public enum EventTopic {
 	
 	// catch all topic for query sets
 	TOPIC_QUERYSET("proteus/queryset/*"),
-	
+	TOPIC_WW("proteus/worldwind/*"), 
 	
 	// event topic tags 
 	
@@ -63,7 +63,10 @@ public enum EventTopic {
 	// remove all map layers from a particular service 
 	QS_MAPS_DELETE_FROM_SERVICE("proteus/queryset/map/layer/remove_service"), 
 	
-	QS_FLY_TO_LATLON("proteus/queryset/fly"); 
+	QS_FLY_TO_LATLON("proteus/queryset/fly"), 
+
+	// ask World Wind to redraw 
+	WW_REDRAW("proteus/worldwind/redraw"); 
 	
 	
 	private String topic;

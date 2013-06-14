@@ -1,7 +1,13 @@
+/*
+ * Copyright (C) 2013 Intelligent Automation Inc. 
+ * 
+ * All Rights Reserved.
+ */
 package com.iai.proteus.csw.ioos;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,6 +31,12 @@ import org.xml.sax.SAXException;
 import com.iai.proteus.model.services.Service;
 import com.iai.proteus.model.services.ServiceType;
 
+/**
+ * Simple XPath-based parser for extracting end-points for a CSW response
+ * 
+ * @author Jakob Henriksson
+ *
+ */
 public class EndpointParser {
 
 	/**
@@ -35,27 +47,34 @@ public class EndpointParser {
 	
 	}
 	
-	public static void main(String[] args) {
-		new EndpointParser().run1();
-	}
-	
-	public Collection<Service> run1() {
-		
-		String xmlFile = "c:/Users/jhenriksson/Dropbox/Work/smt/data/ioos-csw-example1.xml";
-		String xPath = "//connectPoint//URL/node()";
+	/**
+	 * Finds end points in an XML response from a CSW 
+	 * 
+	 * @param xmlResponse
+	 * @return
+	 */
+	public Collection<Service> findEndpoints(String xmlResponse) {
 		
 		Collection<Service> services = new HashSet<Service>();
 		
+		// basic check 
+		if (xmlResponse == null || xmlResponse.equals(""))
+			return services; 
+
+		// XPath query 
+		String xPath = "//connectPoint//URL/node()";
+		
 		try {
-			
-			String uri = new File(xmlFile).toURI().toString();
-			
+
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			
 			builder = factory.newDocumentBuilder();
 
-			Document doc = builder.parse(uri);
+			// create input stream from XML response 
+			InputStream is = new ByteArrayInputStream(xmlResponse.getBytes("UTF-8"));
+
+			Document doc = builder.parse(is);
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
 			xpath.setNamespaceContext(new NamespaceResolver());
@@ -102,6 +121,8 @@ public class EndpointParser {
 //			
 //			final long endTime = System.currentTimeMillis();
 //			System.out.println("Total execution time: " + (endTime - startTime) );
+			
+			System.out.println("Returning with no error...");
 			
 			return services;
 			
@@ -155,7 +176,7 @@ public class EndpointParser {
 			return null;
 		}
 
-		public Iterator getPrefixes(String namespaceURI) {
+		public Iterator<?> getPrefixes(String namespaceURI) {
 			// Not needed in this context.
 			return null;
 		}

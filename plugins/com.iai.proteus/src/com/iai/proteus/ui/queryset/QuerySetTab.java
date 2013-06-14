@@ -9,6 +9,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Sector;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ import com.iai.proteus.common.sos.model.SensorOffering;
 import com.iai.proteus.common.sos.model.SosCapabilities;
 import com.iai.proteus.common.sos.util.SosDataRequest;
 import com.iai.proteus.common.sos.util.SosUtil;
-import com.iai.proteus.csw.ioos.EndpointParser;
+import com.iai.proteus.csw.ioos.NoaaGeoportalCsw;
 import com.iai.proteus.dialogs.DownloadModel;
 import com.iai.proteus.dialogs.DownloadModelHelper;
 import com.iai.proteus.dialogs.GetObservationProgressDialog;
@@ -202,6 +203,8 @@ public class QuerySetTab extends CTabItem
 	private boolean dirty;
 	// True if the query set has been saved before, false otherwise 
 	private boolean saved;
+	// True if the query set has been named, false otherwise 
+	private boolean named;
 
 	// Prefix added to dirty/modified query sets
 	public static String dirtyPrefix = "*";
@@ -509,6 +512,7 @@ public class QuerySetTab extends CTabItem
 		// unsaved
 		dirty = true;
 		saved = false;
+		named = false;
 
 		this.querySetName = "Untitled";
 		
@@ -1382,12 +1386,47 @@ public class QuerySetTab extends CTabItem
 			}
 		});
 		
+		final Group groupDiscovery = new Group(stackProperties, SWT.NONE);
+		groupDiscovery.setLayout(new GridLayout(1, false));
+		groupDiscovery.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+		groupDiscovery.setText("Discover via Catalog");
+		
+		final ToolBar toolBarDiscoveryHelp = new ToolBar(groupDiscovery, SWT.FLAT | SWT.RIGHT);
+		toolBarDiscoveryHelp.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		
+		// tool bar item that shows some help information 
+		final ToolItem tltmDiscoveryHelp = new ToolItem(toolBarDiscoveryHelp, SWT.NONE);
+		tltmDiscoveryHelp.setText("");
+		tltmDiscoveryHelp.setImage(imgQuestion);
+		tltmDiscoveryHelp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// create the help controller 
+				SwtUtil.createHelpController(stackProperties, 
+						tltmDiscoveryHelp, groupDiscovery,
+						"Use 'Discover' to search CSWs for SOSs." 
+//						"\n\n" + 
+//						"Then click 'Save services' to save the relevant SOSs " + 
+//								"to the query set.
+						);
+
+			}
+		});					
+		
 		// discovery button
-		Button btnDiscover = new Button(stackProperties, SWT.NONE);
+		Button btnDiscover = new Button(groupDiscovery, SWT.NONE);
 		btnDiscover.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-		btnDiscover.setText("Discover via Catalog Service");
+		btnDiscover.setText("Discover");
 		btnDiscover.setImage(imgMagnifier);
 		
+		// add discovery to query set 
+//		final Button btnAddToQuerySet = new Button(groupDiscovery, SWT.NONE);
+//		btnAddToQuerySet.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+//		btnAddToQuerySet.setText("Save services");
+//		btnAddToQuerySet.setImage(imgSave);
+//		// default
+//		btnAddToQuerySet.setEnabled(false);
+
 		btnDiscover.addSelectionListener(new SelectionAdapter() {
 			@SuppressWarnings("serial")
 			@Override
@@ -1406,13 +1445,10 @@ public class QuerySetTab extends CTabItem
 						put("mode", FacetDisplayStrategy.SHOW_SELECTED); 
 					}
 				}));				
-				
 
 				// TODO: update sos offering layer (needed?)
 				
 				Job job = new Job("Finding Sensor Observation Services") {
-
-					@SuppressWarnings("serial")
 					@Override
 					protected IStatus run(IProgressMonitor monitor) {
 						
@@ -1423,9 +1459,9 @@ public class QuerySetTab extends CTabItem
 							
 							monitor.beginTask("Contacting CSWs...", 1);
 							
-							// TODO: get services from IOOS CSW
+							// get services from NOAA/IOOS CSW
 							Collection<Service> foundServices = 
-									new EndpointParser().run1();
+									new NoaaGeoportalCsw().searchForSos();
 							
 							monitor.beginTask("Parsing Capabilities...", 
 									foundServices.size());
@@ -1450,6 +1486,8 @@ public class QuerySetTab extends CTabItem
 								monitor.worked(1);
 							}
 
+						} catch (IOException e) {
+							log.error("IO Exception: " + e.getMessage());
 						} finally {
 							monitor.done();
 						}
@@ -1468,10 +1506,17 @@ public class QuerySetTab extends CTabItem
 				};
 				job.setUser(true);
 				job.schedule();				
-				
-				// TODO: add button to add matching services to query set 				
 			}
-		});
+		});		
+
+		// listener to add selected observed properties and their services 
+		// to the query set 
+//		btnAddToQuerySet.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent event) {
+//				
+//			}
+//		});
 
 		/*
 		 * STACK: time
@@ -2308,6 +2353,8 @@ public class QuerySetTab extends CTabItem
 							
 							// maintain activity status of model object 
 							map.setActive(treeItem.getChecked());
+							
+							setDirty(true);
 							
 							 // notify listeners that the layer should be toggled 
 							eventAdminService.sendEvent(new Event(EventTopic.QS_MAPS_LAYER_TOGGLE.toString(), 
@@ -4789,6 +4836,24 @@ public class QuerySetTab extends CTabItem
 		saved = status;
 	}	
 	
+	/**
+	 * Returns true if the query set has been named 
+	 * 
+	 * @return
+	 */
+	public boolean isNamed() {
+		return named;
+	}
+	
+	/**
+	 * Sets whether the query set has been named 
+	 * 
+	 * @param status
+	 */
+	public void setNamed(boolean status) {
+		named = status;
+	}
+	
 	@Override
 	public void setText(String text) {
 		this.querySetName = text;
@@ -4825,6 +4890,7 @@ public class QuerySetTab extends CTabItem
 			String name = dialog.getValue().trim();
 			// set new name
 			setText(name);
+			named = true;
 		}
 	}	
 	
