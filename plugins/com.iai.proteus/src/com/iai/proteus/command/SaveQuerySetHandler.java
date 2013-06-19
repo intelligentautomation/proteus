@@ -49,7 +49,7 @@ public class SaveQuerySetHandler implements IHandler {
 				if (querySetTab != null) {
 					
 					// provide a name 
-					if (!querySetTab.isSaved()) {
+					if (!querySetTab.isNamed()) {
 						querySetTab.nameQuerySet();
 					}
 					
