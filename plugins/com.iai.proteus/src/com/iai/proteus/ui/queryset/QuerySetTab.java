@@ -4890,7 +4890,7 @@ public class QuerySetTab extends CTabItem
 			String name = dialog.getValue().trim();
 			// set new name
 			setText(name);
-			named = true;
+			setNamed(true);
 		}
 	}	
 	
