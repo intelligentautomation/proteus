@@ -8,8 +8,10 @@ package com.iai.proteus.wizards;
 import gov.nasa.worldwind.ogc.wms.WMSCapabilities;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.log4j.Logger;
@@ -155,7 +157,8 @@ public class AddServicePage extends WizardPage implements Listener {
 						
 						monitor.worked(1);
 						
-						String url = textServiceUrl.getText();
+						String url = 
+								removeQueryParameters(textServiceUrl.getText());
 						
 						switch (comboServiceType.getSelectionIndex()) {
 						// SOS
@@ -281,10 +284,8 @@ public class AddServicePage extends WizardPage implements Listener {
 		// when the URL is changed
 		if (event.widget == textServiceUrl) {
 			
-			String url = textServiceUrl.getText();
+			String url = removeQueryParameters(textServiceUrl.getText());
 			
-			System.out.println("URL: " + url);
-
 			// first check: validate URL 
 			UrlValidator urlValidator = 
 					new UrlValidator(new String[] { "http", "https" } );
@@ -328,5 +329,22 @@ public class AddServicePage extends WizardPage implements Listener {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Removes query parameters from a URL 
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private String removeQueryParameters(String value) {
+		try {
+			URL url = new URL(value);
+			return url.getProtocol() + 
+					"://" + url.getAuthority() + url.getPath();
+		} catch (MalformedURLException e) {
+			System.err.println("Malformed URL: " + e.getMessage());
+		}
+		return value;
 	}
 }
