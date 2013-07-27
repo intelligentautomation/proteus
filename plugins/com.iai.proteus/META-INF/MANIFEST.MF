@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.iai.proteus
 Bundle-SymbolicName: com.iai.proteus;singleton:=true
-Bundle-Version: 1.2.0
+Bundle-Version: 1.3.0
 Bundle-Activator: com.iai.proteus.Activator
 Bundle-Vendor: IAI
 Bundle-Localization: plugin
