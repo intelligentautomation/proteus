@@ -49,9 +49,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
-
 /**
  * Provides an interactive region selector. To use, construct and call enable/disable. Register a property listener to
  * receive changes to the sector as they occur, or just wait until the user is done and then query the result via {@link
@@ -161,9 +158,6 @@ public class SectorSelector extends WWObjectImpl
         this.getWwd().getInputHandler().addMouseMotionListener(this);
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-
-        EventNotifier.getInstance().fireEvent(this,
-        		EventType.DISCOVERY_LAYER_REGION_ENABLED);
     }
 
     public void disable()
