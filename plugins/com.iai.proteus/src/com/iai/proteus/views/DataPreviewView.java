@@ -54,8 +54,6 @@ import org.osgi.service.event.EventHandler;
 
 import com.iai.proteus.Activator;
 import com.iai.proteus.common.TimeUtils;
-import com.iai.proteus.common.event.EventNotifier;
-import com.iai.proteus.common.event.EventType;
 import com.iai.proteus.common.sos.data.Field;
 import com.iai.proteus.common.sos.data.SensorData;
 import com.iai.proteus.queryset.EventTopic;
@@ -374,11 +372,6 @@ public class DataPreviewView extends ViewPart {
 				
 		plot(currentSensorData, title, 
 				plotData.getDomainVariable(), plotData.getRangeVariasbles());
-		
-		// notify listeners, for just one data set
-		EventNotifier.getInstance().fireEvent(this,
-				EventType.DATA_TABLE_VIEWER_UPDATE, currentSensorData);	
-
 	}
 
 	/**
