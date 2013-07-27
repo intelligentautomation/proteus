@@ -2,7 +2,7 @@
 <feature
       id="com.iai.proteus.feature"
       label="Sensor Discovery"
-      version="1.2.0"
+      version="1.3.0"
       provider-name="Intelligent Automationc Inc."
       plugin="com.iai.proteus"
       os="linux,macosx,win32"
@@ -76,7 +76,7 @@
          id="com.iai.proteus"
          download-size="0"
          install-size="0"
-         version="1.2.0"
+         version="1.3.0"
          unpack="false"/>
 
    <plugin
