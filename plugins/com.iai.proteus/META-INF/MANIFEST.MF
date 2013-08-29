@@ -4,7 +4,7 @@ Bundle-Name: com.iai.proteus
 Bundle-SymbolicName: com.iai.proteus;singleton:=true
 Bundle-Version: 1.3.0
 Bundle-Activator: com.iai.proteus.Activator
-Bundle-Vendor: IAI
+Bundle-Vendor: Intelligent Automation Inc.
 Bundle-Localization: plugin
 Require-Bundle: com.iai.proteus.common;bundle-version="1.0.0",
  com.iai.proteus.model;bundle-version="1.0.0",

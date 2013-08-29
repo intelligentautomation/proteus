@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: NASA World Wind
 Bundle-SymbolicName: gov.nasa.worldwind
 Bundle-Version: 1.3.0
-Bundle-Vendor: IAI
+Bundle-Vendor: Intelligent Automation Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ActivationPolicy: lazy
