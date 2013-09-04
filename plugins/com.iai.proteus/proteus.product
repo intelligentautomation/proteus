@@ -33,7 +33,6 @@ Version 1.0.0
       </win>
    </launcher>
 
-
    <vm>
    </vm>
 
@@ -212,7 +211,7 @@ Library.
    </plugins>
 
    <features>
-      <feature id="gov.nasa.worldwind.feature"/>
+      <feature id="gov.nasa.worldwind2.feature"/>
       <feature id="com.iai.proteus.feature"/>
       <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.equinox.p2.rcp.feature"/>

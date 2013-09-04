@@ -236,6 +236,19 @@ public class WorldWindView extends ViewPart
 				return panel;
 			}
 		};
+		
+//		Composite top = new Composite(parent, SWT.EMBEDDED);
+//		top.setLayout(new FillLayout());
+//		// Swing Frame and Panel
+//		SWT_AWT.embeddedFrameClass = "sun.lwawt.macosx.CEmbeddedFrame";
+//		final Frame frame = SWT_AWT.new_Frame(top);
+//		final Panel panel = 
+//			new java.awt.Panel(new BorderLayout());  
+//		frame.add(panel);
+//		// Add the WWJ 3D OpenGL Canvas to the Swing Panel
+//		panel.add(world, BorderLayout.CENTER);
+//		parent.setLayoutData(new GridData(GridData.FILL_BOTH));	
+		
 
 		/* add select listener that responds to clicks */
 		getWwd().getInputHandler().addSelectListener(this);

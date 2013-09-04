@@ -23,12 +23,8 @@
    </license>
 
    <includes
-         id="gov.nasa.worldwind.feature"
-         version="1.1.0"
-         name="Proteus"
-         os="linux,macosx,win32"
-         ws="cocoa,gtk,win32"
-         arch="x86,x86_64"/>
+         id="gov.nasa.worldwind2.feature"
+         version="2.0.0"/>
 
    <plugin
          id="org.eclipse.core.databinding.property"
