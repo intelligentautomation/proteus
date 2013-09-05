@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: com.iai.proteus.common;bundle-version="1.0.0",
  com.iai.proteus.model;bundle-version="1.0.0",
  com.iai.proteus.csw;bundle-version="1.0.0",
- gov.nasa.worldwind2;bundle-version="2.0.0",
+ gov.nasa.worldwind;bundle-version="2.0.0.daily",
  org.eclipse.ui,
  org.eclipse.ui.views;bundle-version="3.6.0",
  org.eclipse.core.runtime,
@@ -24,7 +24,7 @@ Require-Bundle: com.iai.proteus.common;bundle-version="1.0.0",
  org.eclipse.osgi.services;bundle-version="3.3.0",
  org.eclipse.equinox.ds;bundle-version="1.3.1",
  org.eclipse.equinox.event;bundle-version="1.2.100"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/junit-4.8.2.jar,
