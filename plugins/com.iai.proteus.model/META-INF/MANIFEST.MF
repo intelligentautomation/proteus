@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Resources
+Bundle-Name: Proteus Model
 Bundle-SymbolicName: com.iai.proteus.model
 Bundle-Version: 1.0.0
 Bundle-Vendor: Intelligent Automation Inc.
