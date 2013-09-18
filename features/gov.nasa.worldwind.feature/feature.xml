@@ -71,4 +71,24 @@
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="com.jogamp.jogl-linux-amd64"
+         os="linux"
+         arch="x86_64"
+         download-size="0"
+         install-size="0"
+         version="2.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="com.jogamp.jogl-linux-i586"
+         os="linux"
+         arch="x86"
+         download-size="0"
+         install-size="0"
+         version="2.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>
