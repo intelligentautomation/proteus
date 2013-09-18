@@ -36,7 +36,7 @@ Proteus is built on the [Eclipse Rich Client Platform (RCP)](http://wiki.eclipse
 
 ### Requirements 
 
-Proteus has been tested with JDK6, JDK7 and Eclipse RCP 3.7.x. (_Indigo_). The build also requires [Ant](http://ant.apache.org/ "Ant") to be installed on you computer and to be available on your path. 
+Proteus requires JDK 7 and Eclipse RCP 3.7.x. (_Indigo_). The build also requires [Ant](http://ant.apache.org/ "Ant") to be installed on you computer and to be available on your path. 
 
 To [build](#building) Proteus for multiple platforms (e.g. Mac OS X, Linux and Windows), the Eclipse target installation needs to have the [Delta pack](#delta-pack) installed. The Delta pack contains platform-specific bundles and executables for multiple platforms. By default an Eclipse RCP installation only contains bundles for the specific platform it will run on. 
 
