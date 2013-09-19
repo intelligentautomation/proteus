@@ -5,7 +5,7 @@ Bundle-SymbolicName: com.iai.proteus.csw
 Bundle-Version: 1.0.0
 Bundle-Vendor: Intelligent Automation Inc.
 Bundle-Activator: com.iai.proteus.csw.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/ST-4.0.5.jar,
  lib/antlr-3.4-complete.jar

@@ -5,5 +5,5 @@ Bundle-SymbolicName: com.iai.proteus.win32;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: Intelligent Automation Inc.
 Fragment-Host: com.iai.proteus
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-PlatformFilter: (osgi.os=win32)
