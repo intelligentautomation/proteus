@@ -5,4 +5,4 @@ Bundle-SymbolicName: com.iai.proteus.log4j.fragment
 Bundle-Version: 1.0.0
 Bundle-Vendor: Intelligent Automation Inc.
 Fragment-Host: com.iai.proteus
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Sensor Management" uid="com.iai.proteus.product" id="com.iai.proteus.product" application="com.iai.proteus.application" version="1.2.0.beta" useFeatures="true" includeLaunchers="true">
+<product name="Sensor Management" uid="com.iai.proteus.product" id="com.iai.proteus.product" application="com.iai.proteus.application" version="1.3.0.beta" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/com.iai.proteus/icons/about.png"/>
@@ -32,7 +32,6 @@ Version 1.0.0
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>
@@ -212,7 +211,6 @@ Library.
    </plugins>
 
    <features>
-      <feature id="gov.nasa.worldwind.feature"/>
       <feature id="com.iai.proteus.feature"/>
       <feature id="org.eclipse.rcp"/>
       <feature id="org.eclipse.equinox.p2.rcp.feature"/>
