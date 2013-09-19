@@ -5,8 +5,8 @@
  */
 package com.iai.proteus.queryset;
 
-import gov.nasa.worldwind.ogc.ows.OWSException;
-import gov.nasa.worldwind.ogc.ows.OWSExceptionReport;
+//import gov.nasa.worldwind.ogc.ows.OWSException;
+//import gov.nasa.worldwind.ogc.ows.OWSExceptionReport;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -434,31 +434,31 @@ public class DataFetcher implements IRunnableWithProgress {
 
 			StringWriter sw = new StringWriter();
 
-			try {
-
-				InputStream is = new ByteArrayInputStream(result.getBytes());
-				OWSExceptionReport exceptionReport =
-						new OWSExceptionReport(is).parse();
-
-				if (exceptionReport != null) {
-
-					for (OWSException exception : exceptionReport.getExceptions()) {
-						for (String text : exception.getExceptionText()) {
-
-							UIUtil.log(Activator.PLUGIN_ID, text);
-
-							sw.write(text);
-						}
-					}
-
-					throw new ExceptionReportException(sw.toString());
-				}
-
-				throw new ExceptionReportException(result);
-
-			} catch (XMLStreamException xmlException) {
-				log.warn("XML stream exception: " + xmlException.getMessage());
-			}
+//			try {
+//
+//				InputStream is = new ByteArrayInputStream(result.getBytes());
+//				OWSExceptionReport exceptionReport =
+//						new OWSExceptionReport(is).parse();
+//
+//				if (exceptionReport != null) {
+//
+//					for (OWSException exception : exceptionReport.getExceptions()) {
+//						for (String text : exception.getExceptionText()) {
+//
+//							UIUtil.log(Activator.PLUGIN_ID, text);
+//
+//							sw.write(text);
+//						}
+//					}
+//
+//					throw new ExceptionReportException(sw.toString());
+//				}
+//
+//				throw new ExceptionReportException(result);
+//
+//			} catch (XMLStreamException xmlException) {
+//				log.warn("XML stream exception: " + xmlException.getMessage());
+//			}
 
 		}
 
